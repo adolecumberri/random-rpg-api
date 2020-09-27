@@ -1,0 +1,257 @@
+ figth = () => {
+    let {
+      heroStats: {
+        id: idHero1,
+        id_class: id1,
+        gender: gender1,
+        dexterity: basicDex1,
+        currentHp: curHp1,
+        hp: hp1,
+        name: name1
+      },
+      skill: skill1,
+      beginning: beginning1,
+      start: start1,
+      hit: hit1,
+      isHitted: isHitted1,
+      setHp: setHp1,
+      end: end1,
+      heroDead: heroDead1,
+      heroWins: heroWins1,
+      calcNextTurn: calcNextTurn1
+    } = this.hero1;
+    let {
+      heroStats: {
+        id: idHero2,
+        id_class: id2,
+        gender: gender2,
+        dexterity: basicDex2,
+        currentHp: curHp2,
+        hp: hp2,
+        name: name2
+      },
+      skill: skill2,
+      beginning: beginning2,
+      start: start2,
+      hit: hit2,
+      isHitted: isHitted2,
+      setHp: setHp2,
+      end: end2,
+      heroDead: heroDead2,
+      heroWins: heroWins2,
+      calcNextTurn: calcNextTurn2
+    } = this.hero2;
+
+    //STATS DE ESTADISTICAS ----------->> PODRIA CREAR UN OBJETO.
+    let totalDmg1: number = 0;
+    let totalDmg2: number = 0;
+    let totalDmgStopped1: number = 0;
+    let totalDmgStopped2: number = 0;
+    let numHits1: number = 0;
+    let numHits2: number = 0;
+    let winner: number | null = null;
+    let loser: number | null = null;
+
+    let dex1 = basicDex1; //inicializacion de la dextreza
+    let dex2 = basicDex2; //inicializacion de la dextreza
+    let flag1 = false; //ha muerto
+    let flag2 = false; //ha muerto
+
+    //Pre Pelea
+    //BEGINING 1
+    if (id1 == 7) {
+      let hit = skill1();
+      let hitDeffended = isHitted2(hit.dmg); //actualizo el golpe. (damage) => { evaded, dmg }
+      !hitDeffended.evaded //No ha sido evadido ? golpeo. sino nada
+        ? (curHp2 -= hitDeffended.dmg)
+        : "";
+
+      //Stats Basicas
+      if (!hitDeffended.evaded && hit.type !== "miss") {
+        totalDmg1 += hit.dmg; // --------- Stats
+        totalDmgStopped2 += hit.dmg - hitDeffended.dmg; // --------- Stats
+        numHits1++; // --------------Stats
+      }
+
+      //SKILL DEFENDER
+      if (id2 == 3 && hitDeffended.skill !== undefined) {
+        curHp1 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
+        totalDmg2 += hitDeffended.skill; // ------------------Stats
+        // console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
+      }
+      // SKILL FENCER
+      if (id2 == 4 && hitDeffended.skill !== undefined) {
+        curHp1 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
+        // console.log(`${name2} Countered ${name1}`);
+        totalDmg2 += hitDeffended.skill; // ------------------Stats
+      }
+
+      // //REPORT
+      // if (hit.type === "miss") console.log(` ${name1} missed`);
+      // else if (hitDeffended.evaded) console.log(` ${name2} dodged the attack.`);
+      // else if (hit.type === "crit") {
+      //   console.log(` ${name1} HEAD SHOT! ${hitDeffended.dmg}`);
+      // } else console.log(` ${name1} skill-hit ${hitDeffended.dmg}`);
+
+      flag1 = end1(curHp1);
+      flag2 = end2(curHp2);
+    }
+    //BEGINNING 2
+    if (id2 == 7) {
+      let hit = skill2(); //golpeo return {type, dmg }
+      let hitDeffended = isHitted1(hit.dmg); //actualizo el golpe. (damage) => { evaded, dmg }
+
+      !hitDeffended.evaded //No ha sido evadido ? golpeo. sino nada
+        ? (curHp1 -= hitDeffended.dmg)
+        : "";
+
+      //Stats Basicas
+      if (!hitDeffended.evaded && hit.type !== "miss") {
+        totalDmg2 += hit.dmg; // --------- Stats
+        totalDmgStopped1 += hit.dmg - hitDeffended.dmg; // --------- Stats
+        numHits2++; // --------------Stats
+      }
+
+      //SKILL DEFENDER
+      if (id1 == 3 && hitDeffended.skill !== undefined) {
+        //aunque ataca el 2, se hiere el 2 si el 1 es defender
+        curHp2 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
+        // console.log(`${name2} hitted by thornmail - ${hitDeffended.skill}`);
+        totalDmg1 += hitDeffended.skill; // ------------------Stats
+      }
+      // SKILL FENCER
+      if (id1 == 4 && hitDeffended.skill !== undefined) {
+        curHp2 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
+        // console.log(`${name1} Countered ${name2}`);
+        totalDmg1 += hitDeffended.skill; // ------------------Stats
+      }
+
+      // //REPORT
+      // if (hit.type === "miss") console.log(` ${name2} missed`);
+      // else if (hitDeffended.evaded) console.log(` ${name1} dodged the attack.`);
+      // else if (hit.type === "crit") {
+      //   console.log(` ${name2} HEAD SHOT! ${hitDeffended.dmg}`);
+      // } else console.log(` ${name2} skill-hit ${hitDeffended.dmg}`);
+
+      flag1 = end1(curHp1);
+      flag2 = end2(curHp2);
+    }
+
+    for (let i = 0; !flag1 && !flag2; i++) {
+      if (i == dex1) {
+        let hit = hit1(); //golpeo return {type, dmg }
+        let hitDeffended = isHitted2(hit.dmg); //actualizo el golpe. (damage) => { evaded, dmg }
+
+        !hitDeffended.evaded //No ha sido evadido ? golpeo. sino nada
+          ? (curHp2 -= hitDeffended.dmg)
+          : "";
+
+        //Stats Basicas
+        if (!hitDeffended.evaded && hit.type !== "miss") {
+          totalDmg1 += hit.dmg; // --------- Stats
+          totalDmgStopped2 += hit.dmg - hitDeffended.dmg; // --------- Stats
+          numHits1++; // --------------Stats
+        }
+
+        //SKILL DEFENDER
+        if (id2 == 3 && hitDeffended.skill !== undefined) {
+          curHp1 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
+          // console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
+          totalDmg2 += hitDeffended.skill; // ------------------Stats
+        }
+        // SKILL FENCER
+        if (id2 == 4 && hitDeffended.skill !== undefined) {
+          curHp1 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
+          // console.log(`${name2} Countered ${name1}`);
+          totalDmg2 += hitDeffended.skill; // ------------------Stats
+        }
+
+        //SKILL PALADIN
+        if (id1 == 6) {
+          curHp1 = skill1(curHp1);
+        }
+
+        dex1 += calcNextTurn1(dex1);
+
+        //Al final del turno
+        flag1 = end1(curHp1);
+        flag2 = end2(curHp2);
+      }
+      if (i == dex2) {
+        let hit = hit2(); //golpeo return {type, dmg }
+        let hitDeffended = isHitted1(hit.dmg); //actualizo el golpe. (damage) => { evaded, dmg }
+
+        !hitDeffended.evaded //No ha sido evadido ? golpeo. sino nada
+          ? (curHp1 -= hitDeffended.dmg)
+          : "";
+
+        //Stats Basicas
+        if (!hitDeffended.evaded && hit.type !== "miss") {
+          totalDmg2 += hit.dmg; // --------- Stats
+          totalDmgStopped1 += hit.dmg - hitDeffended.dmg; // --------- Stats
+          numHits2++; // --------------Stats
+        }
+
+        //SKILL DEFENDER
+        if (id1 == 3 && hitDeffended.skill !== undefined) {
+          //aunque ataca el 2, se hiere el 2 si el 1 es defender
+          curHp2 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
+          // console.log(`${name2} hitted by thornmail - ${hitDeffended.skill}`);
+          totalDmg1 += hitDeffended.skill; // ------------------Stats
+        }
+        // SKILL FENCER
+        if (id1 == 4 && hitDeffended.skill !== undefined) {
+          curHp2 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
+          // console.log(`${name1} Countered ${name2}`);
+          totalDmg1 += hitDeffended.skill; // ------------------Stats
+        }
+
+        // SKILL PALADIN
+        if (id2 == 6) {
+          curHp1 = skill2(curHp1);
+        }
+
+        dex2 += calcNextTurn2(dex2);
+
+        //Al final del turno
+        flag1 = end1(curHp1);
+        flag2 = end2(curHp2);
+      }
+    }
+
+    if (flag1 && flag2) {
+      //SI EMPATE, NADA.
+      //ambos muertos
+      // console.log(`${name1}, Y ${name2} han empatado`);
+      // heroWins1(); //PIERDEN AMBOS PERO LES SUMO KILL
+      // heroWins2(); //PIERDEN AMBOS PERO LES SUMO KILL
+    } else {
+      if (flag1) {
+        //muerto heroe 1
+        // console.log(
+        //   `${name1}, ${getClass(
+        //     id1,
+        //     gender1
+        //   )} ha muerto contra ${name2}, ${getClass(id2, gender2)}`
+        // );
+        heroWins2(); //GANA HEROE 2
+        heroDead1();
+        loser = idHero1;
+        winner = idHero2;
+      } else {
+        if (flag2) {
+          //muerto heroe 2
+          // console.log(
+          //   `${name2}, ${getClass(
+          //     id1,
+          //     gender1
+          //   )} ha muerto contra ${name1}, ${getClass(id1, gender1)}`
+          // );
+          heroWins1(); //gana HEroe 1
+          heroDead2();
+          loser = idHero2;
+          winner = idHero1;
+        }
+      }
+    }
+  };
