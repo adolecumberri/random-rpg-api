@@ -4,6 +4,6 @@ export  const connection : Connection = createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'heros'
+    database: 'heros2'
 });
 

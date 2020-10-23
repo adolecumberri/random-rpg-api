@@ -17,5 +17,7 @@ router.route("/fight2")
 router.route("/fightTest")
 .get(fightAsinc);
 
+router.route("f/:id1")
+
 
 export default router;
