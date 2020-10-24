@@ -23,7 +23,7 @@ export class Thieve {
     this.heroEfects = {
       dmg: this.heroStats.dmg * 0.3,
       def: this.heroStats.def * 0.3,
-      dex: this.heroStats.dexterity * 0.3
+      dex: this.heroStats.att_interval * 0.3
     };
   };
 
@@ -122,7 +122,7 @@ export class Thieve {
       }`
     );
 
-  calcNextTurn = (curDex: number) => (curDex += this.heroStats.dexterity);
+  calcNextTurn = (curDex: number) => (curDex += this.heroStats.att_interval);
 }
 
 //function to generate rand numbers

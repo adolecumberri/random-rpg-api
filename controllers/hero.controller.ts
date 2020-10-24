@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IHeroStats, IHero } from '../interfaces/Hero.Interface';
+import { IHeroStats, IHero, IHeroCreated } from '../interfaces/Hero.Interface';
 
 // DB
 import { connection } from '../config/database';
@@ -8,30 +8,19 @@ import { FightAsinchonous } from './herojs/fight';
 
 //common
 
-import { getBaseStats, getClassStats, randName } from '../commonModules/classes';
-import {rand} from '../commonModules/utils';
+import { getBaseStats, getClassStats, randName, calculateFinalStats } from '../commonModules/heros';
+import { rand } from '../commonModules/utils';
+import { FieldInfo, MysqlError, queryCallback } from 'mysql';
 
 //Get info when controller is created.
-let basicStats: IHeroStats | any = Promise.resolve(getBaseStats());
-let classStats: ({ id: number; name: string } & IHeroStats)[] | any = Promise.resolve(getClassStats()); // & es una interseccion
+let basicStats: IHeroStats | any;
+let classStats: ({ id: number; name: string } & IHeroStats)[] | any; // & es una interseccion
 let gender = ['female', 'male'];
 
 let ranHero: IHero & IHeroStats;
 
 // -------------------------- FUNCTIONS -------------------------------
 
-//function to generate rand numbers
-let rand = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
-
-//funtn to generate rand Name
-let randName = (gender: number) => {
-	return (
-		'' +
-		(gender === 1 ? hombres[rand(0, hombres.length)]?.nombre : mujeres[rand(0, mujeres.length)]?.nombre) +
-		' ' +
-		apellido[rand(0, apellido.length)]?.apellido
-	);
-};
 //get Stats and calculate them  over and under 15%
 // let getStats = async (choosedClass: number) => {
 // 	let obj: any = {};
@@ -43,31 +32,57 @@ let randName = (gender: number) => {
 // };
 
 //Crear heroe
-// let createHero = () => {
+let createHero = () => {
+	// console.time('createHero');
+	let id_class = rand(0, classStats.length - 1); //ES EL INDICE -> el valor es id_class + 1
+	let choosedClassStats = classStats[id_class];
+	let currGender = rand(0, 1);
+	let randHero: IHeroCreated = {
+		...calculateFinalStats(basicStats, choosedClassStats),
+		id_class: id_class + 1,
+		gender: currGender,
+		name: randName(Number(currGender)),
+	};
+	randHero['hp'] = Math.round(randHero['hp']);
+	randHero['currentHp'] = randHero.hp;
+	randHero['dmg'] = Math.round(randHero['dmg']);
+	randHero['def'] = Math.round(randHero['def']);
+	console.log(`Random Hero: \n ${JSON.stringify(randHero.name)}`);
+	// console.timeEnd('createHero');
+	return randHero as IHeroCreated;
+};
 
-//   let id_class = rand(0, classStats.length - 1); //ES EL INDICE -> el valor es id_class + 1
-//   let choosedClassStats = classStats[id_class];
+//param :numberToCreate : number
+let createHeros = async (req: Request, res: Response) => {
+	console.time('createHero2');
 
-//   let randHero: ({ id: number; name: string } & IHeroStats)[] | any = {};
-//   randHero = { ...getStats(basicStats, choosedClassStats) };
-//   randHero["id_class"] = id_class + 1; //choosedClassStats["name"];
-//   randHero["gender"] = rand(0, 1);
-//   randHero["name"] = randName(randHero["gender"]);
-//   // Correcciones de decimales
-//   randHero["hp"] = Math.round(randHero["hp"]);
-//   randHero["currentHp"] = randHero.hp;
-//   randHero["dmg"] = Math.round(randHero["dmg"]);
-//   randHero["def"] = Math.round(randHero["def"]);
-//   return randHero;
-// };
+	//Carga de estadisticas
+	basicStats = await getBaseStats();
+	classStats = await getClassStats();
 
-// export function getRanHero(req: Request, res: Response) {
-//    for (let i = 0; i < 3000; i++) {
-//      saveHero(createHero());
-//   }
-//   res.send("Antes aquí se creaban Heroes");
-// }
+	let numberToCreate = req.params.numberToCreate;
+	let promises = [];
+	for (let i = 0; i < Number(numberToCreate); i++) {
+		promises.push(saveHero(createHero()));
+	}
+	Promise.all(promises);
+	/*
+	Si quiero hacer algo despues, puedo hacer
+	Promise.all(promises).then(Codigo para despues.)
+	*/
+	console.timeEnd('createHero2');
+	res.send('Antes aquí se creaban Heroes');
+};
 
+let saveHero = (hero: any) => {
+	// console.time('saveHeros');
+	connection.query('INSERT INTO hero SET ?', [hero], (err: MysqlError | null, result: any) => {
+		console.log(result.insertId);
+	});
+	// console.timeEnd('saveHeros');
+};
+
+export { createHeros };
 // export function fightWithTurns (req: Request, res: Response){
 //   getHeroes(2, (heroes: any[]) => {
 //     let fight = new Fight2(heroes[0], heroes[1]);

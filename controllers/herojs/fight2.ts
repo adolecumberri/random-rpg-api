@@ -80,8 +80,8 @@ export class Fight2 {
   fight = () => {
     let { winner, loser } = this.stats;
 
-    this.nextTurnHero1 = this.hero1.heroStats.dexterity;
-    this.nextTurnHero2 = this.hero2.heroStats.dexterity;
+    this.nextTurnHero1 = this.hero1.heroStats.att_interval;
+    this.nextTurnHero2 = this.hero2.heroStats.att_interval;
 
     //SKILLS FROM SNIPERS.
     if (this.hero1.heroStats.id_class == 7) {

@@ -102,7 +102,7 @@ export class Defender {
     );
 
 
-  calcNextTurn = (curDex: number) => (curDex += this.heroStats.dexterity);
+  calcNextTurn = (curDex: number) => (curDex += this.heroStats.att_interval);
 }
 
 //function to generate rand numbers

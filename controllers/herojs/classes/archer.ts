@@ -115,7 +115,7 @@ export class Archer {
   //CalcNextTurn
   calcNextTurn = (curDex: number) =>
     (curDex +=
-      this.heroStats.dexterity - (this.skillUsed ? this.heroEfects.dex : 0));
+      this.heroStats.att_interval - (this.skillUsed ? this.heroEfects.dex : 0));
 }
 
 //function to generate rand numbers

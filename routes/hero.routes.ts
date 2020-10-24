@@ -1,23 +1,21 @@
 import { Router } from "express";
 import {
-    getRanHero,
-    fightAsinc,
-    fightWithTurns
+  createHeros
 } from "../controllers/hero.controller";
 
 const router = Router();
 
 router
-  .route("")
-  .get(getRanHero);
+  .route("/create/:numberToCreate")
+  .get(createHeros);
 
-router.route("/fight2")
-.get(fightWithTurns);
+// router.route("/fight2")
+// .get(fightWithTurns);
 
-router.route("/fightTest")
-.get(fightAsinc);
+// router.route("/fightTest")
+// .get(fightAsinc);
 
-router.route("f/:id1")
+// router.route("f/:id1")
 
 
 export default router;

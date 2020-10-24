@@ -8,9 +8,16 @@ export interface IHeroStats{
     critDmg: number,
     accuracy: number,
     evasion: number,
-    dexterity: number,
+    att_interval: number,
     reg: number
 }
+
+export interface IHeroCreated extends IHeroStats {
+    id: number;
+    name: string;
+    gender: string;
+} 
+
 export interface IHero { 
     id? : number,
     name : string,
@@ -34,7 +41,7 @@ export interface IHeroFight {
     critDmg: number,
     accuracy: number,
     evasion: number,
-    dexterity: number,
+    att_interval: number,
     reg: number,
     isAlive: boolean,
     kills : number,

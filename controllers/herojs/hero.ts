@@ -14,7 +14,7 @@ export function Hero(data: any): any {
     dmg,
     id,
     name,
-    dexterity,
+    att_interval,
     evasion
   } = data;
   const initialData = data; // datos para resetear cuando viene un estado.
@@ -86,7 +86,7 @@ export function Hero(data: any): any {
     crit = initialData.crit;
     dmg = initialData.dmg;
     def = initialData.def;
-    dexterity = initialData.dexterity;
+    att_interval = initialData.att_interval;
   };
   //cambia estados y añade los tiempos.
   let alterState = (
@@ -95,13 +95,13 @@ export function Hero(data: any): any {
       crit: newCrit = 0,
       dmg: newDmg = 0,
       def: newDef = 0,
-      dexterity: newDex = 0
+      att_interval: newDex = 0
     }: {
       accuracy?: any;
       crit?: any;
       dmg?: any;
       def?: any;
-      dexterity?: any;
+      att_interval?: any;
     },
     turns: number
   ) => {
@@ -109,7 +109,7 @@ export function Hero(data: any): any {
     newDmg += dmg;
     newCrit += crit;
     newDef += def;
-    newDex += dexterity;
+    newDex += att_interval;
     turnsWithStatsChanged = turns;
   };
 
