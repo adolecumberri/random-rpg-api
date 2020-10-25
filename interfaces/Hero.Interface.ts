@@ -28,6 +28,7 @@ export interface IHero {
     kidnaped : number
 }
 
+
 export interface IHeroFight {
     id : number,
     name : string,

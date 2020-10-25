@@ -11,6 +11,7 @@ import { FightAsinchonous } from './herojs/fight';
 import { getBaseStats, getClassStats, randName, calculateFinalStats } from '../commonModules/heros';
 import { rand } from '../commonModules/utils';
 import { FieldInfo, MysqlError, queryCallback } from 'mysql';
+import { fight } from './fight.controller';
 
 //Get info when controller is created.
 let basicStats: IHeroStats | any;
@@ -82,16 +83,38 @@ let saveHero = (hero: any) => {
 	// console.timeEnd('saveHeros');
 };
 
-export { createHeros };
-// export function fightWithTurns (req: Request, res: Response){
-//   getHeroes(2, (heroes: any[]) => {
-//     let fight = new Fight2(heroes[0], heroes[1]);
-//     fight.fight();
-//    });
+// const getHeroes = (num: number, callback: any) => {
+// 	connection.query(`SELECT * FROM hero WHERE isAlive = 1 AND kills = 0 ORDER BY RAND() LIMIT ${num}`, (err, result) => {
+// 		callback(result);
+// 	});
+// };
 
-//    res.sendStatus(200);
-//   }
+const getHeroesTricky = () => {
+	let query = `SELECT * FROM hero WHERE id = 1 OR id = 2;`;
+	console.log(query);
+	return new Promise((res, rej) => {
+		connection.query(query, (err, result: IHeroStats[]) => {
+			if (err) {
+				return rej(err);
+			}
+			console.log(result);
+			res(result);
+		});
+	});
+};
 
+const fight2heros = async (req: Request, res: Response) => {
+	let heroes: any = await getHeroesTricky();
+	console.log('my heroes:');
+	console.log(JSON.stringify(heroes[0]));
+	console.log(JSON.stringify(heroes[1]));
+
+	fight(heroes[0], heroes[1]);
+
+	res.sendStatus(200);
+};
+
+export { createHeros, fight2heros };
 // export function fightAsinc(req: Request, res: Response) {
 
 //   for(let i = 0; i < 3000; i++){
