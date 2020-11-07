@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IHeroStats, IHero } from "../interfaces/Hero.Interface";
+import { IHeroStats, IHeroBase } from "../interfaces/Hero.Interface";
 
 // DB
 import { connection } from "../config/database";
@@ -16,7 +16,7 @@ const hombres = require("../jsons/commun/hombres");
 const mujeres = require("../jsons/commun/mujeres");
 const apellido = require("../jsons/commun/apellidos");
 
-let ranHero: IHero & IHeroStats;
+let ranHero: IHeroBase & IHeroStats;
 // --------------------------------------- CONSTRUCTORS -----------------------
 //Estadisticas Basicas de la base de datos
 connection.query(

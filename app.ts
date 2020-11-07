@@ -7,7 +7,8 @@ import bodyParser from 'body-parser';
 import IndexRoutes from './routes/index.routes';
 import HeroRouter from './routes/hero.routes';
 import StatsRouter from './routes/statistics.routes';
-import CategoryRouter from './routes/categories.routes';
+import CrewRouter from './routes/crew.routes';
+import FightRouter from './routes/fight.routes';
 
 export class App {
 	app: Application | undefined; //creation of the propertie "application"
@@ -63,7 +64,9 @@ export class App {
 	private routes() {
 		this.app?.use('/', IndexRoutes); //main route.
 		this.app?.use('/hero', HeroRouter); //hero route.
+		this.app?.use('/fight', FightRouter); //hero route.
 		this.app?.use('/stats', StatsRouter); //stats route.
+		this.app?.use('/crew', CrewRouter) //crews routes
 	}
 
 	async listen(): Promise<void> {

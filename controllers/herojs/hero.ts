@@ -1,4 +1,4 @@
-import { IHeroStats, IHero } from "../../interfaces/Hero.Interface";
+import { IHeroStats, IHeroBase } from "../../interfaces/Hero.Interface";
 import { connection } from "../../config/database";
 
 //FUNCTION

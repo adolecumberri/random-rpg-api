@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IHeroStats, IHero, IHeroCreated } from '../interfaces/Hero.Interface';
+import { IHeroStats, IHeroBase, IHeroCreated } from '../interfaces/Hero.Interface';
 
 // DB
 import { connection } from '../config/database';
@@ -18,7 +18,7 @@ let basicStats: IHeroStats | any;
 let classStats: ({ id: number; name: string } & IHeroStats)[] | any; // & es una interseccion
 let gender = ['female', 'male'];
 
-let ranHero: IHero & IHeroStats;
+let ranHero: IHeroBase & IHeroStats;
 
 // -------------------------- FUNCTIONS -------------------------------
 
@@ -38,11 +38,13 @@ let createHero = () => {
 	let id_class = rand(0, classStats.length - 1); //ES EL INDICE -> el valor es id_class + 1
 	let choosedClassStats = classStats[id_class];
 	let currGender = rand(0, 1);
+	let name = randName(Number(currGender));
 	let randHero: IHeroCreated = {
 		...calculateFinalStats(basicStats, choosedClassStats),
 		id_class: id_class + 1,
 		gender: currGender,
-		name: randName(Number(currGender)),
+		name: name[0],
+		surname: name[1]
 	};
 	randHero['hp'] = Math.round(randHero['hp']);
 	randHero['currentHp'] = randHero.hp;
@@ -90,7 +92,7 @@ let saveHero = (hero: any) => {
 // };
 
 const getHeroesTricky = () => {
-	let query = `SELECT * FROM hero WHERE id = 1 OR id = 2;`;
+	let query = `SELECT * FROM hero WHERE id = 143 OR id = 144;`;
 	console.log(query);
 	return new Promise((res, rej) => {
 		connection.query(query, (err, result: IHeroStats[]) => {

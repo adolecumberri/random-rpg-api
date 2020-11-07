@@ -10,12 +10,10 @@ const VARIATION = 0.15;
 //Get info when controller is created.
 
 let randName = (gender: number) => {
-	return (
-		'' +
-		(gender === 1 ? HOMBRES[rand(0, HOMBRES.length)] : MUJERES[rand(0, MUJERES.length)]) +
-		' ' +
-		APELLIDOS[rand(0, APELLIDOS.length)]
-	);
+	return [
+		gender === 1 ? HOMBRES[rand(0, HOMBRES.length)] : MUJERES[rand(0, MUJERES.length)],
+		APELLIDOS[rand(0, APELLIDOS.length -1)],
+	];
 };
 
 //Estadisticas Basicas de la base de datos

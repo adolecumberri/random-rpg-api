@@ -1,8 +1,8 @@
 import { connection } from '../../../config/database';
-import { IHeroFight, IHeroEfects } from '../../../interfaces/Hero.Interface';
+import { IHero, IHeroEfects } from '../../../interfaces/Hero.Interface';
 
 export class Paladin {
-	constructor(data: IHeroFight) {
+	constructor(data: IHero) {
 		this.heroStats = { ...data };
 		this.heroEfects = {
 			dmg: 0,
@@ -12,7 +12,7 @@ export class Paladin {
 	}
 
 	//Propiedades.
-	heroStats: IHeroFight; //Estadisticas
+	heroStats: IHero; //Estadisticas
 	heroEfects: IHeroEfects; //E stados cambiados
 	isDead = false;
 	skillUsed = false;

@@ -15,12 +15,14 @@ export interface IHeroStats{
 export interface IHeroCreated extends IHeroStats {
     id: number;
     name: string;
+    surname: string;
     gender: string;
 } 
 
-export interface IHero { 
+export interface IHeroBase { 
     id? : number,
     name : string,
+    surname: string,
     gender: boolean | undefined,
     id_class: number | undefined,
     isAlive: boolean | undefined,
@@ -29,11 +31,13 @@ export interface IHero {
 }
 
 
-export interface IHeroFight {
+export interface IHero {
     id : number,
     name : string,
+    surname: string,
     gender: boolean,
     id_class: number,
+    id_crew: number,
     hp: number,
     currentHp: number,
     dmg: number,

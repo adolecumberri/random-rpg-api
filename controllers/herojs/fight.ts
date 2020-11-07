@@ -1,4 +1,4 @@
-import { IHeroStats, IHeroFight } from "../../interfaces/Hero.Interface";
+import { IHeroStats, IHero } from "../../interfaces/Hero.Interface";
 import { Hero } from "./hero";
 import { Archer } from "./classes/archer";
 import { Defender } from "./classes/defender";
@@ -57,7 +57,7 @@ export class FightAsinchonous {
 
   hero1: any;
   hero2: any;
-  constructor(heroA: IHeroFight, heroB: IHeroFight) {
+  constructor(heroA: IHero, heroB: IHero) {
     this.hero1 = switchClass(heroA);
     this.hero2 = switchClass(heroB);
 
