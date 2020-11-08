@@ -1,51 +1,6 @@
 import { connection } from '../config/database';
-import {
-	Archer,
-	Berserker,
-	Defender,
-	Fencer,
-	Ninja,
-	Paladin,
-	Sniper,
-	Soldier,
-	Thieve,
-} from '../controllers/herojs/classes';
+
 import { IBeginFight, IFightStats, ITurnSingleFight } from '../interfaces/Figth.interface';
-
-let switchClass = (hero: any) => {
-	let solution: Archer | Berserker | Defender | Fencer | Ninja | Paladin | Sniper | Soldier | undefined = undefined;
-	switch (hero.id_class) {
-		case 1:
-			solution = new Archer(hero);
-			break;
-		case 2:
-			solution = new Berserker(hero);
-			break;
-		case 3:
-			solution = new Defender(hero);
-			break;
-		case 4:
-			solution = new Fencer(hero);
-			break;
-		case 5:
-			solution = new Ninja(hero);
-			break;
-		case 6:
-			solution = new Paladin(hero);
-			break;
-		case 7:
-			solution = new Sniper(hero);
-			break;
-		case 8:
-			solution = new Soldier(hero);
-			break;
-		case 9:
-			solution = new Thieve(hero);
-			break;
-	}
-
-	return solution as Archer | Berserker | Defender | Fencer | Ninja | Paladin | Sniper | Soldier;
-};
 
 const saveSingleFight: any = async (fightStats: IFightStats, hero1: any, hero2: any) => {
 	let { winner, loser, totalDmg1, totalDmg2, numHits1, numHits2, totalDmgStopped1, totalDmgStopped2 } = fightStats;
@@ -169,10 +124,10 @@ const turnSingleFight: ITurnSingleFight = (attacante, defensor, flag1, flag2) =>
 		totalDmgA,
 		totalDmgD,
 		totalDmgStopped,
-        numHits,
-        flag1,
-        flag2
+		numHits,
+		flag1,
+		flag2,
 	};
 };
 
-export { switchClass, saveSingleFight, beginning, turnSingleFight };
+export { saveSingleFight, beginning, turnSingleFight };

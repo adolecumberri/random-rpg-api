@@ -4,7 +4,8 @@ import { connection } from '../config/database';
 
 import { Express, Request, Response, NextFunction } from 'express';
 import { getCrewByCrewId } from '../commonModules/crew';
-import { switchClass, saveSingleFight, beginning, turnSingleFight } from '../commonModules/fight';
+import { saveSingleFight, beginning, turnSingleFight } from '../commonModules/fight';
+import { switchClass } from '../commonModules/heros';
 
 const fight = (heroA: IHero, heroB: IHero) => {
 	let fightStats: IFightStats = {
@@ -22,7 +23,7 @@ const fight = (heroA: IHero, heroB: IHero) => {
 	let hero1 = switchClass(heroA);
 	let hero2 = switchClass(heroB);
 
-	//Cargar intervalo
+	//Cargar intervalo 
 	let nextTurnHero1: number = hero1.heroStats.att_interval;
 	let nextTurnHero2: number = hero2.heroStats.att_interval;
 

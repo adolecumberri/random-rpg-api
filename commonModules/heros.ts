@@ -2,6 +2,18 @@ import { connection } from '../config/database';
 import { IHeroStats } from '../interfaces/Hero.Interface';
 import { rand } from './utils';
 
+import {
+	Archer,
+	Berserker,
+	Defender,
+	Fencer,
+	Ninja,
+	Paladin,
+	Sniper,
+	Soldier,
+	Thieve,
+} from '../controllers/herojs/classes';
+
 //CONST NOMBRES + APELLIDOS
 const HOMBRES = require('../jsons/commun/hombres');
 const MUJERES = require('../jsons/commun/mujeres');
@@ -12,7 +24,7 @@ const VARIATION = 0.15;
 let randName = (gender: number) => {
 	return [
 		gender === 1 ? HOMBRES[rand(0, HOMBRES.length)] : MUJERES[rand(0, MUJERES.length)],
-		APELLIDOS[rand(0, APELLIDOS.length -1)],
+		APELLIDOS[rand(0, APELLIDOS.length - 1)],
 	];
 };
 
@@ -56,4 +68,39 @@ let calculateFinalStats = (baseStats: any, classState: any) => {
 	return finalStat;
 };
 
-export { getBaseStats, getClassStats, randName, calculateFinalStats };
+let switchClass = (hero: any) => {
+	let solution: Archer | Berserker | Defender | Fencer | Ninja | Paladin | Sniper | Soldier | undefined = undefined;
+	switch (hero.id_class) {
+		case 1:
+			solution = new Archer(hero);
+			break;
+		case 2:
+			solution = new Berserker(hero);
+			break;
+		case 3:
+			solution = new Defender(hero);
+			break;
+		case 4:
+			solution = new Fencer(hero);
+			break;
+		case 5:
+			solution = new Ninja(hero);
+			break;
+		case 6:
+			solution = new Paladin(hero);
+			break;
+		case 7:
+			solution = new Sniper(hero);
+			break;
+		case 8:
+			solution = new Soldier(hero);
+			break;
+		case 9:
+			solution = new Thieve(hero);
+			break;
+	}
+
+	return solution as Archer | Berserker | Defender | Fencer | Ninja | Paladin | Sniper | Soldier;
+};
+
+export { getBaseStats, getClassStats, randName, calculateFinalStats, switchClass };

@@ -3,7 +3,7 @@ import { IHero, IHeroEfects } from '../../../interfaces/Hero.Interface';
 
 export class Soldier {
 	constructor(data: IHero) {
-		this.heroStats = { ...data };
+		this.heroStats = { ...data, curr_att_interval: data.att_interval };
 		this.heroEfects = {
 			dmg: 0,
 			def: 0,
@@ -27,7 +27,7 @@ export class Soldier {
 	skillOff: any = () => (this.heroEfects.def = 0);
 
 
-	
+
 	//Beginning -> function executed when the figth starts. just 1 time.
 	beginning: any = () => {};
 

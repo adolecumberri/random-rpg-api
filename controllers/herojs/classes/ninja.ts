@@ -3,7 +3,7 @@ import { IHero, IHeroEfects } from '../../../interfaces/Hero.Interface';
 
 export class Ninja {
 	constructor(data: IHero) {
-		this.heroStats = { ...data };
+		this.heroStats = { ...data, curr_att_interval: data.att_interval };
 		this.heroEfects = {
 			dmg: 0,
 			def: 0,

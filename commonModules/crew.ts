@@ -2,6 +2,7 @@
 import { createWatchCompilerHost } from 'typescript';
 import { connection } from '../config/database';
 import { IHero } from '../interfaces/Hero.Interface';
+import { switchClass } from './heros';
 
 let createCrews = (crews: string[]) => {
 	let query = `INSERT INTO crew VALUES `;
@@ -46,9 +47,43 @@ let getRandomCrew = (soldiersNumber: number) => {
 			if (err) {
 				rej(err);
 			}
+			result.forEach((o, i, herosArr) => {
+				herosArr[i]['curr_att_interval'] = o.att_interval;
+			});
 			res(result);
 		});
 	});
 };
 
-export { createCrews, getCrewByCrewId, getRandomCrew };
+let getSelectedCrew = (ids: number[]) => {
+	let query = `SELECT * FROM hero
+	WHERE `;
+
+	ids.forEach((id, i) => {
+		console.log('i: ' + i);
+		if (i === 0) {
+			query += ` id = ${id}`;
+		} else {
+			query += ` OR id = ${id}`;
+		}
+	});
+
+	query += ';';
+
+	console.log(query);
+
+	return new Promise<IHero[]>((res, rej) => {
+		connection.query(query, (err: any, result: IHero[]) => {
+			if (err) {
+				rej(err);
+			}
+
+			let herosResult: any[] = result.map((o, i, herosArr) =>
+				switchClass({ ...herosArr[i], curr_att_interval: o.att_interval })
+			);
+			res(herosResult);
+		});
+	});
+};
+
+export { createCrews, getCrewByCrewId, getRandomCrew, getSelectedCrew };

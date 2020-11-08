@@ -47,6 +47,7 @@ export interface IHero {
     accuracy: number,
     evasion: number,
     att_interval: number,
+    curr_att_interval ?: number,
     reg: number,
     isAlive: boolean,
     kills : number,
