@@ -1,6 +1,7 @@
 // DB
 import { createWatchCompilerHost } from 'typescript';
 import { connection } from '../config/database';
+import { AnyHero } from '../controllers/herojs/classes';
 import { IHero } from '../interfaces/Hero.Interface';
 import { switchClass } from './heros';
 
@@ -42,15 +43,16 @@ let getRandomCrew = (soldiersNumber: number) => {
 	ORDER BY RAND()
 	LIMIT ${soldiersNumber};`;
 
-	return new Promise<IHero[]>((res, rej) => {
+	return new Promise<AnyHero[]>((res, rej) => {
 		connection.query(query, (err: any, result: IHero[]) => {
 			if (err) {
 				rej(err);
 			}
-			result.forEach((o, i, herosArr) => {
-				herosArr[i]['curr_att_interval'] = o.att_interval;
-			});
-			res(result);
+
+			let herosResult: any[] = result.map((o, i, herosArr) =>
+				switchClass({ ...herosArr[i], curr_att_interval: o.att_interval })
+			);
+			res(herosResult);
 		});
 	});
 };
@@ -67,12 +69,9 @@ let getSelectedCrew = (ids: number[]) => {
 			query += ` OR id = ${id}`;
 		}
 	});
-
 	query += ';';
 
-	console.log(query);
-
-	return new Promise<IHero[]>((res, rej) => {
+	return new Promise<AnyHero[]>((res, rej) => {
 		connection.query(query, (err: any, result: IHero[]) => {
 			if (err) {
 				rej(err);
