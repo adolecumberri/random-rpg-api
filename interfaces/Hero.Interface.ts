@@ -55,7 +55,7 @@ export interface IHero {
 }
 
 export interface IHeroEfects {
-    dex : number,
+    att_interval : number,
     dmg : number, 
     def : number
 }
