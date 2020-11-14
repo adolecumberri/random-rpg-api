@@ -92,6 +92,21 @@ export class Thieve {
 	end: any = (newCurHp: number): boolean => {
 		if (newCurHp <= 0) {
 			this.isDead = true;
+<<<<<<< Updated upstream
+=======
+			this.heroDies();
+			console.log(`${id}.${name} ${surname} has died`);
+		} else {
+			if (this.skillUsed) {
+				// console.log(this.heroStats.name + " used RAGE");
+				this.skillOf();
+				this.skillUsed = false;
+			} else {
+				this.skill();
+			}
+ 
+			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
+>>>>>>> Stashed changes
 		}
 
 		//USO SKILL COURAGE

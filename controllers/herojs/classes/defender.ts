@@ -12,6 +12,7 @@ export class Defender {
 	}
 
 	//Propiedades.
+<<<<<<< Updated upstream
 	heroStats: IHero; //Estadisticas
 	heroEfects: IHeroEfects; //E stados cambiados
 	isDead = false;
@@ -51,6 +52,18 @@ export class Defender {
 
 		return solution;
 	};
+=======
+	heroEfects: IHeroEfects = {
+		dmg: 0,
+		def: 0,
+		att_interval: 0,
+	}; //E stados cambiados
+
+	//THORNMAIL
+	skillProb = 1;
+	skill: (damage: number) => number = (damage) => Math.floor(6 + damage * 0.2);
+	skillUsed = false;
+>>>>>>> Stashed changes
 
 	//CALC DAMAGE AFTER BLOCKING
 	isHitted: any = (damage: number): { evaded: boolean; dmg: number; skill: number } => {

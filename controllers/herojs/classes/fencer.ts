@@ -18,7 +18,25 @@ export class Fencer {
 
 	//Counter
 	skillProb: number = 0.22;
+<<<<<<< Updated upstream
 	skill: any = (damage: number) => this.hit(damage);
+=======
+	skill: any = (damage: number) => this.rand(damage * 0.85, damage * 1.15); //Sutil nerfeo aquí.
+	skillUsed = false;
+
+
+
+	defend: (enemi: AnyHero) => any = (enemi) => {
+		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
+		let finalDamage = 0;
+
+		if (evasion >= this.getProb()) {
+			//Evade o no.
+			finalDamage = Math.floor((enemi.attack() * (100 - def * 0.9)) / 100 - def * 0.29);
+		} else {
+			console.log(`${id}.${name} ${surname} Evaded the attack`);
+		}
+>>>>>>> Stashed changes
 
 	//Beginning -> function executed when the figth starts. just 1 time.
 	beginning: any = () => {};
