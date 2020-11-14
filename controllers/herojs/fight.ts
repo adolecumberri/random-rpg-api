@@ -1,5 +1,5 @@
 import { IHeroStats, IHero } from "../../interfaces/Hero.Interface";
-import { Hero } from "./hero";
+import { Hero } from "./hero_old";
 import { Archer } from "./classes/archer";
 import { Defender } from "./classes/defender";
 import { Fencer } from "./classes/fencer";

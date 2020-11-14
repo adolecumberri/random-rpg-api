@@ -2,7 +2,7 @@ import { IHeroStats, IHeroBase } from "../../interfaces/Hero.Interface";
 import { connection } from "../../config/database";
 
 //FUNCTION
-export function Hero(data: any): any {
+export function Hero_old(data: any): any {
   let heroStats = {...data};
   let isDead = false;
   let {
