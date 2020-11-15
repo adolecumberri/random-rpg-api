@@ -58,6 +58,7 @@ export class Ninja extends Hero {
 		}
 
 		console.log(`${id}.${name} ${surname} did ${damage} `);
+		this.calcNextTurn();
 		return damage;
 	};
 }

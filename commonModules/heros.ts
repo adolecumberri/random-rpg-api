@@ -57,6 +57,19 @@ let getClassStats = () => {
 	});
 };
 
+//Coger heroe 0,0
+let getRandomHero = () => {
+	return new Promise((resolve, reject) => {
+		let query = `SELECT * FROM hero WHERE id_class = 2 ORDER BY RAND() LIMIT 1;`;
+		connection.query(query, (err, result: ({ id: number; name: string } & IHeroStats)[]) => {
+			if (err) {
+				return reject(err);
+			}
+			resolve(result[0]);
+		});
+	});
+};
+
 let calculateFinalStats = (baseStats: any, classState: any) => {
 	let finalStat: any = {};
 	Object.keys(baseStats).map((a: string | any) => {
@@ -103,4 +116,4 @@ let switchClass = (hero: any) => {
 	return solution as Archer | Berserker | Defender | Fencer | Ninja | Paladin | Sniper | Soldier;
 };
 
-export { getBaseStats, getClassStats, randName, calculateFinalStats, switchClass };
+export { getBaseStats, getClassStats, randName, calculateFinalStats, switchClass, getRandomHero };

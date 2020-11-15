@@ -35,6 +35,8 @@ export class Thieve extends Hero {
 
 	attack: () => number = () => {
 		let damage = super.attack(this.heroEfects.dmg);
+
+		this.calcNextTurn(this.heroEfects.att_interval);
 		return damage;
 	};
 
@@ -43,7 +45,7 @@ export class Thieve extends Hero {
 		let { def: defEffect } = this.heroEfects;
 		let finalDamage = 0;
 
-		if (evasion >= this.getProb()) {
+		if(evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - (def + defEffect) * 0.9)) / 100 - (def + defEffect) * 0.29);
 		} else {
@@ -54,8 +56,8 @@ export class Thieve extends Hero {
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-
 			this.heroDies();
+			enemi.heroKills();
 			console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			if (this.skillUsed) {
@@ -69,9 +71,4 @@ export class Thieve extends Hero {
 			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
 		}
 	};
-
-	calcNextTurn: () => void = () => {
-		super.calcNextTurn(this.heroEfects.att_interval);
-	};
 }
-

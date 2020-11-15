@@ -36,7 +36,7 @@ export class Hero {
 				console.log(`${id}.${name} ${surname}: ${damage}dmg`);
 			}
 		}
-
+		this.calcNextTurn();
 		return damage;
 	};
 
@@ -44,7 +44,7 @@ export class Hero {
 		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
 		let finalDamage = 0;
 
-		if (evasion >= this.getProb()) {
+		if (evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - def * 0.9)) / 100 - def * 0.29);
 		} else {
@@ -52,17 +52,17 @@ export class Hero {
 		}
 
 		this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //
-
+		console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
 			this.heroDies();
+			enemi.heroKills();
 			console.log(`${id}.${name} ${surname} has died`);
-		} else {
-			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
 		}
 	};
 
-	straightDamage: (damage: number) => void = (damage) => {
+	//does hero dies after straightDamage?
+	straightDamage: (damage: number) => boolean = (damage) => {
 		let { id, hp, name, surname } = this.heroStats;
 		this.heroStats.currentHp = this.heroStats.currentHp - damage >= 0 ? this.heroStats.currentHp - damage : 0;
 
@@ -70,22 +70,26 @@ export class Hero {
 			this.isDead = true;
 			this.heroDies();
 			console.log(`${id}.${name} ${surname} has died`);
+			return true;
 		} else {
 			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
+			return false;
 		}
 	};
 
 	//HERO DIES
-	heroDies: () => Promise<unknown> = async () =>
-		new Promise((res, rej) => {
+	heroDies: () => Promise<unknown> = async () => {
+		return new Promise((res, rej) => {
 			connection.query(`UPDATE hero SET deaths = deaths + 1 WHERE id = ${this.heroStats.id}`);
 		});
+	};
 
 	//HERO WINS
-	heroKills: () => Promise<unknown> = async () =>
-		new Promise((res, rej) => {
+	heroKills: () => Promise<unknown> = async () => {
+		return new Promise((res, rej) => {
 			connection.query(`UPDATE hero SET kills = kills + 1 WHERE id = ${this.heroStats.id}`);
 		});
+	};
 
 	//calculo siguiente turno. Habilidades de velocidad lo sobreescribiran.
 	calcNextTurn: (att_intervarEf?: number) => void = (att_intervarEf = 0) => {

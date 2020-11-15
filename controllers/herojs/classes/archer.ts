@@ -31,7 +31,7 @@ export class Archer extends Hero {
 		} else {
 			this.heroEfects.att_interval = 0;
 		}
-
+		this.calcNextTurn(this.heroEfects.att_interval);
 		return damage;
 	};
 }

@@ -3,15 +3,14 @@ import { IHeroStats, IHeroBase, IHeroCreated } from '../interfaces/Hero.Interfac
 
 // DB
 import { connection } from '../config/database';
-import { Fight2 } from './herojs/fight2';
-import { FightAsinchonous } from './herojs/fight';
 
 //common
 
 import { getBaseStats, getClassStats, randName, calculateFinalStats } from '../commonModules/heros';
 import { rand } from '../commonModules/utils';
 import { FieldInfo, MysqlError, queryCallback } from 'mysql';
-import { fight } from './fight.controller';
+import { fight1v1 } from './fight.controller';
+
 
 //Get info when controller is created.
 let basicStats: IHeroStats | any;
@@ -111,7 +110,7 @@ const fight2heros = async (req: Request, res: Response) => {
 	console.log(JSON.stringify(heroes[0]));
 	console.log(JSON.stringify(heroes[1]));
 
-	fight(heroes[0], heroes[1]);
+	fight1v1(heroes[0], heroes[1]);
 
 	res.sendStatus(200);
 };

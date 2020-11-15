@@ -24,11 +24,14 @@ export class Defender extends Hero {
 		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
 		let finalDamage = 0;
 
-		if (evasion >= this.getProb()) {
+		if(evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - def * 0.9)) / 100 - def * 0.29);
 			//if he hits, I use the skill.
-			enemi.straightDamage(this.skill(finalDamage));
+			let enemiDeath = enemi.straightDamage(this.skill(finalDamage));
+			if(enemiDeath){
+				this.heroKills();
+			}
 		} else {
 			console.log(`${id}.${name} ${surname} Evaded the attack`);
 		}
@@ -38,6 +41,7 @@ export class Defender extends Hero {
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
 			this.heroDies();
+			enemi.heroKills();
 			console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);

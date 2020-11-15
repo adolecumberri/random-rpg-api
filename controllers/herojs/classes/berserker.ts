@@ -21,19 +21,20 @@ export class Berserker extends Hero {
 	};
 	skillUsed = false;
 
-	//HIT
 	attack: () => number = () => {
 		let damage = super.attack(this.heroEfects.dmg);
 
+		this.calcNextTurn(this.heroEfects.att_interval);
 		return damage;
 	};
+
 
 	defend: (enemi: AnyHero) => any = (enemi) => {
 		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
 		let { def: defEffect } = this.heroEfects;
 		let finalDamage = 0;
 
-		if (evasion >= this.getProb()) {
+		if(evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - (def + defEffect) * 0.9)) / 100 - (def + defEffect) * 0.29);
 		} else {
@@ -45,6 +46,7 @@ export class Berserker extends Hero {
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
 			this.heroDies();
+			enemi.heroKills();
 			console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			if (this.heroStats.currentHp <= hp * 0.3 && !this.skillUsed) {

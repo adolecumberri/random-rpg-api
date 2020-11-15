@@ -43,7 +43,7 @@ export class Soldier extends Hero {
 		let { def: defEffect } = this.heroEfects;
 		let finalDamage = 0;
 
-		if (evasion >= this.getProb()) {
+		if(evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - (def + defEffect) * 0.9)) / 100 - (def + defEffect) * 0.29);
 		} else {
@@ -55,6 +55,7 @@ export class Soldier extends Hero {
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
 			this.heroDies();
+			enemi.heroKills();
 			console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);

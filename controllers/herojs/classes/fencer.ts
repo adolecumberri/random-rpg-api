@@ -24,7 +24,7 @@ export class Fencer extends Hero {
 		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
 		let finalDamage = 0;
 
-		if (evasion >= this.getProb()) {
+		if(evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - def * 0.9)) / 100 - def * 0.29);
 		} else {
@@ -33,7 +33,10 @@ export class Fencer extends Hero {
 
 		//contrataco. si fallo, recibo el daño.
 		if (this.skillProb > this.getProb()) {
-			enemi.straightDamage(this.skill(finalDamage));
+			let enemiDeath = enemi.straightDamage(this.skill(finalDamage));
+			if(enemiDeath){
+				this.heroKills();
+			}
 		} else {
 			this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //
 		}
@@ -41,6 +44,7 @@ export class Fencer extends Hero {
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
 			this.heroDies();
+			enemi.heroKills();
 			console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
