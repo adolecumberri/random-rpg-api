@@ -77,21 +77,21 @@
       if (id2 == 3 && hitDeffended.skill !== undefined) {
         curHp1 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
         totalDmg2 += hitDeffended.skill; // ------------------Stats
-        // console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
+        // //console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
       }
       // SKILL FENCER
       if (id2 == 4 && hitDeffended.skill !== undefined) {
         curHp1 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
-        // console.log(`${name2} Countered ${name1}`);
+        // //console.log(`${name2} Countered ${name1}`);
         totalDmg2 += hitDeffended.skill; // ------------------Stats
       }
 
       // //REPORT
-      // if (hit.type === "miss") console.log(` ${name1} missed`);
-      // else if (hitDeffended.evaded) console.log(` ${name2} dodged the attack.`);
+      // if (hit.type === "miss") //console.log(` ${name1} missed`);
+      // else if (hitDeffended.evaded) //console.log(` ${name2} dodged the attack.`);
       // else if (hit.type === "crit") {
-      //   console.log(` ${name1} HEAD SHOT! ${hitDeffended.dmg}`);
-      // } else console.log(` ${name1} skill-hit ${hitDeffended.dmg}`);
+      //   //console.log(` ${name1} HEAD SHOT! ${hitDeffended.dmg}`);
+      // } else //console.log(` ${name1} skill-hit ${hitDeffended.dmg}`);
 
       flag1 = end1(curHp1);
       flag2 = end2(curHp2);
@@ -116,22 +116,22 @@
       if (id1 == 3 && hitDeffended.skill !== undefined) {
         //aunque ataca el 2, se hiere el 2 si el 1 es defender
         curHp2 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
-        // console.log(`${name2} hitted by thornmail - ${hitDeffended.skill}`);
+        // //console.log(`${name2} hitted by thornmail - ${hitDeffended.skill}`);
         totalDmg1 += hitDeffended.skill; // ------------------Stats
       }
       // SKILL FENCER
       if (id1 == 4 && hitDeffended.skill !== undefined) {
         curHp2 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
-        // console.log(`${name1} Countered ${name2}`);
+        // //console.log(`${name1} Countered ${name2}`);
         totalDmg1 += hitDeffended.skill; // ------------------Stats
       }
 
       // //REPORT
-      // if (hit.type === "miss") console.log(` ${name2} missed`);
-      // else if (hitDeffended.evaded) console.log(` ${name1} dodged the attack.`);
+      // if (hit.type === "miss") //console.log(` ${name2} missed`);
+      // else if (hitDeffended.evaded) //console.log(` ${name1} dodged the attack.`);
       // else if (hit.type === "crit") {
-      //   console.log(` ${name2} HEAD SHOT! ${hitDeffended.dmg}`);
-      // } else console.log(` ${name2} skill-hit ${hitDeffended.dmg}`);
+      //   //console.log(` ${name2} HEAD SHOT! ${hitDeffended.dmg}`);
+      // } else //console.log(` ${name2} skill-hit ${hitDeffended.dmg}`);
 
       flag1 = end1(curHp1);
       flag2 = end2(curHp2);
@@ -156,13 +156,13 @@
         //SKILL DEFENDER
         if (id2 == 3 && hitDeffended.skill !== undefined) {
           curHp1 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
-          // console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
+          // //console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
           totalDmg2 += hitDeffended.skill; // ------------------Stats
         }
         // SKILL FENCER
         if (id2 == 4 && hitDeffended.skill !== undefined) {
           curHp1 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
-          // console.log(`${name2} Countered ${name1}`);
+          // //console.log(`${name2} Countered ${name1}`);
           totalDmg2 += hitDeffended.skill; // ------------------Stats
         }
 
@@ -196,13 +196,13 @@
         if (id1 == 3 && hitDeffended.skill !== undefined) {
           //aunque ataca el 2, se hiere el 2 si el 1 es defender
           curHp2 -= hitDeffended.skill; //al pj 1 se hiere al atacar un Defencer
-          // console.log(`${name2} hitted by thornmail - ${hitDeffended.skill}`);
+          // //console.log(`${name2} hitted by thornmail - ${hitDeffended.skill}`);
           totalDmg1 += hitDeffended.skill; // ------------------Stats
         }
         // SKILL FENCER
         if (id1 == 4 && hitDeffended.skill !== undefined) {
           curHp2 -= hitDeffended.skill; //al pj 1 lo han hecho counter.
-          // console.log(`${name1} Countered ${name2}`);
+          // //console.log(`${name1} Countered ${name2}`);
           totalDmg1 += hitDeffended.skill; // ------------------Stats
         }
 
@@ -222,13 +222,13 @@
     if (flag1 && flag2) {
       //SI EMPATE, NADA.
       //ambos muertos
-      // console.log(`${name1}, Y ${name2} han empatado`);
+      // //console.log(`${name1}, Y ${name2} han empatado`);
       // heroWins1(); //PIERDEN AMBOS PERO LES SUMO KILL
       // heroWins2(); //PIERDEN AMBOS PERO LES SUMO KILL
     } else {
       if (flag1) {
         //muerto heroe 1
-        // console.log(
+        // //console.log(
         //   `${name1}, ${getClass(
         //     id1,
         //     gender1
@@ -241,7 +241,7 @@
       } else {
         if (flag2) {
           //muerto heroe 2
-          // console.log(
+          // //console.log(
           //   `${name2}, ${getClass(
           //     id1,
           //     gender1

@@ -26,19 +26,19 @@ export async function asignCrewsToHero(req: Request, res: Response) {
 		let query = `UPDATE hero
 		SET id_crew = ${index}
 		WHERE surname like "${apellido}" AND gender = 1;`;
-		console.log(query);
+		//console.log(query);
 		promises.push(
 			connection.query(query, () => {
-				console.log('inserted i');
+				//console.log('inserted i');
 			})
 		);
 		let query2 = `UPDATE hero
 		SET id_crew = ${index + 153}
 		WHERE surname like "${apellido}" AND gender = 0;`;
-		console.log(query2);
+		//console.log(query2);
 		promises.push(
 			connection.query(query2, () => {
-				console.log('inserted i');
+				//console.log('inserted i');
 			})
 		);
 	});

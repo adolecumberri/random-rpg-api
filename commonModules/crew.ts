@@ -20,7 +20,7 @@ let createCrews = (crews: string[]) => {
 			if (err) {
 				rej(err);
 			}
-			console.log(result.insertId);
+			//console.log(result.insertId);
 		});
 	});
 };
@@ -62,7 +62,7 @@ let getSelectedCrew = (ids: number[]) => {
 	WHERE `;
 
 	ids.forEach((id, i) => {
-		console.log('i: ' + i);
+		//console.log('i: ' + i);
 		if (i === 0) {
 			query += ` id = ${id}`;
 		} else {

@@ -17,7 +17,7 @@ export class Paladin extends Hero {
 	//BLESSING -- se usa fuera
 	skillProb: number = 0.23;
 	skill: () => void = () => {
-		// console.log(`${this.heroStats.name} was Blessed`);
+		// //console.log(`${this.heroStats.name} was Blessed`);
 		this.heroStats.currentHp = this.rand(this.heroStats.hp * 0.3, this.heroStats.hp * 0.4);
 	};
 	skillUsed = false;

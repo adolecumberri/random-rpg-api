@@ -33,7 +33,7 @@ let ranHero: IHeroBase & IHeroStats;
 
 //Crear heroe
 let createHero = () => {
-	// console.time('createHero');
+	// //console.time('createHero');
 	let id_class = rand(0, classStats.length - 1); //ES EL INDICE -> el valor es id_class + 1
 	let choosedClassStats = classStats[id_class];
 	let currGender = rand(0, 1);
@@ -49,14 +49,14 @@ let createHero = () => {
 	randHero['currentHp'] = randHero.hp;
 	randHero['dmg'] = Math.round(randHero['dmg']);
 	randHero['def'] = Math.round(randHero['def']);
-	console.log(`Random Hero: \n ${JSON.stringify(randHero.name)}`);
-	// console.timeEnd('createHero');
+	//console.log(`Random Hero: \n ${JSON.stringify(randHero.name)}`);
+	// //console.timeEnd('createHero');
 	return randHero as IHeroCreated;
 };
 
 //param :numberToCreate : number
 let createHeros = async (req: Request, res: Response) => {
-	console.time('createHero2');
+	//console.time('createHero2');
 
 	//Carga de estadisticas
 	basicStats = await getBaseStats();
@@ -72,16 +72,16 @@ let createHeros = async (req: Request, res: Response) => {
 	Si quiero hacer algo despues, puedo hacer
 	Promise.all(promises).then(Codigo para despues.)
 	*/
-	console.timeEnd('createHero2');
+	//console.timeEnd('createHero2');
 	res.send('Antes aquí se creaban Heroes');
 };
 
 let saveHero = (hero: any) => {
-	// console.time('saveHeros');
+	// //console.time('saveHeros');
 	connection.query('INSERT INTO hero SET ?', [hero], (err: MysqlError | null, result: any) => {
-		console.log(result.insertId);
+		//console.log(result.insertId);
 	});
-	// console.timeEnd('saveHeros');
+	// //console.timeEnd('saveHeros');
 };
 
 // const getHeroes = (num: number, callback: any) => {
@@ -92,13 +92,13 @@ let saveHero = (hero: any) => {
 
 const getHeroesTricky = () => {
 	let query = `SELECT * FROM hero WHERE id = 143 OR id = 144;`;
-	console.log(query);
+	//console.log(query);
 	return new Promise((res, rej) => {
 		connection.query(query, (err, result: IHeroStats[]) => {
 			if (err) {
 				return rej(err);
 			}
-			console.log(result);
+			//console.log(result);
 			res(result);
 		});
 	});
@@ -106,9 +106,9 @@ const getHeroesTricky = () => {
 
 const fight2heros = async (req: Request, res: Response) => {
 	let heroes: any = await getHeroesTricky();
-	console.log('my heroes:');
-	console.log(JSON.stringify(heroes[0]));
-	console.log(JSON.stringify(heroes[1]));
+	//console.log('my heroes:');
+	//console.log(JSON.stringify(heroes[0]));
+	//console.log(JSON.stringify(heroes[1]));
 
 	fight1v1(heroes[0], heroes[1]);
 

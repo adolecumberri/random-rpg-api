@@ -70,6 +70,30 @@ let getRandomHero = () => {
 	});
 };
 
+let getHeroById = (id:number) => {
+	return new Promise((resolve, reject) => {
+		let query = `SELECT * FROM hero WHERE id = ${id};`;
+		connection.query(query, (err, result: ({ id: number; name: string } & IHeroStats)[]) => {
+			if (err) {
+				return reject(err);
+			}
+			resolve(result[0]);
+		});
+	});
+}
+
+let getRandomHeroByClass = (id_class :number) => {
+	return new Promise((resolve, reject) => {
+		let query = `SELECT * FROM hero WHERE id_class = ${id_class} ORDER BY RAND() LIMIT 1;`;
+		connection.query(query, (err, result: ({ id: number; name: string } & IHeroStats)[]) => {
+			if (err) {
+				return reject(err);
+			}
+			resolve(result[0]);
+		});
+	});
+}
+
 let calculateFinalStats = (baseStats: any, classState: any) => {
 	let finalStat: any = {};
 	Object.keys(baseStats).map((a: string | any) => {
@@ -116,4 +140,4 @@ let switchClass = (hero: any) => {
 	return solution as Archer | Berserker | Defender | Fencer | Ninja | Paladin | Sniper | Soldier;
 };
 
-export { getBaseStats, getClassStats, randName, calculateFinalStats, switchClass, getRandomHero };
+export { getBaseStats, getClassStats, getRandomHeroByClass, randName, calculateFinalStats, switchClass, getRandomHero, getHeroById };

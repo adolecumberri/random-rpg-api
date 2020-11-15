@@ -21,7 +21,7 @@ export async function getUsers(
 // receive just his name
 export async function addUser({ body }: Request, res: Response) {
   const newUser: User = body;
-  console.log(newUser);
+  //console.log(newUser);
   await connection.query("INSERT INTO users SET ?", [newUser], (_, result) =>
     res.json({
       message: result === undefined ? "Name too long" : "New User Created"
@@ -80,7 +80,7 @@ export async function addBookToUser({ params }: Request, res: Response) {
     "INSERT INTO users_books SET ?",
     [params],
     (_, result) => {
-      console.log(result);
+      //console.log(result);
       res.json({
         message:
           result === undefined

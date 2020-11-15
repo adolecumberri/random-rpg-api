@@ -22,41 +22,54 @@ export class Berserker extends Hero {
 	skillUsed = false;
 
 	attack: () => number = () => {
-		let damage = super.attack(this.heroEfects.dmg);
+		let { id, name, surname, accuracy, crit, critDmg, dmg } = this.heroStats;
+		let { dmg: dmgEf } = this.heroEfects;
+		let damage = 0;
+
+		if (accuracy > this.getProb()) {
+			//golpeo?
+			if (crit > this.getProb()) {
+				//critico
+				damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.85, (dmg + dmgEf) * (critDmg + 1) * 1.15);
+				//console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
+			} else {
+				damage = this.rand((dmg + dmgEf) * 0.85, (dmg + dmgEf) * 1.15);
+				//console.log(`${id}.${name} ${surname}: ${damage}dmg`);
+			}
+		}
 
 		this.calcNextTurn(this.heroEfects.att_interval);
 		return damage;
 	};
 
-
-	defend: (enemi: AnyHero) => any = (enemi) => {
+	defend: (enemi: AnyHero) => any = async (enemi) => {
 		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
 		let { def: defEffect } = this.heroEfects;
 		let finalDamage = 0;
 
-		if(evasion <= this.getProb()) {
+		if (evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - (def + defEffect) * 0.9)) / 100 - (def + defEffect) * 0.29);
 		} else {
-			console.log(`${id}.${name} ${surname} Evaded the attack`);
+			enemi.calcNextTurn(enemi.heroEfects.att_interval);
+			//console.log(`${id}.${name} ${surname} Evaded the attack`);
 		}
 
 		this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			this.heroDies();
-			enemi.heroKills();
-			console.log(`${id}.${name} ${surname} has died`);
+			await this.heroDies();
+			await enemi.heroKills();
+			//console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			if (this.heroStats.currentHp <= hp * 0.3 && !this.skillUsed) {
-				// console.log(this.heroStats.name + " used RAGE");
+				// //console.log(this.heroStats.name + " used RAGE");
 				this.skill();
 				this.skillUsed = true;
 			}
 
-			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
+			//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
 		}
 	};
-
 }

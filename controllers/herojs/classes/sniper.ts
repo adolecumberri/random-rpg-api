@@ -29,10 +29,10 @@ export class Sniper extends Hero {
 				if (crit > this.getProb()) {
 					//critico
 					damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.95, (dmg + dmgEf) * (critDmg + 1) * 1.15);
-					console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
+					//console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
 				} else {
 					damage = this.rand((dmg + dmgEf) * 0.95, (dmg + dmgEf) * 1.15);
-					console.log(`${id}.${name} ${surname}: ${damage}dmg`);
+					//console.log(`${id}.${name} ${surname}: ${damage}dmg`);
 				}
 			}
 			this.skillUsed = false; //Apago la skill
@@ -42,10 +42,10 @@ export class Sniper extends Hero {
 				if (crit > this.getProb()) {
 					//critico
 					damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.85, (dmg + dmgEf) * (critDmg + 1) * 1.15);
-					console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
+					//console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
 				} else {
 					damage = this.rand((dmg + dmgEf) * 0.85, (dmg + dmgEf) * 1.15);
-					console.log(`${id}.${name} ${surname}: ${damage}dmg`);
+					//console.log(`${id}.${name} ${surname}: ${damage}dmg`);
 				}
 			}
 			this.calcNextTurn();

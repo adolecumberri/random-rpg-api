@@ -22,16 +22,32 @@ export class Archer extends Hero {
 
 	//HIT
 	attack: () => number = () => {
-		let damage = super.attack(); //ataque normal.
+		let { id, name, surname, accuracy, crit, critDmg, dmg } = this.heroStats;
+		let { dmg: dmgEf } = this.heroEfects;
+		let damage = 0;
+
+		if (accuracy > this.getProb()) {
+			//golpeo?
+			if (crit > this.getProb()) {
+				//critico
+				damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.85, (dmg + dmgEf) * (critDmg + 1) * 1.15);
+				//console.log(`${id}.${name} ${surname}: ${damage}dmg! 8`);
+			} else {
+				damage = this.rand((dmg + dmgEf) * 0.85, (dmg + dmgEf) * 1.15);
+				//console.log(`${id}.${name} ${surname}: ${damage}dmg 9`);
+			}
+		}
 
 		//archer Skill
 		if (this.skillProb > this.getProb()) {
-			// console.log(this.heroStats.name + " used Haste");
+			//console.log(this.heroStats.name + " used Haste 10");
 			this.skill();
 		} else {
 			this.heroEfects.att_interval = 0;
 		}
+		//console.log(`${this.heroStats.id} --- ${this.heroStats.curr_att_interval}`);
 		this.calcNextTurn(this.heroEfects.att_interval);
+		//console.log(`${this.heroStats.id} --- ${this.heroStats.curr_att_interval}`);
 		return damage;
 	};
 }

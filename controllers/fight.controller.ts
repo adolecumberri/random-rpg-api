@@ -1,32 +1,52 @@
 import { Request, Response, NextFunction } from 'express';
-import { getRandomHero, switchClass } from '../commonModules/heros';
+import { getHeroById, getRandomHero, getRandomHeroByClass, switchClass } from '../commonModules/heros';
+import { pvp } from './herojs/fight';
 
 export async function fight1v1({ params }: Request, res: Response) {
-	//carga de la clase de cada heroe
+	let { id1, id2 } = params;
+	let hero1 = switchClass(await getHeroById(Number(id1)));
+	let hero2 = switchClass(await getHeroById(Number(id2)));
+
+	pvp(hero1, hero2);
+
+	res.sendStatus(200);
+}
+
+export async function fight1v1Random({ params }: Request, res: Response) {
 	let hero1 = switchClass(await getRandomHero());
 	let hero2 = switchClass(await getRandomHero());
 
-	if (hero1.heroStats.id_class === 7) {
-		hero2.defend(hero1);
-	}
-	if (hero2.heroStats.id_class === 7) {
-		hero1.defend(hero2);
+	pvp(hero1, hero2);
+
+	res.sendStatus(200);
+}
+
+export async function fight1v1Recursive({ params }: Request, res: Response) {
+	let { id1, id2, times } = params;
+	let hero1 = switchClass(await getHeroById(Number(id1)));
+	let hero2 = switchClass(await getHeroById(Number(id2)));
+
+	for (let i = 0; i < Number(times); i++) {
+		await pvp(hero1, hero2);
+		hero1 = switchClass(await getHeroById(Number(id1)));
+		hero2 = switchClass(await getHeroById(Number(id2)));
 	}
 
-	for (let i = 0; !hero1.isDead && !hero1.isDead && i < 1000; i++) {
-		if (hero1.heroStats.curr_att_interval === i) {
-			//ataca hero1
-			hero2.defend(hero1);
-		}
-		if (hero2.heroStats.curr_att_interval === i) {
-			//ataca hero2
-			hero1.defend(hero2);
-		}
-	}
+	res.sendStatus(200);
+}
 
-	//Guardar en la base de datos
-	if (hero1.isDead || hero1.isDead) {
-		//	saveSingleFight(fightStats, hero1, hero2);
+export async function fightToGenerateStats({ params }: Request, res: Response) {
+	let { id1 } = params;
+	let hero1 = switchClass(await getRandomHeroByClass(Number(id1)));
+	let hero2 = switchClass(await getRandomHeroByClass(1));
+
+	for (let i = 1; i <= 9; i++) {
+		for (let j = 1; j < 1001; j++) {
+			await pvp(hero1, hero2);
+			hero1 = switchClass(await getRandomHeroByClass(Number(id1)));
+			hero2 = switchClass(await getRandomHeroByClass(i));
+			console.log(j);
+		}
 	}
 
 	res.sendStatus(200);

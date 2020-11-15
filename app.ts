@@ -24,7 +24,7 @@ export class App {
 	//     }
 	//     // Listen for dying threads
 	//     cluster.on("exit", function(thread) {
-	//       console.log(`Thread ${ thread.id } died `);
+	//       //console.log(`Thread ${ thread.id } died `);
 	//       cluster.fork();
 	//     });
 	//   } else {

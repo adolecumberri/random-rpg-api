@@ -49,15 +49,15 @@ export class Ninja extends Hero {
 				if (crit > this.getProb()) {
 					//critico
 					damage = this.rand(dmg * (critDmg + 1) * 0.85, dmg * (critDmg + 1) * 1.15);
-					console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
+					//console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
 				} else {
 					damage = this.rand(dmg * 0.85, dmg * 1.15);
-					console.log(`${id}.${name} ${surname}: ${damage}dmg`);
+					//console.log(`${id}.${name} ${surname}: ${damage}dmg`);
 				}
 			}
 		}
 
-		console.log(`${id}.${name} ${surname} did ${damage} `);
+		//console.log(`${id}.${name} ${surname} did ${damage} `);
 		this.calcNextTurn();
 		return damage;
 	};

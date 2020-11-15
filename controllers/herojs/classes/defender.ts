@@ -20,31 +20,40 @@ export class Defender extends Hero {
 	skillUsed = false;
 
 	//CALC DAMAGE AFTER BLOCKING
-	defend: (enemi: AnyHero) => any = (enemi) => {
+	defend: (enemi: AnyHero) => any = async (enemi) => {
 		let { id, hp, currentHp, name, surname, def, evasion } = this.heroStats;
 		let finalDamage = 0;
 
-		if(evasion <= this.getProb()) {
+		if (evasion <= this.getProb()) {
 			//Evade o no.
-			finalDamage = Math.floor((enemi.attack() * (100 - def * 0.9)) / 100 - def * 0.29);
+			let enemiAttack = enemi.attack();
+
+			finalDamage = Math.floor((enemiAttack * (100 - def * 0.9)) / 100 - def * 0.29);
+
+			let enemiDeath = false;
+
 			//if he hits, I use the skill.
-			let enemiDeath = enemi.straightDamage(this.skill(finalDamage));
-			if(enemiDeath){
-				this.heroKills();
+			let skillDmg = this.skill(finalDamage);
+			//console.log(`${id}.${name} ${surname}: skill dmg = ${skillDmg}`);
+			enemiDeath = await enemi.straightDamage(skillDmg);
+
+			if (enemiDeath) {
+				await this.heroKills();
 			}
 		} else {
-			console.log(`${id}.${name} ${surname} Evaded the attack`);
+			enemi.calcNextTurn(enemi.heroEfects.att_interval);
+			//console.log(`${id}.${name} ${surname} Evaded the attack`);
 		}
 
 		this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			this.heroDies();
-			enemi.heroKills();
-			console.log(`${id}.${name} ${surname} has died`);
+			await this.heroDies();
+			await enemi.heroKills();
+			//console.log(`${id}.${name} ${surname} has died`);
 		} else {
-			console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
+			//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
 		}
 	};
 }

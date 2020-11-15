@@ -54,7 +54,7 @@ const beginning: IBeginFight = (attacante, defensor, flag1, flag2) => {
 	if ((idD == 3 || idD == 4) && hitDeffended.skill !== undefined) {
 		setHpA = setHpA(curHpA - hitDeffended.skill); //al pj 1 se hiere al atacar un Defencer
 		totalDmgD += hitDeffended.skill; // ------------------Stats
-		// console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
+		// //console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
 	}
 
 	//Al final del turno
@@ -107,7 +107,7 @@ const turnSingleFight: ITurnSingleFight = (attacante, defensor, flag1, flag2) =>
 	//SKILL DEFENDER
 	if ((idD == 3 || idD == 4) && hitDeffended.skill !== undefined) {
 		setHpA = setHpA(curHpA - hitDeffended.skill); //al pj 1 se hiere al atacar un Defencer
-		// console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
+		// //console.log(`${name1} hitted by thornmail - ${hitDeffended.skill}`);
 		totalDmgD += hitDeffended.skill; // ------------------Stats
 	}
 

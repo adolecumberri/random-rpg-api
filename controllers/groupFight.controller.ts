@@ -47,7 +47,7 @@ export async function randomGroupFight({ params }: Request, res: Response) {
 
 	//Group Fight.
 	crew1.heros.forEach((hero) => {
-		console.log(hero.heroStats.id + ': ' + hero.heroStats.name + ' --- ' + hero.heroStats.att_interval);
+		//console.log(hero.heroStats.id + ': ' + hero.heroStats.name + ' --- ' + hero.heroStats.att_interval);
 	});
 
 	let att_counters = crew1.heros.map((hero) => {
@@ -55,7 +55,7 @@ export async function randomGroupFight({ params }: Request, res: Response) {
 	});
 
 	let iterations = 0;
-	console.time('f');
+	//console.time('f');
 
 	let generalFightStats = {
 		muertos: [], //{id_muerto, id_asesino, turno}
@@ -126,14 +126,14 @@ export async function randomGroupFight({ params }: Request, res: Response) {
 		deffenders2 = [];
 	}
 
-	console.timeEnd('f');
-	console.log('iterations: ' + iterations);
+	//console.timeEnd('f');
+	//console.log('iterations: ' + iterations);
 	att_counters.forEach((hero) => {
-		console.log(hero.id + ' --- ' + hero.attacks);
+		//console.log(hero.id + ' --- ' + hero.attacks);
 	});
 
 	// crew2.forEach( (hero) => {
-	// 	console.log(hero.id + ": " + hero.name + " --- " + hero.att_interval);
+	// 	//console.log(hero.id + ": " + hero.name + " --- " + hero.att_interval);
 	// })
 
 	res.send(flag);
