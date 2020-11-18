@@ -13,18 +13,17 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 	for (let i = 0; !hero1.isDead && !hero2.isDead; i++) {
 		if (hero1.heroStats.curr_att_interval === i) {
 			//ataca hero1
-			//console.log(`${hero1.heroStats.id} attack`);
 			await hero2.defend(hero1);
 		}
 		if (hero2.heroStats.curr_att_interval === i) {
 			//ataca hero2
-			//console.log(`${hero2.heroStats.id} attack`);
 			await hero1.defend(hero2);
 		}
 	}
 
 	//Guardar en la base de datos
 	if (hero1.isDead || hero2.isDead) {
+		// console.log("FINISHED!");
 		//	saveSingleFight(fightStats, hero1, hero2);
 	}
 };

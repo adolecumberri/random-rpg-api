@@ -16,7 +16,7 @@ export class Archer extends Hero {
 	//Haste
 	skillProb = 0.33;
 	skill: () => void = () => {
-		this.heroEfects.att_interval = -5;
+		this.heroEfects.att_interval = -2;
 	};
 	skillUsed = null;
 
@@ -31,23 +31,18 @@ export class Archer extends Hero {
 			if (crit > this.getProb()) {
 				//critico
 				damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.85, (dmg + dmgEf) * (critDmg + 1) * 1.15);
-				//console.log(`${id}.${name} ${surname}: ${damage}dmg! 8`);
 			} else {
 				damage = this.rand((dmg + dmgEf) * 0.85, (dmg + dmgEf) * 1.15);
-				//console.log(`${id}.${name} ${surname}: ${damage}dmg 9`);
 			}
 		}
 
 		//archer Skill
 		if (this.skillProb > this.getProb()) {
-			//console.log(this.heroStats.name + " used Haste 10");
 			this.skill();
 		} else {
 			this.heroEfects.att_interval = 0;
 		}
-		//console.log(`${this.heroStats.id} --- ${this.heroStats.curr_att_interval}`);
 		this.calcNextTurn(this.heroEfects.att_interval);
-		//console.log(`${this.heroStats.id} --- ${this.heroStats.curr_att_interval}`);
 		return damage;
 	};
 }

@@ -6,6 +6,7 @@
  */
 
 import { connection } from '../../config/database';
+import { IFightStats } from '../../interfaces/Figth.interface';
 import { IHero } from '../../interfaces/Hero.Interface';
 import { AnyHero } from './classes';
 
@@ -13,7 +14,7 @@ export class Hero {
 	constructor(data: IHero) {
 		this.heroStats = { ...data, curr_att_interval: data.att_interval };
 	}
-
+	// fightStats: IFightStats
 	heroStats: IHero;
 	isDead = false;
 
@@ -30,10 +31,8 @@ export class Hero {
 			if (crit > this.getProb()) {
 				//critico
 				damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.85, (dmg + dmgEf) * (critDmg + 1) * 1.15);
-				//console.log(`${id}.${name} ${surname}: ${damage}dmg!`);
 			} else {
 				damage = this.rand((dmg + dmgEf) * 0.85, (dmg + dmgEf) * 1.15);
-				//console.log(`${id}.${name} ${surname}: ${damage}dmg`);
 			}
 		}
 		this.calcNextTurn();
@@ -47,24 +46,16 @@ export class Hero {
 		if (evasion <= this.getProb()) {
 			//Evade o no.
 			let enemiAttack = enemi.attack();
-			// console.log(`${enemi.heroStats.id} does ${enemiAttack}dmg`);
 			finalDamage = Math.floor((enemiAttack * (100 - def * 0.9)) / 100 - def * 0.29);
-
-			// console.log(`${this.heroStats.id} received ${finalDamage}dmg`);
 		} else {
-			// console.log(`${enemi.heroStats.id} --- ${enemi.heroStats.curr_att_interval}`);
 			enemi.calcNextTurn(enemi.heroEfects.att_interval);
-			// console.log(`${enemi.heroStats.id} --- ${enemi.heroStats.curr_att_interval}`);
-			// console.log(`${id}.${name} ${surname} Evaded the attack 4`);
 		}
 
 		this.heroStats.currentHp = currentHp - finalDamage >= 0 ? currentHp - finalDamage : 0; //
-		// console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp} 7`);
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
 			await this.heroDies();
 			await enemi.heroKills();
-			// console.log(`${id}.${name} ${surname} has died 3`);
 		}
 	};
 
@@ -75,12 +66,9 @@ export class Hero {
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			// console.log(`${id}.${name} ${surname} has died 2`);
-
 			await this.heroDies();
 			return true;
 		} else {
-			// console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp} 1`);
 			return false;
 		}
 	};
@@ -88,21 +76,34 @@ export class Hero {
 	//HERO DIES
 	heroDies: () => Promise<unknown> = async () => {
 		// console.log('entro en muerte');
-		connection.query(`UPDATE hero SET deaths = deaths + 1 WHERE id = ${this.heroStats.id}`);
+		// if (this.heroStats.id_class === 2) {
+		// 	console.log('Berserk dies');
+		// } else {
+		// 	console.log('Archer dies');
+		// }
+		await new Promise((resolve, reject) => {
+			connection.query(`UPDATE hero SET deaths = deaths + 1 WHERE id = ${this.heroStats.id}`, (err, result) =>
+				resolve(true)
+			);
+		});
 	};
 
 	//HERO WINS
 	heroKills: () => Promise<unknown> = async () => {
+		// if (this.heroStats.id_class === 2) {
+		// 	console.log('Berserk kills');
+		// } else {
+		// 	console.log('Archer kills');
+		// }
 		// console.log('entro en victoria');
-		connection.query(`UPDATE hero SET kills = kills + 1 WHERE id = ${this.heroStats.id}`);
+		await new Promise((resolve, reject) => {
+			connection.query(`UPDATE hero SET kills = kills + 1 WHERE id = ${this.heroStats.id}`, (err, result) =>
+				resolve(true)
+			);
+		});
 	};
 
 	//calculo siguiente turno. Habilidades de velocidad lo sobreescribiran.
-	calcNextTurn2: (att_intervarEf?: number) => void = (att_intervarEf = 0) => {
-		this.heroStats.curr_att_interval =
-			(this.heroStats.curr_att_interval as number) + (this.heroStats.att_interval + att_intervarEf);
-	};
-
 	calcNextTurn: (att_intervalEf?: number) => void = (att_intervalEf = 0) => {
 		let { curr_att_interval, att_interval } = this.heroStats;
 		let new_att_interval = (curr_att_interval as number) + (att_interval + att_intervalEf);

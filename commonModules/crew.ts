@@ -38,6 +38,19 @@ let getCrewByCrewId = (id_crew: number) => {
 	});
 };
 
+let getCrewByClassId = (id_class: number, howMany: number) => {
+	let query = `SELECT * FROM hero WHERE id_class = ${id_class} LIMIT ${howMany};`;
+
+	return new Promise<IHero[]>((res, rej) => {
+		connection.query(query, (err, result: IHero[]) => {
+			if (err) {
+				rej(err);
+			}
+			res(result);
+		});
+	});
+};
+
 let getRandomCrew = (soldiersNumber: number) => {
 	let query = `SELECT * FROM hero
 	ORDER BY RAND()
@@ -85,4 +98,4 @@ let getSelectedCrew = (ids: number[]) => {
 	});
 };
 
-export { createCrews, getCrewByCrewId, getRandomCrew, getSelectedCrew };
+export { createCrews, getCrewByCrewId, getRandomCrew, getSelectedCrew, getCrewByClassId };

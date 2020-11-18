@@ -39,16 +39,15 @@ export class Fencer extends Hero {
 				this.heroKills();
 			}
 		} else {
-			this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //
-		}
-
-		if (this.heroStats.currentHp === 0) {
-			this.isDead = true;
-			await this.heroDies();
-			await enemi.heroKills();
-			//console.log(`${id}.${name} ${surname} has died`);
-		} else {
-			//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
+			this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //ç
+			if (this.heroStats.currentHp === 0) {
+				this.isDead = true;
+				await this.heroDies();
+				await enemi.heroKills();
+				//console.log(`${id}.${name} ${surname} has died`);
+			} else {
+				//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
+			}
 		}
 	};
 }
