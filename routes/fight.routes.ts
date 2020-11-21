@@ -6,6 +6,8 @@ import {
 	fight1v1Recursive,
 	fightToGenerateStats,
 	fightToGenerateStatsWithGroups,
+	fightToGenerateStatsWithAllGroups,
+	fight1v1ByClassId,
 } from '../controllers/fight.controller';
 
 const router = Router();
@@ -13,10 +15,11 @@ const router = Router();
 router.route('/random/:groupSize').get(randomGroupFight);
 
 router.route('/1v1/random').get(fight1v1Random);
+router.route('/1v1/byClass/:id1/:id2').get(fight1v1ByClassId);
 
 router.route('/1v1/:id1/:id2').get(fight1v1);
 router.route('/1v1/recursive/:id1/:id2/:times').get(fight1v1Recursive);
 
+router.route('/loadstats/:id1/:howmany').get(fightToGenerateStatsWithAllGroups);
 router.route('/loadstats/:id1/:id2/:howmany').get(fightToGenerateStatsWithGroups);
-
 export default router;
