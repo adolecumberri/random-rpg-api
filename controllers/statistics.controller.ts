@@ -18,7 +18,6 @@ const classes: string[] = [
 export function getHeroStats(req: Request, res: Response) {
   for (let i = 1; i <= 9; i++) {
     getStatsByClassId(i, (fullMsg: any) => {
-      //console.log(fullMsg);
     });
   }
 

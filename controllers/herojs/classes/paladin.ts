@@ -47,7 +47,6 @@ export class Paladin extends Hero {
 	};
 
 	end: () => void = () => {
-		console.log("me curo");
 		if (this.heroStats.currentHp < this.heroStats.hp * 0.6 && this.skillProb > this.getProb()) {
 			this.skill();
 		}

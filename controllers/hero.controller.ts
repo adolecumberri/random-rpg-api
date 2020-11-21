@@ -68,37 +68,23 @@ let createHeros = async (req: Request, res: Response) => {
 		promises.push(saveHero(createHero()));
 	}
 	Promise.all(promises);
-	/*
-	Si quiero hacer algo despues, puedo hacer
-	Promise.all(promises).then(Codigo para despues.)
-	*/
-	//console.timeEnd('createHero2');
 	res.send('Antes aquí se creaban Heroes');
 };
 
 let saveHero = (hero: any) => {
-	// //console.time('saveHeros');
 	connection.query('INSERT INTO hero SET ?', [hero], (err: MysqlError | null, result: any) => {
 		//console.log(result.insertId);
 	});
-	// //console.timeEnd('saveHeros');
 };
 
-// const getHeroes = (num: number, callback: any) => {
-// 	connection.query(`SELECT * FROM hero WHERE isAlive = 1 AND kills = 0 ORDER BY RAND() LIMIT ${num}`, (err, result) => {
-// 		callback(result);
-// 	});
-// };
 
 const getHeroesTricky = () => {
 	let query = `SELECT * FROM hero WHERE id = 143 OR id = 144;`;
-	//console.log(query);
 	return new Promise((res, rej) => {
 		connection.query(query, (err, result: IHeroStats[]) => {
 			if (err) {
 				return rej(err);
 			}
-			//console.log(result);
 			res(result);
 		});
 	});
@@ -106,9 +92,6 @@ const getHeroesTricky = () => {
 
 const fight2heros = async (req: Request, res: Response) => {
 	let heroes: any = await getHeroesTricky();
-	//console.log('my heroes:');
-	//console.log(JSON.stringify(heroes[0]));
-	//console.log(JSON.stringify(heroes[1]));
 
 	fight1v1(heroes[0], heroes[1]);
 
@@ -116,28 +99,3 @@ const fight2heros = async (req: Request, res: Response) => {
 };
 
 export { createHeros, fight2heros };
-// export function fightAsinc(req: Request, res: Response) {
-
-//   for(let i = 0; i < 3000; i++){
-//     getHeroes(2, (heroes: any[]) => {
-//       let fight = new FightAsinchonous(heroes[0], heroes[1]);
-//       fight.fight();
-//      });
-//   }
-
-//   res.send("La movida");
-// }
-
-// /* --------------- HEROES FIGHT ----------- */
-// const getHeroes = (num: number, callback: any) => {
-//   connection.query(
-//     `SELECT * FROM hero WHERE isAlive = 1 AND kills = 0 ORDER BY RAND() LIMIT ${num}`,
-//     (err, result) => {
-//       callback(result);
-//     }
-//   );
-// };
-
-// let saveHero = (hero: any) => {
-//   connection.query("INSERT INTO hero SET ?", [hero]);
-// };

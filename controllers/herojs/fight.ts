@@ -25,7 +25,5 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 
 	//Guardar en la base de datos
 	if (hero1.isDead || hero2.isDead) {
-		// console.log("FINISHED!");
-		//	saveSingleFight(fightStats, hero1, hero2);
 	}
 };

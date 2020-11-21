@@ -17,7 +17,9 @@ export class Fencer extends Hero {
 
 	//Counter
 	skillProb: number = 0.22;
-	skill: any = (damage: number) => {console.log("skill used"); return this.rand(damage * 0.85, damage * 1.15); }//Sutil nerfeo aquí.
+	skill: any = (damage: number) => {
+		return this.rand(damage * 0.85, damage * 1.15);
+	}; //Sutil nerfeo aquí.
 	skillUsed = false;
 
 	defend: (enemi: AnyHero) => any = async (enemi) => {
@@ -34,7 +36,7 @@ export class Fencer extends Hero {
 
 		//contrataco. si fallo, recibo el daño.
 		if (this.skillProb > this.getProb()) {
-			let enemiDeath = enemi.straightDamage(this.skill(finalDamage));
+			let enemiDeath = await enemi.straightDamage(this.skill(finalDamage));
 			if (enemiDeath) {
 				this.heroKills();
 			}

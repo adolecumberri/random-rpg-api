@@ -59,7 +59,6 @@ export async function fightToGenerateStats({ params }: Request, res: Response) {
 			await pvp(hero1, hero2);
 			hero1 = switchClass(await getRandomHeroByClass(Number(id1)));
 			hero2 = switchClass(await getRandomHeroByClass(i));
-			console.log(j);
 		}
 	}
 
