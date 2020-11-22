@@ -51,8 +51,12 @@ let getCrewByClassId = (id_class: number, howMany: number) => {
 	});
 };
 
-let getRandomCrew = (soldiersNumber: number) => {
+let getRandomCrew: (soldiersNumber: number, neverFought?: boolean) => Promise<AnyHero[]> = (
+	soldiersNumber,
+	neverFought = true
+) => {
 	let query = `SELECT * FROM hero
+	${neverFought ? '' : 'WHERE deaths = 0 AND kills = 0'}
 	ORDER BY RAND()
 	LIMIT ${soldiersNumber};`;
 

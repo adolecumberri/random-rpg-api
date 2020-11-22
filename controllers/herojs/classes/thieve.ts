@@ -19,9 +19,9 @@ export class Thieve extends Hero {
 	skillProb: number = 0.6;
 	skill: () => void = () => {
 		this.heroEfects = {
-			dmg: this.heroStats.dmg * 0.3,
-			def: this.heroStats.def * 0.3,
-			att_interval: -(this.heroStats.att_interval * 0.3),
+			dmg: Math.floor(this.heroStats.dmg * 0.3),
+			def:  Math.floor(this.heroStats.def * 0.3),
+			att_interval: - Math.floor((this.heroStats.att_interval * 0.3)),
 		};
 	};
 	skillOf: () => void = () => {

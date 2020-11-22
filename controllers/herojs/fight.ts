@@ -19,8 +19,6 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 			//ataca hero2
 			await hero1.defend(hero2);
 		}
-
-		
 	}
 
 	//Guardar en la base de datos

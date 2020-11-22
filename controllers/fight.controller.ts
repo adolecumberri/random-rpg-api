@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { isPropertySignature } from 'typescript';
-import { getCrewByClassId } from '../commonModules/crew';
+import { getCrewByClassId, getRandomCrew } from '../commonModules/crew';
 import { getHeroById, getRandomHero, getRandomHeroByClass, switchClass } from '../commonModules/heros';
 import { IHero } from '../interfaces/Hero.Interface';
 import { AnyHero } from './herojs/classes';
@@ -100,7 +100,7 @@ export async function fightToGenerateStatsWithAllGroups({ params }: Request, res
 	res.sendStatus(200);
 }
 
-export async function fightToGenerateStatsWithGroups({ params }: Request, res: Response) {
+export async function fightOneClassVSAll({ params }: Request, res: Response) {
 	console.time('f');
 	let { id1, id2, howmany } = params;
 	//loop to switcClass
@@ -114,6 +114,26 @@ export async function fightToGenerateStatsWithGroups({ params }: Request, res: R
 	for (let j = 0; j < Number(howmany); j++) {
 		pvps.push(await pvp(hero1[j] as AnyHero, hero2[j] as AnyHero));
 	}
+
+	Promise.all(pvps);
+	console.timeEnd('f');
+	res.sendStatus(200);
+}
+
+export async function createStatsRandomly({ params }: Request, res: Response) {
+	console.time('f');
+	let { howmany } = params;
+	//loop to switcClass
+	let hero1: (IHero | AnyHero)[] = await getRandomCrew(Number(howmany), false);
+
+	let hero2: (IHero | AnyHero)[] = await getRandomCrew(Number(howmany), false);
+	let pvps: any = [];
+
+	await Promise.all(
+		(hero1 as AnyHero[]).map(async (currentHero, index) => {
+			return pvp(currentHero, (hero2 as AnyHero[])[index]);
+		})
+	);
 
 	Promise.all(pvps);
 	console.timeEnd('f');
