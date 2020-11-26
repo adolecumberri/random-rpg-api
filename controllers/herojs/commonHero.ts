@@ -9,12 +9,15 @@ import { connection } from '../../config/database';
 import { IFightStats } from '../../interfaces/Figth.interface';
 import { IHero } from '../../interfaces/Hero.Interface';
 import { AnyHero } from './classes';
+import { StatsManager } from './fightStatsManager';
 
 export class Hero {
 	constructor(data: IHero) {
 		this.heroStats = { ...data, curr_att_interval: data.att_interval };
+		this.fightStats = new StatsManager(data.id);
 	}
 	// fightStats: IFightStats
+	fightStats: StatsManager //Manager de stats. Easy
 	heroStats: IHero;
 	isDead = false;
 
