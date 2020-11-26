@@ -131,6 +131,7 @@ export async function createStatsRandomly({ params }: Request, res: Response) {
 
 	await Promise.all(
 		(hero1 as AnyHero[]).map(async (currentHero, index) => {
+			console.log(index);
 			return pvp(currentHero, (hero2 as AnyHero[])[index]);
 		})
 	);

@@ -16,7 +16,7 @@ export class Defender extends Hero {
 
 	//THORNMAIL
 	skillProb = 1;
-	skill: (damage: number) => number = (damage) => Math.floor(6 + damage * 0.2);
+	skill: (damage: number) => number = (damage) => Math.floor(7 + damage * 0.2);
 	skillUsed = false;
 
 	//CALC DAMAGE AFTER BLOCKING

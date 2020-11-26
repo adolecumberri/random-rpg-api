@@ -14,7 +14,7 @@ export class Archer extends Hero {
 	}; //E stados cambiados
 
 	//Haste
-	skillProb = 0.33;
+	skillProb = 0.23;
 	skill: () => void = () => {
 		this.heroEfects.att_interval = -2;
 	};

@@ -1,0 +1,278 @@
+[
+	{
+		"id_class" : 1,
+		"version" : 1,
+		"fights_number" : 276,
+		"winrate" : 24
+	},
+	{
+		"id_class" : 1,
+		"version" : 1,
+		"fights_number" : 276,
+		"winrate" : 24
+	},
+	{
+		"id_class" : 2,
+		"version" : 1,
+		"fights_number" : 779,
+		"winrate" : 35
+	},
+	{
+		"id_class" : 3,
+		"version" : 1,
+		"fights_number" : 1054,
+		"winrate" : 81
+	},
+	{
+		"id_class" : 4,
+		"version" : 1,
+		"fights_number" : 864,
+		"winrate" : 43
+	},
+	{
+		"id_class" : 5,
+		"version" : 1,
+		"fights_number" : 1210,
+		"winrate" : 72
+	},
+	{
+		"id_class" : 6,
+		"version" : 1,
+		"fights_number" : 605,
+		"winrate" : 20
+	},
+	{
+		"id_class" : 7,
+		"version" : 1,
+		"fights_number" : 792,
+		"winrate" : 59
+	},
+	{
+		"id_class" : 8,
+		"version" : 1,
+		"fights_number" : 816,
+		"winrate" : 34
+	},
+	{
+		"id_class" : 9,
+		"version" : 1,
+		"fights_number" : 445,
+		"winrate" : 29
+	},
+	{
+		"id_class" : 1,
+		"version" : 2,
+		"fights_number" : 769,
+		"winrate" : 25
+	},
+	{
+		"id_class" : 2,
+		"version" : 2,
+		"fights_number" : 1293,
+		"winrate" : 66
+	},
+	{
+		"id_class" : 3,
+		"version" : 2,
+		"fights_number" : 1100,
+		"winrate" : 71
+	},
+	{
+		"id_class" : 4,
+		"version" : 2,
+		"fights_number" : 1455,
+		"winrate" : 49
+	},
+	{
+		"id_class" : 5,
+		"version" : 2,
+		"fights_number" : 1267,
+		"winrate" : 54
+	},
+	{
+		"id_class" : 6,
+		"version" : 2,
+		"fights_number" : 1385,
+		"winrate" : 35
+	},
+	{
+		"id_class" : 7,
+		"version" : 2,
+		"fights_number" : 1221,
+		"winrate" : 53
+	},
+	{
+		"id_class" : 8,
+		"version" : 2,
+		"fights_number" : 1331,
+		"winrate" : 52
+	},
+	{
+		"id_class" : 9,
+		"version" : 2,
+		"fights_number" : 720,
+		"winrate" : 37
+	},
+	{
+		"id_class" : 1,
+		"version" : 3,
+		"fights_number" : 917,
+		"winrate" : 28
+	},
+	{
+		"id_class" : 2,
+		"version" : 3,
+		"fights_number" : 1767,
+		"winrate" : 42
+	},
+	{
+		"id_class" : 3,
+		"version" : 3,
+		"fights_number" : 1789,
+		"winrate" : 41
+	},
+	{
+		"id_class" : 4,
+		"version" : 3,
+		"fights_number" : 1755,
+		"winrate" : 51
+	},
+	{
+		"id_class" : 5,
+		"version" : 3,
+		"fights_number" : 1684,
+		"winrate" : 67
+	},
+	{
+		"id_class" : 6,
+		"version" : 3,
+		"fights_number" : 1704,
+		"winrate" : 44
+	},
+	{
+		"id_class" : 7,
+		"version" : 3,
+		"fights_number" : 1759,
+		"winrate" : 59
+	},
+	{
+		"id_class" : 8,
+		"version" : 3,
+		"fights_number" : 1745,
+		"winrate" : 55
+	},
+	{
+		"id_class" : 9,
+		"version" : 3,
+		"fights_number" : 864,
+		"winrate" : 62
+	},
+	{
+		"id_class" : 1,
+		"version" : 4,
+		"fights_number" : 1865,
+		"winrate" : 52
+	},
+	{
+		"id_class" : 2,
+		"version" : 4,
+		"fights_number" : 3600,
+		"winrate" : 50
+	},
+	{
+		"id_class" : 3,
+		"version" : 4,
+		"fights_number" : 3700,
+		"winrate" : 73
+	},
+	{
+		"id_class" : 4,
+		"version" : 4,
+		"fights_number" : 3673,
+		"winrate" : 55
+	},
+	{
+		"id_class" : 5,
+		"version" : 4,
+		"fights_number" : 3581,
+		"winrate" : 31
+	},
+	{
+		"id_class" : 6,
+		"version" : 4,
+		"fights_number" : 3710,
+		"winrate" : 54
+	},
+	{
+		"id_class" : 7,
+		"version" : 4,
+		"fights_number" : 3494,
+		"winrate" : 34
+	},
+	{
+		"id_class" : 8,
+		"version" : 4,
+		"fights_number" : 3606,
+		"winrate" : 53
+	},
+	{
+		"id_class" : 9,
+		"version" : 4,
+		"fights_number" : 1668,
+		"winrate" : 48
+	},
+	{
+		"id_class" : 1,
+		"version" : 5,
+		"fights_number" : 1462,
+		"winrate" : 55
+	},
+	{
+		"id_class" : 2,
+		"version" : 5,
+		"fights_number" : 2815,
+		"winrate" : 47
+	},
+	{
+		"id_class" : 3,
+		"version" : 5,
+		"fights_number" : 2752,
+		"winrate" : 61
+	},
+	{
+		"id_class" : 4,
+		"version" : 5,
+		"fights_number" : 2670,
+		"winrate" : 54
+	},
+	{
+		"id_class" : 5,
+		"version" : 5,
+		"fights_number" : 2684,
+		"winrate" : 34
+	},
+	{
+		"id_class" : 6,
+		"version" : 5,
+		"fights_number" : 2348,
+		"winrate" : 52
+	},
+	{
+		"id_class" : 7,
+		"version" : 5,
+		"fights_number" : 2848,
+		"winrate" : 48
+	},
+	{
+		"id_class" : 8,
+		"version" : 5,
+		"fights_number" : 2629,
+		"winrate" : 55
+	},
+	{
+		"id_class" : 9,
+		"version" : 5,
+		"fights_number" : 1220,
+		"winrate" : 48
+	}
+]

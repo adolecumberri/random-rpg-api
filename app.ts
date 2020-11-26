@@ -6,7 +6,6 @@ import bodyParser from 'body-parser';
 // Routes
 import IndexRoutes from './routes/index.routes';
 import HeroRouter from './routes/hero.routes';
-import StatsRouter from './routes/statistics.routes';
 import CrewRouter from './routes/crew.routes';
 import FightRouter from './routes/fight.routes';
 
@@ -65,7 +64,6 @@ export class App {
 		this.app?.use('/', IndexRoutes); //main route.
 		this.app?.use('/hero', HeroRouter); //hero route.
 		this.app?.use('/fight', FightRouter); //hero route.
-		this.app?.use('/stats', StatsRouter); //stats route.
 		this.app?.use('/crew', CrewRouter) //crews routes
 	}
 

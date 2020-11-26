@@ -24,12 +24,12 @@ export async function asignCrewsToHero(req: Request, res: Response) {
 
 	APELLIDOS.forEach((apellido: string, index: number) => {
 		let query = `UPDATE hero
-		SET id_crew = ${index}
+		SET id_crew = ${index + 1}
 		WHERE surname like "${apellido}" AND gender = 1;`;
 		//console.log(query);
 		promises.push(
-			connection.query(query, () => {
-				//console.log('inserted i');
+			connection.query(query, (err, result) => {
+				console.log(`Rows affected: ${result.affectedRows}`);
 			})
 		);
 		let query2 = `UPDATE hero
@@ -37,8 +37,8 @@ export async function asignCrewsToHero(req: Request, res: Response) {
 		WHERE surname like "${apellido}" AND gender = 0;`;
 		//console.log(query2);
 		promises.push(
-			connection.query(query2, () => {
-				//console.log('inserted i');
+			connection.query(query2, (err, result) => {
+				console.log(`Rows affected: ${result.affectedRows}`);
 			})
 		);
 	});

@@ -73,7 +73,7 @@ let createHeros = async (req: Request, res: Response) => {
 
 let saveHero = (hero: any) => {
 	connection.query('INSERT INTO hero SET ?', [hero], (err: MysqlError | null, result: any) => {
-		//console.log(result.insertId);
+		console.log(`created ${result.insertId}`);
 	});
 };
 
