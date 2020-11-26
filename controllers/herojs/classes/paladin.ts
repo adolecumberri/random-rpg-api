@@ -40,8 +40,8 @@ export class Paladin extends Hero {
 		
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			await this.heroDies();
-			await enemi.heroKills();
+			// await this.heroDies();
+			// await enemi.heroKills();
 		}
 		
 	};

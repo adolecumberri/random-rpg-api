@@ -37,15 +37,15 @@ export class Fencer extends Hero {
 		//contrataco. si fallo, recibo el daño.
 		if (this.skillProb > this.getProb()) {
 			let enemiDeath = await enemi.straightDamage(this.skill(finalDamage));
-			if (enemiDeath) {
-				await this.heroKills();
-			}
+			// if (enemiDeath) {
+			// 	await this.heroKills();
+			// }
 		} else {
 			this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //ç
 			if (this.heroStats.currentHp === 0) {
 				this.isDead = true;
-				await this.heroDies();
-				await enemi.heroKills();
+				// await this.heroDies();
+				// await enemi.heroKills();
 				//console.log(`${id}.${name} ${surname} has died`);
 			} else {
 				//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);

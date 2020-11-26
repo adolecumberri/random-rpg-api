@@ -37,9 +37,9 @@ export class Defender extends Hero {
 			//console.log(`${id}.${name} ${surname}: skill dmg = ${skillDmg}`);
 			enemiDeath = await enemi.straightDamage(skillDmg);
 
-			if (enemiDeath) {
-				await this.heroKills();
-			}
+			// if (enemiDeath) {
+			// 	await this.heroKills();
+			// }
 		} else {
 			enemi.calcNextTurn(enemi.heroEfects.att_interval);
 			//console.log(`${id}.${name} ${surname} Evaded the attack`);
@@ -49,8 +49,8 @@ export class Defender extends Hero {
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			await this.heroDies();
-			await enemi.heroKills();
+			// await this.heroDies();
+			// await enemi.heroKills();
 			//console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
