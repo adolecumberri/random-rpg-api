@@ -22,7 +22,14 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 	}
 
 	//Guardar en la base de datos
-	if (hero1.isDead || hero2.isDead) {
+	if (hero1.isDead && hero2.isDead) {
+		console.log("draw");
 		console.log(`${hero1.heroStats.id} ---- ${hero2.heroStats.id}`);
+	}else if (hero1.isDead){
+		await hero1.heroDies();
+		await hero2.heroKills();
+	}else if (hero2.isDead){
+		await hero1.heroKills();
+		await hero2.heroDies();
 	}
 };

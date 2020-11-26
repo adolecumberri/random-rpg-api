@@ -55,8 +55,8 @@ export class Soldier extends Hero {
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			await this.heroDies();
-			await enemi.heroKills();
+			// await this.heroDies();
+			// await enemi.heroKills();
 			//console.log(`${id}.${name} ${surname} has died`);
 		} else {
 			//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);

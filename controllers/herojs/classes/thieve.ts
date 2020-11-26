@@ -72,8 +72,8 @@ export class Thieve extends Hero {
 			this.isDead = true;
 		
 			//console.log(`${id}.${name} ${surname} has died`);
-			await this.heroDies();
-			await enemi.heroKills();
+			// await this.heroDies();
+			// await enemi.heroKills();
 			 //No tiene sentido pero he puesto esto
 		} else {
 			if (this.skillUsed) {

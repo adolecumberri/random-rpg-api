@@ -57,8 +57,8 @@ export class Hero {
 		this.heroStats.currentHp = currentHp - finalDamage >= 0 ? currentHp - finalDamage : 0; //
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			await this.heroDies();
-			await enemi.heroKills();
+			// await this.heroDies();
+			// await enemi.heroKills();
 		}
 	};
 
@@ -69,7 +69,7 @@ export class Hero {
 
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			await this.heroDies();
+			// await this.heroDies();
 			return true;
 		} else {
 			return false;
