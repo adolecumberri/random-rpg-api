@@ -17,7 +17,7 @@ export class Hero {
 		this.fightStats = new StatsManager(data.id);
 	}
 	// fightStats: IFightStats
-	fightStats: StatsManager //Manager de stats. Easy
+	fightStats: StatsManager; //Manager de stats. Easy
 	heroStats: IHero;
 	isDead = false;
 
@@ -32,11 +32,15 @@ export class Hero {
 		if (accuracy > this.getProb()) {
 			//golpeo?
 			if (crit > this.getProb()) {
+				this.fightStats.addCrit();
 				//critico
 				damage = this.rand((dmg + dmgEf) * (critDmg + 1) * 0.85, (dmg + dmgEf) * (critDmg + 1) * 1.15);
 			} else {
+				this.fightStats.addHit();
 				damage = this.rand((dmg + dmgEf) * 0.85, (dmg + dmgEf) * 1.15);
 			}
+		} else {
+			this.fightStats.addMiss();
 		}
 		this.calcNextTurn();
 		return damage;
@@ -50,29 +54,35 @@ export class Hero {
 			//Evade o no.
 			let enemiAttack = enemi.attack();
 			finalDamage = Math.floor((enemiAttack * (100 - def * 0.9)) / 100 - def * 0.29);
+
+			//Stats
+			enemi.fightStats.set('total_damage', enemi.fightStats.get('total_damage') + finalDamage);
+			this.fightStats.addHitReceived();
 		} else {
 			enemi.calcNextTurn(enemi.heroEfects.att_interval);
+
+			//stats
+			this.fightStats.addEvasion();
 		}
 
 		this.heroStats.currentHp = currentHp - finalDamage >= 0 ? currentHp - finalDamage : 0; //
+		//stats
+		this.fightStats.set('currhp', this.heroStats.currentHp);
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			// await this.heroDies();
-			// await enemi.heroKills();
 		}
 	};
 
 	//does hero dies after straightDamage?
-	straightDamage: (damage: number) => Promise<boolean> = async (damage) => {
+	straightDamage: (damage: number) => void = (damage) => {
 		let { id, hp, name, surname } = this.heroStats;
 		this.heroStats.currentHp = this.heroStats.currentHp - damage >= 0 ? this.heroStats.currentHp - damage : 0;
 
+		//stats
+		this.fightStats.addHitReceived();
+		this.fightStats.set('currhp', this.heroStats.currentHp);
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			// await this.heroDies();
-			return true;
-		} else {
-			return false;
 		}
 	};
 

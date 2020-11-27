@@ -18,7 +18,9 @@ export class Paladin extends Hero {
 	//BLESSING -- se usa fuera
 	skillProb: number = 0.23;
 	skill: () => void = () => {
-		// //console.log(`${this.heroStats.name} was Blessed`);
+		//stats
+		this.fightStats.addSkillUses();
+
 		this.heroStats.currentHp = this.rand(this.heroStats.hp * 0.3, this.heroStats.hp * 0.4);
 	};
 	skillUsed = false;
@@ -31,19 +33,24 @@ export class Paladin extends Hero {
 			//Evade o no.
 			let enemiAttack = enemi.attack();
 			finalDamage = Math.floor((enemiAttack * (100 - def * 0.9)) / 100 - def * 0.29);
+
+			//Stats
+			enemi.fightStats.set('total_damage', enemi.fightStats.get('total_damage') + finalDamage);
+			this.fightStats.addHitReceived();
 		} else {
 			enemi.calcNextTurn(enemi.heroEfects.att_interval);
+
+			//stats
+			this.fightStats.addEvasion();
 		}
 
 		this.heroStats.currentHp = currentHp - finalDamage >= 0 ? currentHp - finalDamage : 0; //
-		this.end();
-		
+
+		//stats
+		this.fightStats.set('currhp', this.heroStats.currentHp);
 		if (this.heroStats.currentHp === 0) {
 			this.isDead = true;
-			// await this.heroDies();
-			// await enemi.heroKills();
 		}
-		
 	};
 
 	end: () => void = () => {

@@ -20,26 +20,25 @@ type TStatsManaget =
 	| 'crits'
 	| 'misses'
 	| 'hits_received'
-	| 'damageStopped'
 	| 'evasions'
-    | 'skills_used'
-    | 'currhp';
-    
+	| 'skills_used'
+	| 'currhp';
+
 export class StatsManager {
 	constructor(id_hero: number) {
 		this.id_hero = id_hero;
 	}
 
-	id_hero = 0;
-	hits = 0;
-	total_damage = 0;
-	crits = 0;
-	misses = 0;
-	hits_received = 0;
-	damageStopped = 0;
-	evasions = 0;
-	skills_used = 0;
-	currhp = 0;
+	private id_hero = 0;
+	private hits = 0;
+	private total_damage = 0;
+	private crits = 0;
+	private misses = 0;
+	private hits_received = 0;
+	private damageStopped = 0;
+	private evasions = 0;
+	private skills_used = 0;
+	private currhp = 0;
 
 	addHit = () => {
 		this.hits++;
@@ -47,6 +46,7 @@ export class StatsManager {
 
 	addCrit = () => {
 		this.crits++;
+		this.hits++;
 	};
 
 	addMiss = () => {
@@ -69,6 +69,10 @@ export class StatsManager {
 		this[name] = value;
 	};
 
+	get = (name: TStatsManaget) => {
+		return this[name];
+	};
+
 	// saveStats: (id_fight: number) => Promise<unknown> = async (id_fight) => {
 	// 	await new Promise((resolve, reject) => {
 	// 		connection.query(
@@ -78,25 +82,22 @@ export class StatsManager {
 	// 	});
 	// };
 
-	saveStats: (id_fight: number) => Promise<unknown> = async (id_fight) => {
-		await new Promise((resolve, reject) => {
-			connection.query(
-				'INSERT INTO  fight1v1stats VALUES ?',
-				[
-					this.id_hero,
-					id_fight,
-					this.hits,
-					this.total_damage,
-					this.crits,
-					this.misses,
-					this.hits_received,
-					this.damageStopped,
-					this.evasions,
-					this.skills_used,
-					this.currhp,
-				],
-				(err, result) => resolve(true)
-			);
+	saveStats: (id_fight: number) => void = async (id_fight) => {
+		let param = `INSERT INTO  fight1v1stats SET 
+					id_hero = ${this.id_hero},
+					id_fight = ${id_fight},
+					hits = ${this.hits},
+					total_damage = ${this.total_damage},
+					crits = ${this.crits},
+					misses = ${this.misses},
+					hits_received = ${this.hits_received},
+					evasions = ${this.evasions},
+					skills_used = ${this.skills_used},
+					currhp = ${this.currhp}
+					`;
+
+		await connection.query(param, () => {
+			console.log('inserted');
 		});
 	};
 }

@@ -18,6 +18,7 @@ export class Fencer extends Hero {
 	//Counter
 	skillProb: number = 0.22;
 	skill: any = (damage: number) => {
+		this.fightStats.addSkillUses();
 		return this.rand(damage * 0.85, damage * 1.15);
 	}; //Sutil nerfeo aquí.
 	skillUsed = false;
@@ -29,26 +30,27 @@ export class Fencer extends Hero {
 		if (evasion <= this.getProb()) {
 			//Evade o no.
 			finalDamage = Math.floor((enemi.attack() * (100 - def * 0.9)) / 100 - def * 0.29);
+
+			//Stats
+			enemi.fightStats.set('total_damage', enemi.fightStats.get('total_damage') + finalDamage);
+			this.fightStats.addHitReceived();
 		} else {
 			enemi.calcNextTurn(enemi.heroEfects.att_interval);
-			//console.log(`${id}.${name} ${surname} Evaded the attack`);
+
+			//stats
+			this.fightStats.addEvasion();
 		}
 
 		//contrataco. si fallo, recibo el daño.
 		if (this.skillProb > this.getProb()) {
-			let enemiDeath = await enemi.straightDamage(this.skill(finalDamage));
-			// if (enemiDeath) {
-			// 	await this.heroKills();
-			// }
+			this.fightStats.addHit();
+			enemi.straightDamage(this.skill(finalDamage));
 		} else {
-			this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //ç
+			this.heroStats.currentHp = currentHp - finalDamage > 0 ? currentHp - finalDamage : 0; //
+			//stats
+			this.fightStats.set('currhp', this.heroStats.currentHp);
 			if (this.heroStats.currentHp === 0) {
 				this.isDead = true;
-				// await this.heroDies();
-				// await enemi.heroKills();
-				//console.log(`${id}.${name} ${surname} has died`);
-			} else {
-				//console.log(`${id}.${name} ${surname}: ${this.heroStats.currentHp}/${hp}`);
 			}
 		}
 	};
