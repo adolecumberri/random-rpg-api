@@ -96,8 +96,8 @@ export class StatsManager {
 					currhp = ${this.currhp}
 					`;
 
-		await connection.query(param, () => {
-			console.log('inserted');
+		connection.query(param, () => {
+			// console.log('inserted');
 		});
 	};
 }

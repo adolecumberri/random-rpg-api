@@ -5,14 +5,14 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 	//carga de la clase de cada heroe
 
 	let saveFight: (turns: number) => Promise<unknown> = async (turns) => {
-		await new Promise((resolve, reject) => {
-			connection.query(
-				`insert into fight1v1 set turns = ${turns};`,
-				async (err, result) => {
-					await hero1.fightStats.saveStats(result.insertId);
-					await hero2.fightStats.saveStats(result.insertId);
-				}
-			);
+		new Promise((resolve, reject) => {
+			connection.query(`insert into fight1v1 set turns = ${turns};`, async (err, result) => {
+				resolve(result.insertId);
+			});
+		}).then( async (a) => {
+			console.log(a);
+			await hero1.fightStats.saveStats(a as number);
+			await hero2.fightStats.saveStats(a as number);
 		});
 	};
 
@@ -38,16 +38,15 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 
 	//Guardar en la base de datos
 	if (hero1.isDead && hero2.isDead) {
-		console.log('draw');
+		//console.log('draw');
 		// console.log(`${hero1.heroStats.id} ---- ${hero2.heroStats.id}`);
 	} else if (hero1.isDead) {
-		console.log(`${hero2.heroStats.id} wins`);
+		//console.log(`${hero2.heroStats.id} wins`);
 		await hero1.heroDies();
 		await hero2.heroKills();
-
 		await saveFight(i);
 	} else if (hero2.isDead) {
-		console.log(`${hero1.heroStats.id} wins`);
+		//console.log(`${hero1.heroStats.id} wins`);
 		await hero1.heroKills();
 		await hero2.heroDies();
 		await saveFight(i);

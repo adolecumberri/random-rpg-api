@@ -127,14 +127,18 @@ export async function createStatsRandomly({ params }: Request, res: Response) {
 	let hero1: (IHero | AnyHero)[] = await getRandomCrew(Number(howmany), false);
 
 	let hero2: (IHero | AnyHero)[] = await getRandomCrew(Number(howmany), false);
-	
 
 	let pvps: any = [];
 	for (let j = 0; j < Number(howmany); j++) {
-		pvps.push(await pvp(hero1[j] as AnyHero, hero2[j] as AnyHero));
+		pvps.push(
+			new Promise(async (res, rej) => {
+				await pvp(hero1[j] as AnyHero, hero2[j] as AnyHero);
+				res(0);
+			})
+		);
 	}
 
-	Promise.all(pvps);
+	await Promise.all(pvps).then(() => console.log('hola?'));
 
 	console.timeEnd('f');
 	res.sendStatus(200);
