@@ -30,8 +30,8 @@ export class Defender extends Hero {
 		if (evasion <= this.getProb()) {
 			//Evade o no.
 			let enemiAttack = enemi.attack();
-
-			finalDamage = Math.floor((enemiAttack * (100 - def * 0.9)) / 100 - def * 0.29);
+			let attMultiplier = 40 / (40 + def);
+			finalDamage = enemiAttack * attMultiplier;
 
 			//if he hits, I use the skill.
 			let skillDmg = this.skill(finalDamage);

@@ -82,7 +82,7 @@ export class StatsManager {
 	// 	});
 	// };
 
-	saveStats: (id_fight: number) => void = async (id_fight) => {
+	saveStats: (id_fight: number) => Promise<unknown> = async (id_fight) => {
 		let param = `INSERT INTO  fight1v1stats SET 
 					id_hero = ${this.id_hero},
 					id_fight = ${id_fight},
@@ -95,9 +95,10 @@ export class StatsManager {
 					skills_used = ${this.skills_used},
 					currhp = ${this.currhp}
 					`;
-
-		connection.query(param, () => {
-			// console.log('inserted');
+		await new Promise((resolve, reject) => {
+			connection.query(param, () => {
+				resolve(true);
+			});
 		});
 	};
 }

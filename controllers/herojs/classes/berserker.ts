@@ -55,7 +55,9 @@ export class Berserker extends Hero {
 
 		if (evasion <= this.getProb()) {
 			//Evade o no.
-			finalDamage = Math.floor((enemi.attack() * (100 - (def + defEffect) * 0.9)) / 100 - (def + defEffect) * 0.29);
+			let enemiAttack = enemi.attack();
+			let attMultiplier = 40 /( 40 + def + defEffect);
+			finalDamage = enemiAttack * attMultiplier;
 
 			//Stats
 			enemi.fightStats.set('total_damage', enemi.fightStats.get('total_damage') + finalDamage);
