@@ -55,11 +55,11 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 		//console.log(`${hero2.heroStats.id} wins`);
 		await hero1.heroDies();
 		await hero2.heroKills();
-		// await saveFight(i);
+		await saveFight(i);
 	} else if (hero2.isDead) {
 		//console.log(`${hero1.heroStats.id} wins`);
 		await hero1.heroKills();
 		await hero2.heroDies();
-		// await saveFight(i);
+		await saveFight(i);
 	}
 };
