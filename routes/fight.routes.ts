@@ -9,6 +9,7 @@ import {
 	fight1v1ByClassId,
 	createStatsRandomly,
 } from '../controllers/fight.controller';
+import { randomGroupFight } from '../controllers/groupFight.controller';
 
 const router = Router();
 
@@ -22,4 +23,6 @@ router.route('/loadstats/:id1/:howmany').get(fightToGenerateStatsWithAllGroups);
 router.route('/loadstats/:id1/:id2/:howmany').get(fightOneClassVSAll);
 
 router.route('/random/:howmany').get(createStatsRandomly);
+
+router.route('/group/random/:howmany').get(randomGroupFight)
 export default router;

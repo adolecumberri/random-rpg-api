@@ -15,21 +15,32 @@ export class HeroGroup {
 		return this.heros.filter((hero) => hero.heroStats.id_class === classType);
 	};
 
-	getRandom: any = () => {
+	getRandon: any = () => {
 		return this.heros[rand(0, this.heros.length - 1)];
 	};
 
-	//cojo index y elimino al soldado.
-	//TOD: debería hacer aquí la conexion a la bbdd??
-	heroDeath: any = (index: number) => {
-		return this.heros.splice(index, 1);
+	getRandonGroup: (n: number) => AnyHero[] = (n) => {
+		const copy = Array.from(this.heros);
+		return Array.from(Array(n), () => copy.splice(Math.floor(copy.length * Math.random()), 1)[0]);
 	};
 
-	orderByStats: any = (stat: keyof IHero) => {
-		this.heros.sort((a, b) => (a.heroStats[stat] as any) - (b.heroStats[stat] as any));
+	//cojo index y elimino al soldado
+	heroDeath: any = (id: number) => {
+		let indexToRemove = this.heros.findIndex((hero) => hero.heroStats.id === id);
+		if (indexToRemove !== -1) {
+			//Meter conexion a la bbdd
+			console.log('hero ' + id + ' dies.');
+			return this.heros.splice(indexToRemove, 1);
+		} else {
+			console.log('hero ' + id + ' does not exist');
+		}
 	};
 
-	setHeros: any = (newHeros: AnyHero[]) => {
-		this.heros = newHeros;
-	};
+	// orderByStats: any = (stat: keyof IHero) => {
+	// 	this.heros.sort((a, b) => (a.heroStats[stat] as any) - (b.heroStats[stat] as any));
+	// };
+
+	// setHeros: any = (newHeros: AnyHero[]) => {
+	// 	this.heros = newHeros;
+	// };
 }
