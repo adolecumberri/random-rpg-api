@@ -1,4 +1,5 @@
 import { connection } from '../../config/database';
+import { HeroGroup } from '../groupjs/group';
 import { AnyHero } from './classes';
 
 export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2) => {
@@ -63,3 +64,5 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 		await saveFight(i);
 	}
 };
+
+export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (groupA, groupB) => {};

@@ -15,7 +15,7 @@ export class Ninja extends Hero {
 	}; //E stados cambiados
 
 	//BACK STAB
-	skillProb = 0.17;
+	skillProb = 0.19;
 	//skill: any = (damage: number) => damage * 2.05;
 	skill: () => number = () => {
 		let { dmg, critDmg, accuracy, crit } = this.heroStats;
