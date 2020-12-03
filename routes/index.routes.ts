@@ -4,6 +4,9 @@ import { indexWelcome } from '../controllers/index.controller';
 const router = Router();
 
 router.route('/').get(indexWelcome);
+
+
+//funcionan multiples llamadas asyncronas.
 router.route('/wait/:min').get(
 	(req: Request, res: Response): void => {
 		setTimeout(() => {

@@ -65,4 +65,50 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 	}
 };
 
-export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (groupA, groupB) => {};
+export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (groupA, groupB) => {
+	let fightId = 0;
+
+	await (async (turns) => {
+		let prueba ="prueba"
+		await new Promise((resolve, reject) => {
+			connection.query(`insert into groupfight set name = ${prueba};`, async (err, result) => {
+				fightId = result.insertId as number
+				resolve(true);
+			});
+		});
+	})();
+
+
+
+
+	//snioper Skills
+	let snipersA = groupA.getHerosByClass(7);
+	let hittedB = groupB.getRandonGroup(snipersA.length);
+
+	snipersA.forEach(async (sniper, i) => {
+		hittedB[i].defend(sniper);
+		hittedB[i].end();
+		if (hittedB[i].heroStats.currentHp <= 0) {
+			groupB.heroDeath(hittedB[i].heroStats.id);
+		}
+	});
+
+	let snipersB = groupB.getHerosByClass(7);
+	let hittedA = groupA.getRandonGroup(snipersB.length);
+
+	snipersB.forEach( async (sniper, i) => {
+		hittedA[i].defend(sniper);
+		hittedA[i].end();
+		if (hittedA[i].heroStats.currentHp <= 0) {
+			groupA.heroDeath(hittedA[i].heroStats.id);	
+		}
+	});
+
+	for(let i = 0; i < 100; i++){
+		// groupA.forEach( () => {
+
+		// })
+	}
+
+
+};

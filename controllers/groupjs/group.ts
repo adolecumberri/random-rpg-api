@@ -7,15 +7,18 @@ import { rand } from '../../commonModules/utils';
 export class HeroGroup {
 	constructor(data: AnyHero[]) {
 		this.heros = data;
+		this.deaths = [];
 	}
 
 	heros: AnyHero[];
+	deaths: AnyHero[];
 
 	getHerosByClass: (classType: number) => AnyHero[] = (classType: number) => {
 		return this.heros.filter((hero) => hero.heroStats.id_class === classType);
 	};
 
-	getRandon: any = () => {
+	//devuelve .length === 0 si esta vacio.
+	getRandonHero: () => AnyHero = () => {
 		return this.heros[rand(0, this.heros.length - 1)];
 	};
 
@@ -25,12 +28,12 @@ export class HeroGroup {
 	};
 
 	//cojo index y elimino al soldado
-	heroDeath: any = (id: number) => {
+	heroDeath: (id:number) => void = (id) => {
 		let indexToRemove = this.heros.findIndex((hero) => hero.heroStats.id === id);
 		if (indexToRemove !== -1) {
 			//Meter conexion a la bbdd
 			console.log('hero ' + id + ' dies.');
-			return this.heros.splice(indexToRemove, 1);
+			this.deaths.push(this.heros.splice(indexToRemove, 1)[0]); //devuelve los elementos, ergo es un array.
 		} else {
 			console.log('hero ' + id + ' does not exist');
 		}
