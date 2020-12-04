@@ -17,12 +17,16 @@ export class HeroGroup {
 		return this.heros.filter((hero) => hero.heroStats.id_class === classType);
 	};
 
+	getHerosByAtt_interval:  (att_interval: number) => AnyHero[] = (att_interval) => {
+		return this.heros.filter((hero) => hero.heroStats.att_interval === att_interval);
+	}
+
 	//devuelve .length === 0 si esta vacio.
-	getRandonHero: () => AnyHero = () => {
+	getRandomHero: () => AnyHero = () => {
 		return this.heros[rand(0, this.heros.length - 1)];
 	};
 
-	getRandonGroup: (n: number) => AnyHero[] = (n) => {
+	getRandomGroup: (n: number) => AnyHero[] = (n) => {
 		const copy = Array.from(this.heros);
 		return Array.from(Array(n), () => copy.splice(Math.floor(copy.length * Math.random()), 1)[0]);
 	};
