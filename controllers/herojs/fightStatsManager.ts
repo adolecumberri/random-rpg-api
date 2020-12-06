@@ -101,4 +101,8 @@ export class StatsManager {
 			});
 		});
 	};
+
+	getParamsToInsert: () => string = () => {
+		return ` ${this.hits}, ${this.total_damage}, ${this.crits}, ${this.misses}, ${this.hits_received}, ${this.evasions}, ${this.skills_used}, ${this.currhp}`;
+	};
 }

@@ -31,7 +31,7 @@ export class Defender extends Hero {
 			//Evade o no.
 			let enemiAttack = enemi.attack();
 			let attMultiplier = 40 / (40 + def);
-			finalDamage = enemiAttack * attMultiplier;
+			finalDamage = Math.round(enemiAttack * attMultiplier);
 
 			//if he hits, I use the skill.
 			let skillDmg = this.skill(finalDamage);

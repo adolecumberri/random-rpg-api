@@ -66,14 +66,14 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 };
 
 export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (groupA, groupB) => {
-	let fightId = 0;
+	let id_fight = 0;
 
 	await (async () => {
 		let prueba = 'prueba';
 		await new Promise((resolve, reject) => {
 			connection.query(`insert into groupfight set name = "${prueba}";`, async (err, result) => {
 				// console.log(result);
-				fightId = result.insertId as number;
+				id_fight = result.insertId as number;
 				resolve(true);
 			});
 		});
@@ -83,79 +83,133 @@ export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (
 	let snipersA = groupA.getHerosByClass(7);
 	if (snipersA.length) {
 		let hittedB = groupB.getRandomGroup(snipersA.length);
-
 		snipersA.forEach(async (sniper, i) => {
 			hittedB[i].defend(sniper);
 			hittedB[i].end();
 			if (hittedB[i].heroStats.currentHp <= 0) {
-				groupB.heroDeath(hittedB[i].heroStats.id);
+				groupB.heroDeath(hittedB[i].heroStats.id, 0, sniper.heroStats.id);
 			}
 		});
 	}
 
 	let snipersB = groupB.getHerosByClass(7);
 
-	if (snipersB) {
+	if (snipersB.length) {
 		let hittedA = groupA.getRandomGroup(snipersB.length);
-
 		snipersB.forEach(async (sniper, i) => {
 			hittedA[i].defend(sniper);
 			hittedA[i].end();
 			if (hittedA[i].heroStats.currentHp <= 0) {
-				groupA.heroDeath(hittedA[i].heroStats.id);
+				groupA.heroDeath(hittedA[i].heroStats.id, 0, sniper.heroStats.id);
 			}
 		});
 	}
 
-	for (let i = 0; i < 1000; i++) {
-		//atacantes A
-		let attackersA = groupA.getHerosByAtt_interval(i);
+	let i = 1;
+	let turnUntil = 100;
+	let turn: () => Promise<void> = async () => {
+		for (; i < turnUntil && !flagA && !flagB; i++) {
+			//atacantes A
+			let attackersA = groupA.getHerosByAtt_interval(i);
 
-		if (attackersA.length) {
-			//defensores B
-			let defendersB = groupB.getRandomGroup(attackersA.length);
+			if (attackersA.length) {
+				//defensores B
 
-			// await Promise.all(
-			// 	attackersA.map(async (att, i) => {
-			// 		console.log(att.heroStats.id + ' attacks');
-			// 		await defendersB[i].defend(att);
+				//hay defensores? ergo, queda gente viva?
+				if (groupB.heros.length) {
+					//TODO: think about: while creating promises, you can check multiple times the same hero and kill him several times.
+					await Promise.all(
+						attackersA.map(async (att, i) => {
+							console.log(att.heroStats.id + ' attacks');
 
-			// 		if (defendersB[i].heroStats.currentHp <= 0) {
-			// 			groupB.heroDeath(defendersB[i].heroStats.id);
-			// 		}
-			// 	})
-			// );
-			attackersA.forEach(async (att, i) => {
-				console.log(att.heroStats.id + ' attacks');
-				let attacked = groupB.getRandomHero();
-				await attacked.defend(att);
-				if (attacked.heroStats.currentHp <= 0) {
-					groupB.heroDeath(attacked.heroStats.id);
+							let hittedB = groupB.getRandomHero();
+
+							if (hittedB !== undefined) {
+								await hittedB.defend(att);
+
+								if (hittedB.heroStats.currentHp <= 0) {
+									groupB.heroDeath(hittedB.heroStats.id, i, att.heroStats.id);
+								}
+							}
+						})
+					);
+				} else {
+					flagB = true;
 				}
-			});
+			}
+
+			//atacantes B
+			let attackersB = groupB.getHerosByAtt_interval(i);
+
+			if (attackersB.length) {
+				//defensores A
+				if (groupA.heros.length) {
+					await Promise.all(
+						attackersB.map(async (att, i) => {
+							console.log(att.heroStats.id + ' attacks');
+
+							let hittedA = groupA.getRandomHero();
+
+							if (hittedA !== undefined) {
+								await hittedA.defend(att);
+
+								if (hittedA.heroStats.currentHp <= 0) {
+									groupA.heroDeath(hittedA.heroStats.id, i, att.heroStats.id);
+								}
+							}
+						})
+					);
+				} else {
+					flagA = true;
+				}
+			}
 		}
+	};
 
-		//atacantes B
-		let attackersB = groupB.getHerosByAtt_interval(i);
+	// turn
+	let flagA = false;
+	let flagB = false;
+	let drawProb = 0.05;
+	let fightDrawed = false;
+	let turns = 1;
+	do {
+		await turn();
+		turnUntil += 100;
+		fightDrawed = drawProb > Math.random();
+		turns++;
+	} while (!fightDrawed && !flagA && !flagB);
 
-		if (attackersB.length) {
-			//defensores A
-			let defendersA = groupA.getRandomGroup(attackersB.length);
+	console.log({ turns });
 
-			await Promise.all(
-				attackersB.map(async (attacker, index) => {
-					console.log(attacker.heroStats.id + ' attacks');
-					await defendersA[index].defend(attacker);
-					if (defendersA[index].heroStats.currentHp <= 0) {
-						groupA.heroDeath(defendersA[index].heroStats.id);
-					}
-				})
-			);
-		}
+	await new Promise((resolve, reject) => {
+		connection.query(`update groupfight set ${fightDrawed ? ` drawed = 1, turns = ${turns} `: ` turns = ${turns} `} where id = ${id_fight};`, async (err, result) => {
+			// console.log(result);
+			id_fight = result.insertId as number;
+			resolve(true);
+		});
+	});
+
+	if (groupA.heros.length) {
+		console.log('entro A');
+		await groupA.saveHeros(id_fight, i);
+	}
+	if (groupA.deaths.length) {
+		console.log('entro A2');
+		await groupA.saveDeaths(id_fight, i);
 	}
 
-	console.log(groupA);
-	console.log(groupB);
+	if (groupB.heros.length) {
+		console.log('entro B');
+		await groupB.saveHeros(id_fight, i);
+	}
+	if (groupB.deaths.length) {
+		console.log('entro B2');
+		await groupB.saveDeaths(id_fight, i);
+	}
+
+	console.log('adios');
+	// console.log(groupA);
+	// console.log(groupB);
 
 	//TODO: final de la pelea
 };

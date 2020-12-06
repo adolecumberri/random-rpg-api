@@ -33,7 +33,7 @@ export class Paladin extends Hero {
 			//Evade o no.
 			let enemiAttack = enemi.attack();
 			let attMultiplier = 40 / (40 + def);
-			finalDamage = enemiAttack * attMultiplier;
+			finalDamage = Math.round(enemiAttack * attMultiplier);
 			
 			//Stats
 			enemi.fightStats.set('total_damage', enemi.fightStats.get('total_damage') + finalDamage);

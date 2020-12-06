@@ -3,6 +3,7 @@ import { AnyHero } from '../herojs/classes';
 
 import { IHero } from '../../interfaces/Hero.Interface';
 import { rand } from '../../commonModules/utils';
+import { connection } from '../../config/database';
 
 export class HeroGroup {
 	constructor(data: AnyHero[]) {
@@ -11,20 +12,38 @@ export class HeroGroup {
 	}
 
 	heros: AnyHero[];
-	deaths: AnyHero[];
+	deaths: { turn: number; killedBy: number; hero: AnyHero }[];
 
 	getHerosByClass: (classType: number) => AnyHero[] = (classType: number) => {
 		return this.heros.filter((hero) => hero.heroStats.id_class === classType);
 	};
 
-	getHerosByAtt_interval:  (att_interval: number) => AnyHero[] = (att_interval) => {
-		return this.heros.filter((hero) => hero.heroStats.att_interval === att_interval);
-	}
+	// getHerosIdByClass: (classType: number) => number[] = (classType: number) => {
+	// 	return this.heros.filter((hero) => hero.heroStats.id_class === classType).map((hero) => hero.heroStats.id);
+	// };
 
-	//devuelve .length === 0 si esta vacio.
+	// //returns heros index in "hero" attribute
+	// getHerosIndexByClass: (classType: number) => number[] = (classType: number) => {
+	// 	return this.heros.filter((hero) => hero.heroStats.id_class === classType).map((hero) => hero.heroStats.id);
+	// };
+
+	getHerosByAtt_interval: (att_interval: number) => AnyHero[] = (att_interval) => {
+		return this.heros.filter((hero) => hero.heroStats.curr_att_interval === att_interval);
+	};
+
+	// //return indexes of heros who attack this turn
+	// getHerosIndexByAtt_interval: (att_interval: number) => AnyHero[] = (att_interval) => {
+	// 	return this.heros.filter((hero) => hero.heroStats.att_interval === att_interval);
+	// };
+
+	//devuelve un heroe, sino devuelve undefine
 	getRandomHero: () => AnyHero = () => {
 		return this.heros[rand(0, this.heros.length - 1)];
 	};
+
+	// getRandomHeroId: () => number = () => {
+	// 	return this.heros[rand(0, this.heros.length - 1)].heroStats.id;
+	// };
 
 	getRandomGroup: (n: number) => AnyHero[] = (n) => {
 		const copy = Array.from(this.heros);
@@ -32,22 +51,89 @@ export class HeroGroup {
 	};
 
 	//cojo index y elimino al soldado
-	heroDeath: (id:number) => void = (id) => {
+	heroDeath: (id: number, turn: number, killedBy: number) => void = (id, turn, killedBy) => {
 		let indexToRemove = this.heros.findIndex((hero) => hero.heroStats.id === id);
 		if (indexToRemove !== -1) {
 			//Meter conexion a la bbdd
 			console.log('hero ' + id + ' dies.');
-			this.deaths.push(this.heros.splice(indexToRemove, 1)[0]); //devuelve los elementos, ergo es un array.
+			this.deaths.push({ turn, killedBy, hero: this.heros.splice(indexToRemove, 1)[0] }); //devuelve los elementos, ergo es un array.
 		} else {
 			console.log('hero ' + id + ' does not exist');
 		}
 	};
 
-	// orderByStats: any = (stat: keyof IHero) => {
-	// 	this.heros.sort((a, b) => (a.heroStats[stat] as any) - (b.heroStats[stat] as any));
-	// };
+	/**
+id_hero 
+id_fight 
+turns 
+hits 
+total_damage 
+crits 
+misses 
+hits_received 
+evasions 
+skills_used 
+currhp 
+killed_by
+ * 
+ */
 
-	// setHeros: any = (newHeros: AnyHero[]) => {
-	// 	this.heros = newHeros;
-	// };
+	saveHeros: (id_fight: number, turn: number) => Promise<boolean> = async (id_fight, lastFightturn) => {
+		let query = `INSERT INTO groupfightstats 
+		VALUES `;
+
+		this.heros.forEach(({ fightStats: { getParamsToInsert }, heroStats }, i) => {
+			let paramsToInsert = getParamsToInsert();
+			query += `(${heroStats.id}, ${id_fight}, ${lastFightturn}, ${paramsToInsert}, null)`;
+
+			//pongo una coma en todos menos el ultimo
+			if (i !== this.heros.length - 1) {
+				query += `,`;
+			}
+		});
+
+		await new Promise((resolve, reject) => {
+			connection.query(query, (err, result) => {
+				resolve(console.log('heros saved'));
+			});
+		});
+
+		return true;
+		//connection.query();
+	};
+
+	saveDeaths: (id_fight: number, turn: number) => Promise<boolean> = async (id_fight, lastFightturn) => {
+		let query = `INSERT INTO groupfightstats 
+		VALUES `;
+
+		this.deaths.forEach(
+			(
+				{
+					hero: {
+						fightStats: { getParamsToInsert },
+						heroStats,
+					},
+					killedBy,
+					turn,
+				},
+				i
+			) => {
+				let paramsToInsert = getParamsToInsert();
+				query += `(${heroStats.id}, ${id_fight}, ${turn}, ${paramsToInsert}, ${killedBy})`;
+
+				//pongo una coma en todos menos el ultimo
+				if (i !== this.deaths.length - 1) {
+					query += `,`;
+				}
+			}
+		);
+
+		await new Promise((resolve, reject) => {
+			connection.query(query, (err, result) => {
+				resolve(console.log('dead heroes burried'));
+			});
+		});
+
+		return true;
+	};
 }
