@@ -182,29 +182,38 @@ export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (
 	console.log({ turns });
 
 	await new Promise((resolve, reject) => {
-		connection.query(`update groupfight set ${fightDrawed ? ` drawed = 1, turns = ${turns} `: ` turns = ${turns} `} where id = ${id_fight};`, async (err, result) => {
-			// console.log(result);
-			id_fight = result.insertId as number;
-			resolve(true);
-		});
+		connection.query(
+			`update groupfight set ${
+				fightDrawed ? ` drawed = 1, turns = ${turns} ` : ` turns = ${turns} `
+			} where id = ${id_fight};`,
+			async (err, result) => {
+				// console.log(result);
+				id_fight = result.insertId as number;
+				resolve(true);
+			}
+		);
 	});
 
 	if (groupA.heros.length) {
 		console.log('entro A');
 		await groupA.saveHeros(id_fight, i);
+		await groupA.saveHerosUpdate();
 	}
 	if (groupA.deaths.length) {
 		console.log('entro A2');
 		await groupA.saveDeaths(id_fight, i);
+		await groupA.updateDeaths();
 	}
 
 	if (groupB.heros.length) {
 		console.log('entro B');
 		await groupB.saveHeros(id_fight, i);
+		await groupB.saveHerosUpdate();
 	}
 	if (groupB.deaths.length) {
 		console.log('entro B2');
 		await groupB.saveDeaths(id_fight, i);
+		await groupA.updateDeaths();
 	}
 
 	console.log('adios');

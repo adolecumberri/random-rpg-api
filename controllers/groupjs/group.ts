@@ -62,22 +62,6 @@ export class HeroGroup {
 		}
 	};
 
-	/**
-id_hero 
-id_fight 
-turns 
-hits 
-total_damage 
-crits 
-misses 
-hits_received 
-evasions 
-skills_used 
-currhp 
-killed_by
- * 
- */
-
 	saveHeros: (id_fight: number, turn: number) => Promise<boolean> = async (id_fight, lastFightturn) => {
 		let query = `INSERT INTO groupfightstats 
 		VALUES `;
@@ -100,6 +84,37 @@ killed_by
 
 		return true;
 		//connection.query();
+	};
+
+	saveHerosUpdate: () => Promise<boolean> = async () => {
+		//actualización heroes currentHp
+		let query = `UPDATE hero SET currentHp = CASE `;
+
+		this.heros.forEach(({ heroStats: { id, currentHp, hp, reg } }, i) => {
+			//si la vida restante + regeneration*hp es < a hp, pongo la vida + la regeneracion. sino, pongo hp, que es la vida max
+			let newHp = currentHp + hp * reg < hp ? currentHp + hp * reg : hp;
+			query += ` WHEN id = ${id} THEN ${newHp}`;
+		});
+		query += ` END 
+		WHERE id IN (`;
+
+		this.heros.forEach(({ heroStats: { id, currentHp, hp, reg } }, i) => {
+			query += `${id}`;
+			if (i !== this.heros.length - 1) {
+				query += `,`;
+			}
+		});
+
+		query += `);`;
+
+		console.log(query);
+		await new Promise((resolve, reject) => {
+			connection.query(query, (err, result) => {
+				resolve(console.log('heros who survived updated'));
+			});
+		});
+
+		return true;
 	};
 
 	saveDeaths: (id_fight: number, turn: number) => Promise<boolean> = async (id_fight, lastFightturn) => {
@@ -128,9 +143,69 @@ killed_by
 			}
 		);
 
+		// console.log(query);
+
 		await new Promise((resolve, reject) => {
 			connection.query(query, (err, result) => {
 				resolve(console.log('dead heroes burried'));
+			});
+		});
+
+		return true;
+	};
+
+	updateDeaths: () => Promise<boolean> = async () => {
+		//actualización heroes currentHp
+		let query = `UPDATE hero SET isalive = CASE `;
+
+		this.deaths.forEach(
+			({
+				hero: {
+					heroStats: { id, currentHp, hp, reg },
+				},
+			}) => {
+				//si la vida restante + regeneration*hp es < a hp, pongo la vida + la regeneracion. sino, pongo hp, que es la vida max
+				query += ` WHEN id = ${id} THEN 0 `;
+			}
+		);
+		query += ` END
+		, currenthp = CASE `;
+
+		this.deaths.forEach(
+			({
+				hero: {
+					heroStats: { id, currentHp, hp, reg },
+				},
+			}) => {
+				query += ` WHEN id = ${id} THEN ${currentHp} `;
+			}
+		);
+
+		query += ` END 
+		WHERE id IN ( `;
+
+		this.deaths.forEach(
+			(
+				{
+					hero: {
+						heroStats: { id },
+					},
+				},
+				i
+			) => {
+				query += `${id}`;
+				if (i !== this.deaths.length - 1) {
+					query += `,`;
+				}
+			}
+		);
+
+		query += ` );`;
+
+		console.log(query);
+		await new Promise((resolve, reject) => {
+			connection.query(query, (err, result) => {
+				resolve(console.log('heros who died, updated'));
 			});
 		});
 
