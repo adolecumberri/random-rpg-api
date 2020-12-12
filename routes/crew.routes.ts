@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { createCrewsByGender, asignCrewsToHero, getCrew } from '../controllers/crew.controller';
+import { createCrewsByGender, asignCrewsToHerBySurname, getCrew } from '../controllers/crew.controller';
 
 const router = Router();
 
 router.route('/create').get(createCrewsByGender);
 
-router.route('/asign').get(asignCrewsToHero);
+router.route('/asign/event=:event').get(asignCrewsToHerBySurname);
 
 router.route('/get/:id_crew').get(getCrew);
 
