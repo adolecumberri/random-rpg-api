@@ -8,6 +8,7 @@ import IndexRoutes from './routes/index.routes';
 import HeroRouter from './routes/hero.routes';
 import CrewRouter from './routes/crew.routes';
 import FightRouter from './routes/fight.routes';
+import MapRouter from './routes/map.routes';
 
 export class App {
 	app: Application | undefined; //creation of the propertie "application"
@@ -65,6 +66,8 @@ export class App {
 		this.app?.use('/hero', HeroRouter); //hero route.
 		this.app?.use('/fight', FightRouter); //hero route.
 		this.app?.use('/crew', CrewRouter) //crews routes
+		
+		this.app?.use('/map', MapRouter) //map routes
 	}
 
 	async listen(): Promise<void> {

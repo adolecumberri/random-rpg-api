@@ -2,11 +2,26 @@ import { HeroGroup } from '../controllers/groupjs/group';
 
 export interface ICity {
 	teams: {
-		M: HeroGroup[];
-		F: HeroGroup[];
-		Other: HeroGroup[];
+		M: ITeam[];
+		F: ITeam[];
+		Other: ITeam[];
 	};
 	id: number;
 	name: string;
 	connections: number[];
+}
+
+export interface ITeam {
+	id: number;
+	name: string;
+	crew_ingame: boolean;
+	side: string;
+	heros_alive: number;
+	heros_death: number;
+}
+
+export interface IMapTurn {
+	id: number;
+	fighting: { A: ITeam; B: ITeam }[];
+	moving: {team: ITeam, from: number, to: number}[]; //From y To son cities.id
 }
