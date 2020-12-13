@@ -1,4 +1,4 @@
-import { rand } from '../../commonModules/utils';
+import { rand, getProb } from '../../commonModules/utils';
 import { connection } from '../../config/database';
 import { ICity, IMapTurn, ITeam } from '../../interfaces/Map.interface';
 import { CIUDADES } from './map.dictionary';
@@ -96,11 +96,105 @@ export class EventMap {
 				moving: [],
 			};
 
-			for (let i = 0; i < this.MAX_FIGHTS_PER_PLACE && c.teams.M.length > 0 && c.teams.F.length > 0; i++) {
-                
+			/*
+            IMapTurn {
+                id: number;
+                fighting: { A: ITeam; B: ITeam }[];
+                moving: {team: ITeam, from: number, to: number}[]; //From y To son cities.id
             }
+            */
+			//4 vueltas || no hay equipos M || no hay equipos F
+			for (let i = 0; i < this.MAX_FIGHTS_PER_PLACE && c.teams.M.length > 0 && c.teams.F.length > 0; i++) {
+				//cargo los parametros de fighting.
+				/*
+                    1- Male-female
+                    2- Male-Other
+                    3- Female-Other
+                   */
+				switch (Math.round(Math.random() * 2 + 1)) {
+					case 2:
+						console.log('case 2');
+						if (c.teams.Other.length) {
+							params.fighting.push({
+								A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
+								B: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
+							});
+							break;
+						}
+						break;
+					case 3:
+						console.log('case 3');
+						//si hay Others, pelean Others, sino male-female
+						if (c.teams.Other.length) {
+							params.fighting.push({
+								A: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
+								B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
+							});
+							break;
+						}
+					default:
+						console.log('case 1');
+						params.fighting.push({
+							A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
+							B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
+						});
+						break;
+				}
+			}
 
-			return params;
+			//TODO: CODIGO PARA EMPUJAR EQUIPO.
+			//NO PARA PREPARAR LA LOGICA.
+			// c.teams.M.forEach((team, index) => {
+			// 	if (this.MIGRATION_PROB < getProb()) {
+			// 		//cojo una id de las connections y meto a la ciudad alli.
+			// 		let idNewCity = c.connections[rand(0, c.connections.length - 1)];
+			// 		this.cities.forEach((citySearched) => {
+			// 			if (citySearched.id === idNewCity) { //si estoy en la ciudad que quiero...
+			// 				citySearched.teams.M.push(c.teams.M.splice(index, 1)[0]); //saco de mi Teams el equipo y te lo meto.
+			// 			}
+			// 		});
+			// 	}
+			// });
+
+			//compruebo si cada equipo restante se va.
+			//params.moving
+			c.teams.M.forEach((team, index) => {
+				if (this.MIGRATION_PROB < getProb()) {
+					params.moving.push({
+						from: c.id,
+						to: c.connections[rand(0, c.connections.length - 1)],
+						team: team,
+						type: 'M',
+					});
+				}
+			});
+
+			//compruebo si cada equipo restante se va.
+			c.teams.F.forEach((team, index) => {
+				if (this.MIGRATION_PROB < getProb()) {
+					params.moving.push({
+						from: c.id,
+						to: c.connections[rand(0, c.connections.length - 1)],
+						team: team,
+						type: 'F',
+					});
+				}
+			});
+
+			//compruebo si cada equipo restante se va.
+			c.teams.Other.forEach((team, index) => {
+				if (this.MIGRATION_PROB < getProb()) {
+					params.moving.push({
+						from: c.id,
+						to: c.connections[rand(0, c.connections.length - 1)],
+						team: team,
+						type: 'Other',
+					});
+				}
+			});
+
+			//Inserto en el array los parametros calculados.
+			turnParams.push(params);
 		});
 
 		//Procesar
@@ -128,4 +222,6 @@ export class EventMap {
 			])
 		);
 	};
+
+	getProb: () => number = () => Math.random();
 }
