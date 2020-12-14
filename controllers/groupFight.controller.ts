@@ -1,6 +1,6 @@
 import { Express, Request, Response, NextFunction } from 'express';
 
-import { getRandomCrew, getSelectedCrew } from '../commonModules/crew';
+import { getCrewByCrewId, getRandomCrew, getSelectedCrew } from '../commonModules/crew';
 import { rand } from '../commonModules/utils';
 import { IHero } from '../interfaces/Hero.Interface';
 import { HeroGroup } from './groupjs/group';
@@ -29,12 +29,12 @@ export async function randomGroupFight(req: Request, res: Response) {
 	console.time('f');
 	let { howmany } = req.params;
 	//Cojo Rando crew
-	let hero1:  AnyHero[] = await getRandomCrew(Number(howmany), false);
+	let hero1: AnyHero[] = await getRandomCrew(Number(howmany), false);
 	let hero2: AnyHero[] = await getRandomCrew(Number(howmany), false);
 
 	//Creo los grupos
-	let groupA: HeroGroup  = new HeroGroup(hero1);
-	let groupB: HeroGroup = new HeroGroup(hero2); 
+	let groupA: HeroGroup = new HeroGroup(hero1);
+	let groupB: HeroGroup = new HeroGroup(hero2);
 
 	await teamFight(groupA, groupB);
 
@@ -44,4 +44,41 @@ export async function randomGroupFight(req: Request, res: Response) {
 	res.sendStatus(200);
 }
 
+//Peleas en equipo por Id, llamadas directamente desde el router.
+export async function GroupFightByIds(idTeamA: number, idTeamB: number) {
+	console.time('f');
+	//Cojo Rando crew
+	let hero1: AnyHero[] = await getCrewByCrewId(Number(idTeamA));
+	let hero2: AnyHero[] = await getCrewByCrewId(Number(idTeamB));
 
+	//Creo los grupos
+	let groupA: HeroGroup = new HeroGroup(hero1);
+	let groupB: HeroGroup = new HeroGroup(hero2);
+
+	await teamFight(groupA, groupB);
+
+	// await Promise.all(pvps).then(() => console.log('Done?'));
+
+	console.timeEnd('f');
+	res.sendStatus(200);
+}
+
+//Peleas en equipo por Id, llamadas directamente desde el router.
+export async function GroupFightByIdsStraight(req: Request, res: Response) {
+	console.time('f');
+	let { idA, idB } = req.params;
+	//Cojo Rando crew
+	let hero1: AnyHero[] = await getCrewByCrewId(Number(idA));
+	let hero2: AnyHero[] = await getCrewByCrewId(Number(idB));
+
+	//Creo los grupos
+	let groupA: HeroGroup = new HeroGroup(hero1);
+	let groupB: HeroGroup = new HeroGroup(hero2);
+
+	await teamFight(groupA, groupB);
+
+	// await Promise.all(pvps).then(() => console.log('Done?'));
+
+	console.timeEnd('f');
+	res.sendStatus(200);
+}

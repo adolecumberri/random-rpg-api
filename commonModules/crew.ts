@@ -28,12 +28,16 @@ let createCrews = (crews: string[]) => {
 let getCrewByCrewId = (id_crew: number) => {
 	let query = `SELECT * FROM hero WHERE id_crew = ${id_crew};`;
 
-	return new Promise((res, rej) => {
-		connection.query(query, (err, result) => {
+	return new Promise<AnyHero[]>((res, rej) => {
+		connection.query(query, (err, result: IHero[]) => {
 			if (err) {
 				rej(err);
 			}
-			res(result);
+
+			let herosResult: any[] = result.map((o, i, herosArr) =>
+				switchClass({ ...herosArr[i], curr_att_interval: o.att_interval })
+			);
+			res(herosResult);
 		});
 	});
 };

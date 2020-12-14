@@ -85,35 +85,28 @@ export class EventMap {
 	//ejecutar turno:
 	// ejecutar peleas y mover resultantes
 	execTurn = () => {
+		this.listCities();
 		let turnParams: IMapTurn[] = [];
 
 		//Cargar
-
-		this.cities.forEach((c) => {
+		this.cities.forEach( (c) => {
 			let params: IMapTurn = {
 				id: c.id,
 				fighting: [],
 				moving: [],
 			};
 
-			/*
-            IMapTurn {
-                id: number;
-                fighting: { A: ITeam; B: ITeam }[];
-                moving: {team: ITeam, from: number, to: number}[]; //From y To son cities.id
-            }
-            */
 			//4 vueltas || no hay equipos M || no hay equipos F
 			for (let i = 0; i < this.MAX_FIGHTS_PER_PLACE && c.teams.M.length > 0 && c.teams.F.length > 0; i++) {
 				//cargo los parametros de fighting.
 				/*
-                    1- Male-female
+                    1 && DEFAULT - Male-female
                     2- Male-Other
                     3- Female-Other
                    */
 				switch (Math.round(Math.random() * 2 + 1)) {
 					case 2:
-						console.log('case 2');
+						//console.log('case 2');
 						if (c.teams.Other.length) {
 							params.fighting.push({
 								A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
@@ -121,9 +114,8 @@ export class EventMap {
 							});
 							break;
 						}
-						break;
 					case 3:
-						console.log('case 3');
+						//console.log('case 3');
 						//si hay Others, pelean Others, sino male-female
 						if (c.teams.Other.length) {
 							params.fighting.push({
@@ -133,7 +125,7 @@ export class EventMap {
 							break;
 						}
 					default:
-						console.log('case 1');
+						//console.log('case 1');
 						params.fighting.push({
 							A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
 							B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
@@ -198,6 +190,14 @@ export class EventMap {
 		});
 
 		//Procesar
+		turnParams.forEach((turnParam, index) => {
+			turnParam.fighting.forEach((f) => {
+
+                    
+
+            });
+		});
+		this.listCities();
 
 		//Descargar
 	};
