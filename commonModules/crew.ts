@@ -27,8 +27,10 @@ let createCrews = (crews: string[]) => {
 
 let getCrewByCrewId = (id_crew: number) => {
 	
-	//TODO: cambiar la query.
-	let query = `SELECT * FROM hero WHERE id_crew = ${id_crew};`;
+	let query = `select hero.* from hero
+	left join heros_crew
+	on hero.id = heros_crew.id_hero
+	where heros_crew.id_crew = ${id_crew};`;
 	console.log('query', query);
 	return new Promise<AnyHero[]>((res, rej) => {
 		connection.query(query, (err, result: IHero[]) => {
@@ -36,6 +38,33 @@ let getCrewByCrewId = (id_crew: number) => {
 				rej(err);
 			}
 			if (result === undefined) {
+				console.log(query);
+				console.log(id_crew, 'gives result undefined: ', result);
+			}
+
+			let herosResult: any[] = result.map((o, i, herosArr) =>
+				switchClass({ ...herosArr[i], curr_att_interval: o.att_interval })
+			);
+			res(herosResult);
+		});
+	});
+};
+
+//get crew by id, but takes on consideration currentHp from the table heros_crew.
+let getCrewByCrewIdInEvent = (id_crew: number) => {
+	
+	let query = `select hero.*, heros_crew.currentHp as currenthp from hero
+	left join heros_crew
+	on hero.id = heros_crew.id_hero
+	where heros_crew.id_crew = ${id_crew};`;
+	console.log('query', query);
+	return new Promise<AnyHero[]>((res, rej) => {
+		connection.query(query, (err, result: IHero[]) => {
+			if (err) {
+				rej(err);
+			}
+			if (result === undefined) {
+				console.log(query);
 				console.log(id_crew, 'gives result undefined: ', result);
 			}
 

@@ -24,6 +24,7 @@ export class EventMap {
 	teams: ITeam[] = [];
 
 	eventType: number;
+	eventId: number = -1;
 
 	MAX_FIGHTS_PER_PLACE = 4;
 	MIGRATION_PROB = 0.33;
@@ -51,9 +52,19 @@ export class EventMap {
         on heros_crew.id_crew = a.id 
         group by crew.id;`;
 
+		//cargo equios
 		await new Promise((resolve, reject) => {
 			connection.query(q, (err, result: ITeam[]) => {
 				this.teams = result;
+				resolve(true);
+			});
+		});
+
+		//cargo evento_Id generando el evento
+		await new Promise((resolve, reject) => {
+			connection.query(`insert into events set name = "HvsM", id_map = 1;`, async (err, result) => {
+                console.log(result);
+				this.eventId = result.insertId as number;
 				resolve(true);
 			});
 		});
@@ -95,14 +106,16 @@ export class EventMap {
                     1 && DEFAULT - Male-female
                     2- Male-Other
                     3- Female-Other
-                   */
+                */
 				switch (Math.round(Math.random() * 2 + 1)) {
 					case 2:
 						//console.log('case 2');
 						if (c.teams.Other.length) {
 							params.fighting.push({
-								A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
-								B: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
+								// A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
+								// B: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
+								A: c.teams.M[Math.floor(Math.random() * c.teams.M.length)],
+								B: c.teams.Other[Math.floor(Math.random() * c.teams.Other.length)],
 							});
 							break;
 						}
@@ -111,16 +124,20 @@ export class EventMap {
 						//si hay Others, pelean Others, sino male-female
 						if (c.teams.Other.length) {
 							params.fighting.push({
-								A: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
-								B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
+								// A: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
+								// B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
+								A: c.teams.Other[Math.floor(Math.random() * c.teams.Other.length)],
+								B: c.teams.F[Math.floor(Math.random() * c.teams.F.length)],
 							});
 							break;
 						}
 					default:
 						//console.log('case 1');
 						params.fighting.push({
-							A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
-							B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
+							// A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
+							// B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
+							A: c.teams.M[Math.floor(Math.random() * c.teams.M.length)],
+							B: c.teams.F[Math.floor(Math.random() * c.teams.F.length)],
 						});
 						break;
 				}
@@ -181,6 +198,8 @@ export class EventMap {
 			turnParams.push(params);
 		});
 
+        console.log("a");
+
 		//Procesar
 		turnParams.forEach(async (turnParam, index) => {
 			turnParam.fighting.forEach(async (f) => {
@@ -211,17 +230,14 @@ export class EventMap {
 					default:
 						console.log(`fight ha dado -1 ?`);
 						break;
-                }
-                
-                await new Promise((resolve, reject) => {
-                    connection.query(query, (err, result) => {
-                      console.log("console post pelea", result);
-                        resolve(true);
-                    });
-                });
+				}
 
+				await Promise.resolve(() => {
+					connection.query(query);
+				});
 			});
 		});
+
 		this.listCities();
 
 		//Descargar

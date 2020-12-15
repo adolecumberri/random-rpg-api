@@ -39,6 +39,10 @@ export type ITurnSingleFight = (
 	flag2: boolean
 };
 
+export interface IGroupFightSolution {
+	
+}
+
 //(attacante: any, defensor: any, flag1, flag2)
 /*
 	return {

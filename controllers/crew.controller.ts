@@ -19,34 +19,6 @@ export async function createCrewsByGender(req: Request, res: Response) {
 	res.sendStatus(200);
 }
 
-//TODO: obsoleto
-export async function asignCrewsToHero_Obsolete(req: Request, res: Response) {
-	let promises: any[] = [];
-
-	APELLIDOS.forEach((apellido: string, index: number) => {
-		let query = `UPDATE hero
-		SET id_crew = ${index + 1}
-		WHERE surname like "${apellido}" AND gender = 1;`;
-		//console.log(query);
-		promises.push(
-			connection.query(query, (err, result) => {
-				console.log(`Rows affected: ${result.affectedRows}`);
-			})
-		);
-		let query2 = `UPDATE hero
-		SET id_crew = ${index + 153}
-		WHERE surname like "${apellido}" AND gender = 0;`;
-		//console.log(query2);
-		promises.push(
-			connection.query(query2, (err, result) => {
-				console.log(`Rows affected: ${result.affectedRows}`);
-			})
-		);
-	});
-	Promise.all(promises);
-
-	res.sendStatus(200);
-}
 
 // inserta en heros_crew los ids de los heroes con  su correspondiente equipo.
 //TODO: controlar las id_crew insertadas. Cuando no empiecen por 1, habrá que meter un paso intermedio creo.
