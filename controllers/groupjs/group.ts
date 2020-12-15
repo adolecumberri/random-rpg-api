@@ -6,13 +6,15 @@ import { rand } from '../../commonModules/utils';
 import { connection } from '../../config/database';
 
 export class HeroGroup {
-	constructor(data: AnyHero[]) {
+	constructor(data: AnyHero[], idCrew?: number) {
 		this.heros = data;
 		this.deaths = [];
+		this.idCrew = idCrew ? idCrew : 0;
 	}
 
 	heros: AnyHero[];
 	deaths: { turn: number; killedBy: number; hero: AnyHero }[];
+	idCrew: number = 0;
 
 	getHerosByClass: (classType: number) => AnyHero[] = (classType: number) => {
 		return this.heros.filter((hero) => hero.heroStats.id_class === classType);
@@ -88,12 +90,12 @@ export class HeroGroup {
 
 	saveHerosUpdate: () => Promise<boolean> = async () => {
 		//actualización heroes currentHp
-		let query = `UPDATE hero SET currentHp = CASE `;
+		let query = `UPDATE heros_crew SET currentHp = CASE `;
 
 		this.heros.forEach(({ heroStats: { id, currentHp, hp, reg } }, i) => {
 			//si la vida restante + regeneration*hp es < a hp, pongo la vida + la regeneracion. sino, pongo hp, que es la vida max
 			let newHp = currentHp + hp * reg < hp ? currentHp + hp * reg : hp;
-			query += ` WHEN id = ${id} THEN ${newHp}`;
+			query += ` WHEN id_hero = ${id} AND id_crew = ${this.idCrew} THEN ${newHp}`;
 		});
 		query += ` END 
 		WHERE id IN (`;
@@ -156,7 +158,7 @@ export class HeroGroup {
 
 	updateDeaths: () => Promise<boolean> = async () => {
 		//actualización heroes currentHp
-		let query = `UPDATE hero SET isalive = CASE `;
+		let query = `UPDATE heros_crew SET hero_isalive = CASE `;
 
 		this.deaths.forEach(
 			({
@@ -165,7 +167,7 @@ export class HeroGroup {
 				},
 			}) => {
 				//si la vida restante + regeneration*hp es < a hp, pongo la vida + la regeneracion. sino, pongo hp, que es la vida max
-				query += ` WHEN id = ${id} THEN 0 `;
+				query += ` WHEN id_hero = ${id} AND id_crew = ${this.idCrew} THEN 0 `;
 			}
 		);
 		query += ` END

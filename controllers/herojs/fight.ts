@@ -65,7 +65,11 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 	}
 };
 
-export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => Promise<number> = async (groupA, groupB) => {
+export const teamFight: (groupA: HeroGroup, groupB: HeroGroup, eventId?: number) => Promise<number> = async (
+	groupA,
+	groupB,
+	eventId = 0
+) => {
 	let id_fight = 0;
 
 	await (async () => {
@@ -197,23 +201,25 @@ export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => Promise<number
 	if (groupA.heros.length) {
 		console.log('entro A');
 		await groupA.saveHeros(id_fight, i);
-		await groupA.saveHerosUpdate();
+
+		eventId && (await groupA.saveHerosUpdate());
 	}
 	if (groupA.deaths.length) {
 		console.log('entro A2');
 		await groupA.saveDeaths(id_fight, i);
-		await groupA.updateDeaths();
+
+		eventId && (await groupA.updateDeaths());
 	}
 
 	if (groupB.heros.length) {
 		console.log('entro B');
 		await groupB.saveHeros(id_fight, i);
-		await groupB.saveHerosUpdate();
+		eventId && (await groupB.saveHerosUpdate());
 	}
 	if (groupB.deaths.length) {
 		console.log('entro B2');
 		await groupB.saveDeaths(id_fight, i);
-		await groupA.updateDeaths();
+		eventId && (await groupA.updateDeaths());
 	}
 
 	/*

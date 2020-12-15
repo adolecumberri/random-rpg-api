@@ -210,7 +210,7 @@ export class EventMap {
                     3: draw -stopped before end
                     4: both death.
                 */
-				let figthResult = await GroupFightByIds(f.A.id, f.B.id);
+				let figthResult = await GroupFightByIds(f.A.id, f.B.id, this.eventId);
 
 				let query: string = '';
 

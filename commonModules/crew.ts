@@ -140,4 +140,4 @@ let getSelectedCrew = (ids: number[]) => {
 	});
 };
 
-export { createCrews, getCrewByCrewId, getRandomCrew, getSelectedCrew, getCrewByClassId };
+export { createCrews, getCrewByCrewId, getRandomCrew, getSelectedCrew, getCrewByClassId, getCrewByCrewIdInEvent };
