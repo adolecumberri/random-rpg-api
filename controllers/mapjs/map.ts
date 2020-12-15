@@ -1,6 +1,7 @@
 import { rand, getProb } from '../../commonModules/utils';
 import { connection } from '../../config/database';
 import { ICity, IMapTurn, ITeam } from '../../interfaces/Map.interface';
+import { GroupFightByIds } from '../groupFight.controller';
 import { CIUDADES } from './map.dictionary';
 
 export class EventMap {
@@ -31,7 +32,7 @@ export class EventMap {
 
 	//init event tendría que cargar randomly los grupos en lugares random.
 	init: () => Promise<void> = async () => {
-		let q = `select crew.id, nombre as name, crew.side , crew_ingame, a.heros_alive, a.heros_death
+		let q = `select crew.id, nombre as name, crew.side , ingame, a.heros_alive, a.heros_death
         from crew 
         inner join heros_crew 
         on crew.id = heros_crew.id_crew
@@ -62,15 +63,6 @@ export class EventMap {
 		console.log('teams loaded');
 		console.log(this.teams.length);
 
-		//cada team, lo meto
-		// for(let i = 0; i < this.teams.length; i++){
-
-		//     if(this.teams[i].side === "MALE"){
-
-		//     }
-
-		// }
-
 		this.teams.forEach((team) => {
 			if (team.side === 'MALE') {
 				this.cities[rand(0, this.cities.length - 1)].teams.M.push(team);
@@ -89,7 +81,7 @@ export class EventMap {
 		let turnParams: IMapTurn[] = [];
 
 		//Cargar
-		this.cities.forEach( (c) => {
+		this.cities.forEach((c) => {
 			let params: IMapTurn = {
 				id: c.id,
 				fighting: [],
@@ -190,12 +182,45 @@ export class EventMap {
 		});
 
 		//Procesar
-		turnParams.forEach((turnParam, index) => {
-			turnParam.fighting.forEach((f) => {
+		turnParams.forEach(async (turnParam, index) => {
+			turnParam.fighting.forEach(async (f) => {
+				/*Fight result
+                    -1: error ?
+                    1: groupA wins
+                    2: groupB wins
+                    3: draw -stopped before end
+                    4: both death.
+                */
+				let figthResult = await GroupFightByIds(f.A.id, f.B.id);
 
-                    
+				let query: string = '';
 
-            });
+				switch (figthResult) {
+					case 1:
+						query = `update crew set ingame = 0 where id = ${f.A.id}`;
+						break;
+					case 2:
+						query = `update crew set ingame = 0 where id = ${f.B.id}`;
+						break;
+					case 3:
+						//nothing.
+						break;
+					case 4:
+						query = `UPDATE crew SET ingame = 0 WHERE id = ${f.A.id} OR id = ${f.B.id}`;
+						break;
+					default:
+						console.log(`fight ha dado -1 ?`);
+						break;
+                }
+                
+                await new Promise((resolve, reject) => {
+                    connection.query(query, (err, result) => {
+                      console.log("console post pelea", result);
+                        resolve(true);
+                    });
+                });
+
+			});
 		});
 		this.listCities();
 
@@ -203,14 +228,6 @@ export class EventMap {
 	};
 
 	listCities = () => {
-		// this.cities.forEach((c: ICity) => {
-		// 	{
-		// 		console.log(
-		// 			`${c.id}-\t${c.name}   \t -\tconnections:\t${c.connections} -\tF: ${c.teams.F.length} -\tM: ${c.teams.M.length} -\tOTHERS: ${c.teams.Other.length} `
-		// 		);
-		// 	}
-		// });
-
 		console.table(
 			this.cities.map((c) => [
 				c.id,

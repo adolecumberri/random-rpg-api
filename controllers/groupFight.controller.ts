@@ -46,7 +46,7 @@ export async function randomGroupFight(req: Request, res: Response) {
 
 //Peleas en equipo por Id, llamadas directamente desde el router.
 export async function GroupFightByIds(idTeamA: number, idTeamB: number) {
-	console.time('f');
+	console.time(`f-${idTeamA}-${idTeamB}`);
 	//Cojo Rando crew
 	let hero1: AnyHero[] = await getCrewByCrewId(Number(idTeamA));
 	let hero2: AnyHero[] = await getCrewByCrewId(Number(idTeamB));
@@ -55,12 +55,19 @@ export async function GroupFightByIds(idTeamA: number, idTeamB: number) {
 	let groupA: HeroGroup = new HeroGroup(hero1);
 	let groupB: HeroGroup = new HeroGroup(hero2);
 
-	await teamFight(groupA, groupB);
+	/*Fight result
+	-1: error ?
+	1: groupA wins
+	2: groupB wins
+	3: draw -stopped before end
+	4: both death.
+	*/
+	let result = await teamFight(groupA, groupB);
 
 	// await Promise.all(pvps).then(() => console.log('Done?'));
 
-	console.timeEnd('f');
-	res.sendStatus(200);
+	console.timeEnd(`f-${idTeamA}-${idTeamB}`);
+	return result;
 }
 
 //Peleas en equipo por Id, llamadas directamente desde el router.

@@ -65,7 +65,7 @@ export const pvp: (hero1: AnyHero, hero2: AnyHero) => void = async (hero1, hero2
 	}
 };
 
-export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (groupA, groupB) => {
+export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => Promise<number> = async (groupA, groupB) => {
 	let id_fight = 0;
 
 	await (async () => {
@@ -216,9 +216,25 @@ export const teamFight: (groupA: HeroGroup, groupB: HeroGroup) => void = async (
 		await groupA.updateDeaths();
 	}
 
-	console.log('adios');
-	// console.log(groupA);
-	// console.log(groupB);
+	/*
+	-1: error ?
+	1: groupA wins
+	2: groupB wins
+	3: draw -stopped before end
+	4: both death.
+	*/
+	let result = -1;
+	if (!groupA.heros.length && !groupB.heros.length) {
+		result = 4;
+	} else if (!groupA.heros.length) {
+		result = 2;
+	} else if (!groupB.heros.length) {
+		result = 1;
+	} else if (groupA.heros.length && groupA.heros.length) {
+		result = 3;
+	}
+	console.log(`fight result ${result}`);
+	return result;
 
 	//TODO: final de la pelea
 };

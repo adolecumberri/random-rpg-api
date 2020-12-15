@@ -14,7 +14,7 @@ export interface ICity {
 export interface ITeam {
 	id: number;
 	name: string;
-	crew_ingame: boolean;
+	ingame: boolean;
 	side: string;
 	heros_alive: number;
 	heros_death: number;

@@ -26,12 +26,17 @@ let createCrews = (crews: string[]) => {
 };
 
 let getCrewByCrewId = (id_crew: number) => {
+	
+	//TODO: cambiar la query.
 	let query = `SELECT * FROM hero WHERE id_crew = ${id_crew};`;
-
+	console.log('query', query);
 	return new Promise<AnyHero[]>((res, rej) => {
 		connection.query(query, (err, result: IHero[]) => {
 			if (err) {
 				rej(err);
+			}
+			if (result === undefined) {
+				console.log(id_crew, 'gives result undefined: ', result);
 			}
 
 			let herosResult: any[] = result.map((o, i, herosArr) =>
