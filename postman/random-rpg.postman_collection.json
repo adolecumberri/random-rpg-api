@@ -1,0 +1,317 @@
+{
+	"info": {
+		"_postman_id": "f147b461-5a11-4fa5-aaf8-07cd79d931dc",
+		"name": "random-rpg",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Crews",
+			"item": [
+				{
+					"name": "AsignCrews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/crew/asign/event=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"crew",
+								"asign",
+								"event=1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateCrews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/crew/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"crew",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCrewByCrewId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/crew/get/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"crew",
+								"get",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Heros",
+			"item": [
+				{
+					"name": "createHeros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/hero/create/20000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"hero",
+								"create",
+								"20000"
+							]
+						},
+						"description": "Crea heroes dependiendo del numero insertado"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "map",
+			"item": [
+				{
+					"name": "Init_event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/map/init/event=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"map",
+								"init",
+								"event=1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Fights",
+			"item": [
+				{
+					"name": "RandomGroupFight",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/group/random/30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"group",
+								"random",
+								"30"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RandomFight1v1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/1v1/random",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"1v1",
+								"random"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fight_1v1_by_ids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/1v1/99387/99062",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"1v1",
+								"99387",
+								"99062"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fight_1v1_recursive_by_ids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/1v1/recursive/4842/97096/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"1v1",
+								"recursive",
+								"4842",
+								"97096",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fight_between_Classes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/loadstats/6/4/1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"loadstats",
+								"6",
+								"4",
+								"1000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fight_one_class_vs_All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/loadstats/1/1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"loadstats",
+								"1",
+								"1000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FIght_1v1_by_class_ids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/1v1/byClass/4/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"1v1",
+								"byClass",
+								"4",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fights_random",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/fight/random/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"fight",
+								"random",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

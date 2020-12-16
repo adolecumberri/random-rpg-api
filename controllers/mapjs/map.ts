@@ -63,7 +63,7 @@ export class EventMap {
 		//cargo evento_Id generando el evento
 		await new Promise((resolve, reject) => {
 			connection.query(`insert into events set name = "HvsM", id_map = 1;`, async (err, result) => {
-                console.log(result);
+				console.log(result);
 				this.eventId = result.insertId as number;
 				resolve(true);
 			});
@@ -198,7 +198,7 @@ export class EventMap {
 			turnParams.push(params);
 		});
 
-        console.log("a");
+		console.log('a');
 
 		//Procesar
 		turnParams.forEach(async (turnParam, index) => {
@@ -210,7 +210,7 @@ export class EventMap {
                     3: draw -stopped before end
                     4: both death.
                 */
-				let figthResult = await GroupFightByIds(f.A.id, f.B.id, this.eventId);
+				let figthResult = await GroupFightByIds(f.A.id, f.B.id);
 
 				let query: string = '';
 

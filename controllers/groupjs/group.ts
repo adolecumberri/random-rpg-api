@@ -98,7 +98,7 @@ export class HeroGroup {
 			query += ` WHEN id_hero = ${id} AND id_crew = ${this.idCrew} THEN ${newHp}`;
 		});
 		query += ` END 
-		WHERE id IN (`;
+		WHERE id_hero IN (`;
 
 		this.heros.forEach(({ heroStats: { id, currentHp, hp, reg } }, i) => {
 			query += `${id}`;
@@ -179,12 +179,12 @@ export class HeroGroup {
 					heroStats: { id, currentHp, hp, reg },
 				},
 			}) => {
-				query += ` WHEN id = ${id} THEN ${currentHp} `;
+				query += ` WHEN id_hero = ${id} THEN ${currentHp} `;
 			}
 		);
 
 		query += ` END 
-		WHERE id IN ( `;
+		WHERE id_hero IN ( `;
 
 		this.deaths.forEach(
 			(
