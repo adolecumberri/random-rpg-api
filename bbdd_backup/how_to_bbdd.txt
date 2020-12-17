@@ -1,0 +1,20 @@
+
+
+- Insertar datos de estructura_bbdd_$date.sql.
+esto crea la base de datos.
+
+- Valores Basicos.sql
+esto mete los datos basicos que tengo ahora mismo
+    1- clases
+    2- stats para cada clase junto con sus alteraciones
+    3- Estadisticas de las clases en cada version (9 por el momento)
+    4- Mapa
+    5- Localizaciones del Mapa
+    6- Conexiones dentro del mapa.
+
+- Crear heroes
+    via request.
+    
+- Crear y asignar equipos. (tambien la tabla np heros_crew.)
+    via request.
+
