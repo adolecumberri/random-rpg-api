@@ -3,7 +3,7 @@ import { createCrewsByGender, asignCrewsToHerBySurname, getCrew } from '../contr
 
 const router = Router();
 
-router.route('/create').get(createCrewsByGender);
+router.route('/create/eventtype=:eventType').get(createCrewsByGender);
 
 router.route('/asign/event=:event').get(asignCrewsToHerBySurname);
 

@@ -46,7 +46,7 @@ let createHero = () => {
 		surname: name[1]
 	};
 	randHero['hp'] = Math.round(randHero['hp']);
-	randHero['currentHp'] = randHero.hp;
+	//randHero['currentHp'] = randHero.hp;
 	randHero['dmg'] = Math.round(randHero['dmg']);
 	randHero['def'] = Math.round(randHero['def']);
 	//console.log(`Random Hero: \n ${JSON.stringify(randHero.name)}`);

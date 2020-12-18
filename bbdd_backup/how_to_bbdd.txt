@@ -17,4 +17,3 @@ esto mete los datos basicos que tengo ahora mismo
     
 - Crear y asignar equipos. (tambien la tabla np heros_crew.)
     via request.
-

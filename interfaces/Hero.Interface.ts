@@ -1,7 +1,7 @@
 
 export interface IHeroStats{
     hp: number,
-    currentHp: number,
+   // currentHp: number,
     dmg: number,
     def: number,
     crit: number,
