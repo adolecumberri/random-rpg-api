@@ -14,7 +14,6 @@ export async function createCrewsByGender(req: Request, res: Response) {
 }
 
 // inserta en heros_crew los ids de los heroes con  su correspondiente equipo.
-//TODO: controlar las id_crew insertadas. Cuando no empiecen por 1, habrá que meter un paso intermedio creo.
 export async function asignCrewsToHerBySurname(req: Request, res: Response) {
   let evento = req.params.event;
   let promises: any[] = [];
@@ -31,7 +30,10 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
 
   await (async () => {
     await new Promise((resolve, reject) => {
-      let q = `select id, SUBSTRING(nombre,5) as surname, side from crew where evento = 1;`;
+      let q = `select id, SUBSTRING(nombre,5) as surname, side from crew where evento = ${Number(
+        evento
+      )};`;
+      console.log(q);
       connection.query(q, async (err, result) => {
         infoCrew = result;
         console.log("ESTRUCTURA INFO CREW");
@@ -44,11 +46,11 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
   //infoCrew.filter( b =>b.surname === "REYES" && b.side === "MALE")[0].id
 
   APELLIDOS.forEach(async (apellido: string, index: number) => {
-    let idsMale: {id:number, hp: number}[] = [];
+    let idsMale: { id: number; hp: number }[] = [];
     let idCrew = infoCrew.filter(
       (b) => b.surname === apellido && b.side === "MALE"
     )[0].id;
-    console.log({ apellido });
+    
     await (async () => {
       await new Promise((resolve, reject) => {
         let q = `select id, hp from hero where surname like "${apellido}" AND gender = 1`;
@@ -74,21 +76,21 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
     console.log(query);
 
     promises.push(
-      Promise.resolve(() => {
+      new Promise((err, res) => {
         connection.query(query, (err, result) => {
-          return true;
+          if(err) throw err;
+          res(result);
         });
       })
     );
   });
 
-
   //FEMALE
   APELLIDOS.forEach(async (apellido: string, index: number) => {
-    let idsFemale: {id:number, hp: number}[] = [];
-	let idCrew = infoCrew.filter(
-		(b) => b.surname === apellido && b.side === "FEMALE"
-	  )[0].id;
+    let idsFemale: { id: number; hp: number }[] = [];
+    let idCrew = infoCrew.filter(
+      (b) => b.surname === apellido && b.side === "FEMALE"
+    )[0].id;
 
     await (async () => {
       await new Promise((resolve, reject) => {
@@ -113,9 +115,10 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
     });
 
     promises.push(
-      Promise.resolve(() => {
+      new Promise((err, res) => {
         connection.query(query, (err, result) => {
-          return true
+          if(err) throw err;
+          res(result);
         });
       })
     );
