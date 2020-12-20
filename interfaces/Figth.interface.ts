@@ -40,7 +40,17 @@ export type ITurnSingleFight = (
 };
 
 export interface IGroupFightSolution {
-	
+	A: {
+		id_crew: number,
+		heros_alives: number[],
+		heros_deaths: number[]
+	} | null,
+	B: {
+		id_crew: number,
+		heros_alives: number[],
+		heros_deaths: number[]
+	} | null,
+	groupFightResult: number
 }
 
 //(attacante: any, defensor: any, flag1, flag2)

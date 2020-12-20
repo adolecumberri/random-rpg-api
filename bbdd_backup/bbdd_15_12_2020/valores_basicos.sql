@@ -12,6 +12,9 @@ INSERT INTO `version_stats` VALUES (1,1,276,24.00),(1,1,276,24.00),(2,1,779,35.0
 /* 1º mapa*/
 INSERT INTO `map` VALUES( 1, 'spain');
 
+/*genero mapa*/
+insert into events values (	1, "Womens versus Mans", 1);
+
 /*localizaciones del 1º mapa*/
 INSERT INTO `map_locations` VALUES (1, 'albacete', 1),(2, 'almería', 1),(3, 'asturias', 1),(4, 'badajoz', 1),(5, 'barcelona', 1),(6, 'bilbao', 1),(7, 'ciudad real', 1),(8, 'huelva', 1),(9, 'madrid', 1),(10, 'malaga', 1),(11, 'murcia', 1),(12, 'palencia', 1),(13, 'salamanca', 1),(14, 'santiago de compostela', 1),(15, 'soria', 1),(16, 'valencia', 1),(17, 'zaragoza', 1) ;
 

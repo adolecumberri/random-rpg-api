@@ -2,6 +2,7 @@ import { Express, Request, Response, NextFunction } from 'express';
 
 import { getCrewByCrewId, getCrewByCrewIdInEvent, getRandomCrew, getSelectedCrew } from '../commonModules/crew';
 import { rand } from '../commonModules/utils';
+import { IGroupFightSolution } from '../interfaces/Figth.interface';
 import { IHero } from '../interfaces/Hero.Interface';
 import { HeroGroup } from './groupjs/group';
 import { AnyHero } from './herojs/classes';
@@ -51,6 +52,14 @@ export const GroupFightByIds: (idTeamA: number, idTeamB: number, eventId?: numbe
 	eventId = -1
 ) => {
 	console.time(`f-${idTeamA}-${idTeamB}`);
+
+	//IGroupFightSolution
+	let result: IGroupFightSolution = {
+		A: null,
+		B: null,
+		groupFightResult: -1
+	}
+
 	//Cojo Rando crew
 	let hero1: AnyHero[] = await getCrewByCrewIdInEvent(Number(idTeamA));
 	let hero2: AnyHero[] = await getCrewByCrewIdInEvent(Number(idTeamB));
@@ -66,12 +75,12 @@ export const GroupFightByIds: (idTeamA: number, idTeamB: number, eventId?: numbe
 	3: draw -stopped before end
 	4: both death.
 	*/
-	let result = await teamFight(groupA, groupB, eventId);
+	result = await teamFight(groupA, groupB, eventId);
 
 	// await Promise.all(pvps).then(() => console.log('Done?'));
 
 	console.timeEnd(`f-${idTeamA}-${idTeamB}`);
-	return Promise.resolve(result);
+	return Promise.resolve(result.groupFightResult);
 };
 
 //Peleas en equipo por Id, llamadas directamente desde el router.

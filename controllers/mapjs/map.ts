@@ -200,6 +200,9 @@ export class EventMap {
 
 		console.log('a');
 
+
+		//TODO: preparar la parte de proceso para que actualice heros_crew que la base de datos y su estructura 
+		//ha cambiado.
 		//Procesar
 		turnParams.forEach(async (turnParam, index) => {
 			turnParam.fighting.forEach(async (f) => {
