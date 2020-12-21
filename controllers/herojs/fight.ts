@@ -262,6 +262,7 @@ export const teamFight: (
 		heros_deaths: groupB.deaths.map( h => h.hero.heroStats.id)
 	},
     groupFightResult: -1,
+    id_groupFight: id_fight
   };
 
   if (!groupA.heros.length && !groupB.heros.length) {

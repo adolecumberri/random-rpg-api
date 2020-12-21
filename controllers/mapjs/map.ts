@@ -6,6 +6,7 @@ import { CIUDADES } from "./map.dictionary";
 
 export class EventMap {
   constructor(eventType: number) {
+	//   TODO: Cargar de la base de datos el mapa y el evento.
     this.eventType = eventType;
     //Carga de ciudades
     this.cities = CIUDADES.map((city) => {
@@ -29,7 +30,7 @@ export class EventMap {
   MAX_FIGHTS_PER_PLACE = 4;
   MIGRATION_PROB = 0.33;
 
-  eventDay = 0;
+  eventTurn = 0;
 
   //init event tendría que cargar randomly los grupos en lugares random.
   init: () => Promise<void> = async () => {
@@ -100,6 +101,8 @@ export class EventMap {
   //ejecutar turno:
   // ejecutar peleas y mover resultantes
   execTurn = () => {
+    //pasa un turno
+    this.eventTurn++;
     this.listCities();
     let turnParams: IMapTurn[] = [];
 
@@ -224,10 +227,8 @@ export class EventMap {
 
     console.log("a");
 
-    //TODO: preparar la parte de proceso para que actualice heros_crew que la base de datos y su estructura
-    //ha cambiado.
     //Procesar
-    turnParams.forEach(async (turnParam, index) => {
+    turnParams.forEach(async (turnParam, index, array) => {
       turnParam.fighting.forEach(async (f) => {
         /*Fight result
                     -1: error ?
@@ -240,7 +241,7 @@ export class EventMap {
 
         let query: string = "";
 
-        switch (figthResult) {
+        switch (figthResult.groupFightResult) {
           case 1:
             query = `update crew set ingame = 0 where id = ${f.A.id}`;
             break;
@@ -260,15 +261,27 @@ export class EventMap {
 
         console.log("turno out", query);
 
-        await Promise.resolve(() => {
-          connection.query(query);
+        await Promise.resolve(async () => {
+          await connection.query(query, async (err, res) => {
+            if (err) throw err;
+            res(
+              //id_event, id_groupfight, id_map, event_turn
+              await connection.query(
+                `INSERT INTO event_journal VALUES (${this.eventType}, ${figthResult.id_groupFight}, 1, ${this.eventTurn});`,
+                (err, res) => {
+                  if (err) throw err;
+                  res(res.insertId);
+                }
+              )
+            );
+          });
         });
       });
     });
 
+	//Descargar
+	//TODO: cargar comprobantes. Ha acabado el combate?
     this.listCities();
-
-    //Descargar
   };
 
   listCities = () => {

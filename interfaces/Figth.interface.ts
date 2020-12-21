@@ -50,7 +50,8 @@ export interface IGroupFightSolution {
 		heros_alives: number[],
 		heros_deaths: number[]
 	} | null,
-	groupFightResult: number
+	groupFightResult: number,
+	id_groupFight: number
 }
 
 //(attacante: any, defensor: any, flag1, flag2)
