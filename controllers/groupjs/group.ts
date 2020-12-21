@@ -64,6 +64,7 @@ export class HeroGroup {
 		}
 	};
 
+	//update  groupFightStats
 	saveHeros: (id_fight: number, turn: number) => Promise<boolean> = async (id_fight, lastFightturn) => {
 		let query = `INSERT INTO groupfightstats 
 		VALUES `;
@@ -88,6 +89,7 @@ export class HeroGroup {
 		//connection.query();
 	};
 
+	//update heros in heros_crew
 	saveHerosUpdate: () => Promise<boolean> = async () => {
 		//actualización heroes currentHp
 		let query = `UPDATE heros_crew SET currentHp = CASE `;
@@ -119,6 +121,7 @@ export class HeroGroup {
 		return true;
 	};
 
+	//update groupFightStats but adding "killed by" and "turn".
 	saveDeaths: (id_fight: number, turn: number) => Promise<boolean> = async (id_fight, lastFightturn) => {
 		let query = `INSERT INTO groupfightstats 
 		VALUES `;
@@ -156,6 +159,7 @@ export class HeroGroup {
 		return true;
 	};
 
+	//update currentHp and isAlive para los muertos del equipo
 	updateDeaths: () => Promise<boolean> = async () => {
 		//actualización heroes currentHp
 		let query = `UPDATE heros_crew SET hero_isalive = CASE `;

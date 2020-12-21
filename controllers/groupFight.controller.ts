@@ -76,6 +76,8 @@ export const GroupFightByIds: (idTeamA: number, idTeamB: number, eventId?: numbe
 	4: both death.
 	*/
 	result = await teamFight(groupA, groupB, eventId);
+// result es IGroupFightSolution <---
+
 
 	// await Promise.all(pvps).then(() => console.log('Done?'));
 
