@@ -130,7 +130,7 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
 }
 
 export async function getCrew({ params }: Request, res: Response) {
-  let id_crew = params.id_crew; //TODO: checkear si es un numero y si puede no viene
+  let id_crew = params.id_crew; 
 
   let crew = await getCrewByCrewId(Number(id_crew));
   res.send(JSON.stringify(crew));

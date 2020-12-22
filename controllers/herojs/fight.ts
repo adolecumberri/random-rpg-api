@@ -138,7 +138,7 @@ export const teamFight: (
           //TODO: think about: while creating promises, you can check multiple times the same hero and kill him several times.
           await Promise.all(
             attackersA.map(async (att, i) => {
-              console.log(att.heroStats.id + " attacks");
+              //console.log(att.heroStats.id + " attacks");
 
               let hittedB = groupB.getRandomHero();
 
@@ -164,7 +164,7 @@ export const teamFight: (
         if (groupA.heros.length) {
           await Promise.all(
             attackersB.map(async (att, i) => {
-              console.log(att.heroStats.id + " attacks");
+             // console.log(att.heroStats.id + " attacks");
 
               let hittedA = groupA.getRandomHero();
 
@@ -197,7 +197,7 @@ export const teamFight: (
     turns++;
   } while (!fightDrawed && !flagA && !flagB);
 
-  console.log({ turns });
+  //console.log({ turns });
 
   await new Promise((resolve, reject) => {
     connection.query(
@@ -265,6 +265,7 @@ export const teamFight: (
     id_groupFight: id_fight
   };
 
+  //solucion de la pelea en equipo.
   if (!groupA.heros.length && !groupB.heros.length) {
     result.groupFightResult = 4;
   } else if (!groupA.heros.length) {
@@ -277,5 +278,4 @@ export const teamFight: (
   console.log(`fight result ${result}`);
   return result;
 
-  //TODO: final de la pelea
 };

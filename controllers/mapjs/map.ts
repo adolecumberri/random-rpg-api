@@ -75,7 +75,7 @@ export class EventMap {
       connection.query(
         `insert into events set name = "HvsM", id_map = 1;`,
         async (err, result) => {
-          console.log(result);
+          console.log(`Created event type ${this.eventType}. Id: ${result.insertId}`);
           this.eventId = result.insertId as number;
           resolve(true);
         }
@@ -169,20 +169,6 @@ export class EventMap {
             break;
         }
       }
-
-      //TODO: CODIGO PARA EMPUJAR EQUIPO.
-      //NO PARA PREPARAR LA LOGICA.
-      // c.teams.M.forEach((team, index) => {
-      // 	if (this.MIGRATION_PROB < getProb()) {
-      // 		//cojo una id de las connections y meto a la ciudad alli.
-      // 		let idNewCity = c.connections[rand(0, c.connections.length - 1)];
-      // 		this.cities.forEach((citySearched) => {
-      // 			if (citySearched.id === idNewCity) { //si estoy en la ciudad que quiero...
-      // 				citySearched.teams.M.push(c.teams.M.splice(index, 1)[0]); //saco de mi Teams el equipo y te lo meto.
-      // 			}
-      // 		});
-      // 	}
-      // });
 
       //compruebo si cada equipo restante se va.
       //params.moving
