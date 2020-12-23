@@ -6,7 +6,7 @@ import { CIUDADES } from "./map.dictionary";
 
 export class EventMap {
   constructor(eventType: number) {
-	//   TODO: Cargar de la base de datos el mapa y el evento.
+    //   TODO: Cargar de la base de datos el mapa y el evento.
     this.eventType = eventType;
     //Carga de ciudades
     this.cities = CIUDADES.map((city) => {
@@ -75,7 +75,9 @@ export class EventMap {
       connection.query(
         `insert into events set name = "HvsM", id_map = 1;`,
         async (err, result) => {
-          console.log(`Created event type ${this.eventType}. Id: ${result.insertId}`);
+          console.log(
+            `Created event type ${this.eventType}. Id: ${result.insertId}`
+          );
           this.eventId = result.insertId as number;
           resolve(true);
         }
@@ -114,7 +116,8 @@ export class EventMap {
         moving: [],
       };
 
-      //4 vueltas || no hay equipos M || no hay equipos F
+	  //4 vueltas || no hay equipos M || no hay equipos F
+	  // cargo params del attributo params.fighting
       for (
         let i = 0;
         i < this.MAX_FIGHTS_PER_PLACE &&
@@ -133,8 +136,6 @@ export class EventMap {
             //console.log('case 2');
             if (c.teams.Other.length) {
               params.fighting.push({
-                // A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
-                // B: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
                 A: c.teams.M[Math.floor(Math.random() * c.teams.M.length)],
                 B:
                   c.teams.Other[
@@ -148,8 +149,6 @@ export class EventMap {
             //si hay Others, pelean Others, sino male-female
             if (c.teams.Other.length) {
               params.fighting.push({
-                // A: c.teams.Other.splice(Math.floor(Math.random() * c.teams.Other.length), 1)[0],
-                // B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
                 A:
                   c.teams.Other[
                     Math.floor(Math.random() * c.teams.Other.length)
@@ -161,8 +160,6 @@ export class EventMap {
           default:
             //console.log('case 1');
             params.fighting.push({
-              // A: c.teams.M.splice(Math.floor(Math.random() * c.teams.M.length), 1)[0],
-              // B: c.teams.F.splice(Math.floor(Math.random() * c.teams.F.length), 1)[0],
               A: c.teams.M[Math.floor(Math.random() * c.teams.M.length)],
               B: c.teams.F[Math.floor(Math.random() * c.teams.F.length)],
             });
@@ -247,26 +244,28 @@ export class EventMap {
 
         console.log("turno out", query);
 
-        await Promise.resolve(async () => {
-          await connection.query(query, async (err, res) => {
-            if (err) throw err;
-            res(
+        await Promise.resolve(
+          new Promise((res, rej) => {
+            connection.query(query, async (err1, res1) => {
+              if (err1) throw err1;
+
               //id_event, id_groupfight, id_map, event_turn
-              await connection.query(
+              connection.query(
                 `INSERT INTO event_journal VALUES (${this.eventType}, ${figthResult.id_groupFight}, 1, ${this.eventTurn});`,
-                (err, res) => {
-                  if (err) throw err;
-                  res(res.insertId);
+                (err2, res2) => {
+                  if (err2) throw err2;
+                  res(res2.insertId);
                 }
-              )
-            );
-          });
-        });
+              );
+            });
+          })
+        );
       });
     });
 
-	//Descargar
+    //Descargar
 	//TODO: cargar comprobantes. Ha acabado el combate?
+	console.log("finished turn");
     this.listCities();
   };
 

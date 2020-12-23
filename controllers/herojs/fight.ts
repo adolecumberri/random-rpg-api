@@ -89,7 +89,7 @@ export const teamFight: (
       connection.query(
         `insert into groupfight set name = "${prueba}";`,
         async (err, result) => {
-          // console.log(result);
+          console.log("Id de la batalla", result.insertId);
           id_fight = result.insertId as number;
           resolve(true);
         }
@@ -124,7 +124,7 @@ export const teamFight: (
   }
 
   let i = 1;
-  let turnUntil = 100;
+  let turnUntil = 60;
   let turn: () => Promise<void> = async () => {
     for (; i < turnUntil && !flagA && !flagB; i++) {
       //atacantes A
@@ -192,9 +192,10 @@ export const teamFight: (
   let turns = 1;
   do {
     await turn();
-    turnUntil += 100;
+    turnUntil += 60;
     fightDrawed = drawProb > Math.random();
     turns++;
+    console.log({turns});
   } while (!fightDrawed && !flagA && !flagB);
 
   //console.log({ turns });
@@ -206,7 +207,6 @@ export const teamFight: (
       } where id = ${id_fight};`,
       async (err, result) => {
         // console.log(result);
-        id_fight = result.insertId as number;
         resolve(true);
       }
     );

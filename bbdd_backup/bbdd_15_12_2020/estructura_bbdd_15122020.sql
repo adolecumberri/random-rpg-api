@@ -161,16 +161,17 @@ CREATE TABLE `events` (
   CONSTRAINT `id_map_fk` FOREIGN KEY (`id_map`) REFERENCES `map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
+/* las jornadas de los eventos.*/
+/*
+id_action have referencia a groupfight.id si action = "FIGHTING"
+id_action hace referencia a eventaction.id si action = "MOVING" 
+*/
 CREATE TABLE `event_journal` (
-  `id_event` int NOT NULL,
-  `id_groupfight` int NOT NULL,
-  `id_map` int NOT NULL,
-  `event_turn` int DEFAULT NULL,
-  KEY `event_journal_ibfk_2` (`id_groupfight`),
-  KEY `event_journal_ibfk_3` (`id_map`),
-  KEY `event_journal_ibfk_1_idx` (`id_event`),
-  CONSTRAINT `event_journal_ibfk_1` FOREIGN KEY (`id_event`) REFERENCES `events` (`id`),
-  CONSTRAINT `event_journal_ibfk_2` FOREIGN KEY (`id_groupfight`) REFERENCES `groupfight` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `event_journal_ibfk_3` FOREIGN KEY (`id_map`) REFERENCES `map_locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+ id int not null auto_increment primary key,
+ `id_event` int NOT NULL,
+ turn int not null default -1,
+ action ENUM("FIGHTING","MOVING","STAING"),
+ id_action int default null,
+ 
+ CONSTRAINT `event_journal_ibfk_1` FOREIGN KEY (`id_event`) REFERENCES `events` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
