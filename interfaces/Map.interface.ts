@@ -24,6 +24,7 @@ export interface IMapTurn {
 	id: number;
 	fighting: { A: ITeam; B: ITeam }[];
 	moving: {team: ITeam, from: number, to: number,  type: "M" | "F" | "Other"}[]; //From y To son cities.id
+	staying: {team: ITeam, where: number, type: "M" | "F" | "Other" }[],
 	idFightDone?: number 
    
 }

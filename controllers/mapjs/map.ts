@@ -114,10 +114,11 @@ export class EventMap {
         id: c.id,
         fighting: [],
         moving: [],
+        staying: [],
       };
 
-	  //4 vueltas || no hay equipos M || no hay equipos F
-	  // cargo params del attributo params.fighting
+      //4 vueltas || no hay equipos M || no hay equipos F
+      // cargo params del attributo params.fighting
       for (
         let i = 0;
         i < this.MAX_FIGHTS_PER_PLACE &&
@@ -169,12 +170,16 @@ export class EventMap {
 
       //compruebo si cada equipo restante se va.
       //params.moving
+
       c.teams.M.forEach((team, index) => {
         if (this.MIGRATION_PROB < getProb()) {
           params.moving.push({
             from: c.id,
             to: c.connections[rand(0, c.connections.length - 1)],
-            team: team,
+            team: c.teams.M.splice(
+              Math.floor(Math.random() * c.teams.M.length),
+              1
+            )[0],
             type: "M",
           });
         }
@@ -186,7 +191,10 @@ export class EventMap {
           params.moving.push({
             from: c.id,
             to: c.connections[rand(0, c.connections.length - 1)],
-            team: team,
+            team: c.teams.F.splice(
+              Math.floor(Math.random() * c.teams.F.length),
+              1
+            )[0],
             type: "F",
           });
         }
@@ -198,11 +206,48 @@ export class EventMap {
           params.moving.push({
             from: c.id,
             to: c.connections[rand(0, c.connections.length - 1)],
-            team: team,
+            team: c.teams.Other.splice(
+              Math.floor(Math.random() * c.teams.Other.length),
+              1
+            )[0],
             type: "Other",
           });
         }
       });
+
+      //Params.staying
+      //Si no se han ido, estan en estado "staying"
+      params.staying.push(
+        c.teams.M.map(() => {
+          return {
+            team: c.teams.M.splice(0, 1)[0],
+            where: c.id,
+            type: "M",
+          };
+        }) as any
+      );
+
+      //Equipos femeninos quedandose
+      params.staying.push(
+        c.teams.F.map(() => {
+          return {
+            team: c.teams.F.splice(0, 1)[0],
+            where: c.id,
+            type: "F",
+          };
+        }) as any
+      );
+
+      //Other teams staying
+      params.staying.push(
+        c.teams.Other.map(() => {
+          return {
+            team: c.teams.Other.splice(0, 1)[0],
+            where: c.id,
+            type: "Other",
+          };
+        }) as any
+      );
 
       //Inserto en el array los parametros calculados.
       turnParams.push(params);
@@ -214,12 +259,12 @@ export class EventMap {
     turnParams.forEach(async (turnParam, index, array) => {
       turnParam.fighting.forEach(async (f) => {
         /*Fight result
-                    -1: error ?
-                    1: groupA wins
-                    2: groupB wins
-                    3: draw -stopped before end
-                    4: both death.
-                */
+            -1: error ?
+            1: groupA wins
+            2: groupB wins
+            3: draw -stopped before end
+            4: both death.
+        */
         let figthResult = await GroupFightByIds(f.A.id, f.B.id);
 
         let query: string = "";
@@ -249,9 +294,9 @@ export class EventMap {
             connection.query(query, async (err1, res1) => {
               if (err1) throw err1;
 
-              //id_event, id_groupfight, id_map, event_turn
+              //id, id_event, event_turn, action, id_groupfight
               connection.query(
-                `INSERT INTO event_journal VALUES (${this.eventType}, ${figthResult.id_groupFight}, 1, ${this.eventTurn});`,
+                `INSERT INTO event_journal VALUES (null, ${this.eventType}, ${this.eventTurn}, "FIGHTING", ${figthResult.id_groupFight} );`,
                 (err2, res2) => {
                   if (err2) throw err2;
                   res(res2.insertId);
@@ -261,11 +306,21 @@ export class EventMap {
           })
         );
       });
+
+      /*
+      {
+        team: ITeam;
+        from: number;
+        to: number;
+        type: "M" | "F" | "Other";
+      }[]
+      */
+      turnParam.moving.forEach(async (f) => {});
     });
 
     //Descargar
-	//TODO: cargar comprobantes. Ha acabado el combate?
-	console.log("finished turn");
+    //TODO: cargar comprobantes. Ha acabado el combate?
+    console.log("finished turn");
     this.listCities();
   };
 
