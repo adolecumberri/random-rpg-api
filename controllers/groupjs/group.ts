@@ -105,7 +105,8 @@ export class HeroGroup {
 
     await new Promise((resolve, reject) => {
       connection.query(query, (err, result) => {
-        resolve(console.log("heros saved"));
+        //console.log("heros saved");
+        resolve(true);
       });
     });
 
@@ -135,10 +136,11 @@ export class HeroGroup {
 
     query += `);`;
 
-    console.log(query);
+   // console.log(query);
     await new Promise((resolve, reject) => {
       connection.query(query, (err, result) => {
-        resolve(console.log("heros who survived updated"));
+      //  console.log("heros who survived updated");
+        resolve(true);
       });
     });
 
@@ -179,7 +181,8 @@ export class HeroGroup {
 
     await new Promise((resolve, reject) => {
       connection.query(query, (err, result) => {
-        resolve(console.log("dead heroes burried"));
+        //console.log("dead heroes burried")
+        resolve(true);
       });
     });
 
@@ -235,10 +238,11 @@ export class HeroGroup {
 
     query += ` );`;
 
-    console.log(query);
+   // console.log(query);
     await new Promise((resolve, reject) => {
       connection.query(query, (err, result) => {
-        resolve(console.log("heros who died, updated"));
+        //console.log("heros who died, updated")
+        resolve(true);
       });
     });
 

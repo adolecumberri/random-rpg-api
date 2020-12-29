@@ -86,8 +86,7 @@ export class EventMap {
 
     ////
 
-    console.log("teams loaded");
-    console.log(this.teams.length);
+    console.log("teams loaded: ", this.teams.length);
 
     this.teams.forEach((team) => {
       if (team.side === "MALE") {
@@ -105,9 +104,9 @@ export class EventMap {
   execTurn = () => {
     //pasa un turno
     this.eventTurn++;
-    this.listCities();
     let turnParams: IMapTurn[] = [];
 
+    this.listCities();
     //Cargar
     this.cities.forEach((c) => {
       let params: IMapTurn = {
@@ -170,7 +169,6 @@ export class EventMap {
 
       //compruebo si cada equipo restante se va.
       //params.moving
-
       c.teams.M.forEach((team, index) => {
         if (this.MIGRATION_PROB < getProb()) {
           params.moving.push({
@@ -217,37 +215,33 @@ export class EventMap {
 
       //Params.staying
       //Si no se han ido, estan en estado "staying"
-      params.staying.push(
-        c.teams.M.map(() => {
-          return {
-            team: c.teams.M.splice(0, 1)[0],
-            where: c.id,
-            type: "M",
-          };
-        }) as any
-      );
+      c.teams.M.forEach(() => {
+        params.staying.push({
+          team: c.teams.M.splice(0, 1)[0],
+          where: c.id,
+          type: "M",
+        });
+      });
 
       //Equipos femeninos quedandose
-      params.staying.push(
-        c.teams.F.map(() => {
-          return {
-            team: c.teams.F.splice(0, 1)[0],
-            where: c.id,
-            type: "F",
-          };
-        }) as any
-      );
+
+      c.teams.F.forEach(() => {
+        params.staying.push({
+          team: c.teams.F.splice(0, 1)[0],
+          where: c.id,
+          type: "F",
+        });
+      });
 
       //Other teams staying
-      params.staying.push(
-        c.teams.Other.map(() => {
-          return {
-            team: c.teams.Other.splice(0, 1)[0],
-            where: c.id,
-            type: "Other",
-          };
-        }) as any
-      );
+
+      c.teams.Other.forEach(() => {
+        params.staying.push({
+          team: c.teams.Other.splice(0, 1)[0],
+          where: c.id,
+          type: "Other",
+        });
+      });
 
       //Inserto en el array los parametros calculados.
       turnParams.push(params);
@@ -288,7 +282,7 @@ export class EventMap {
         }
 
         console.log("turno out", query);
-
+        /* inserting event_journal fights */
         await Promise.resolve(
           new Promise((res, rej) => {
             connection.query(query, async (err1, res1) => {
@@ -299,6 +293,7 @@ export class EventMap {
                 `INSERT INTO event_journal VALUES (null, ${this.eventType}, ${this.eventTurn}, "FIGHTING", ${figthResult.id_groupFight} );`,
                 (err2, res2) => {
                   if (err2) throw err2;
+                  console.log("inserted_event journal. id:" + res2.insertId);
                   res(res2.insertId);
                 }
               );
@@ -307,7 +302,7 @@ export class EventMap {
         );
       });
 
-      /*
+      /*moving interface
       {
         team: ITeam;
         from: number;
@@ -315,8 +310,43 @@ export class EventMap {
         type: "M" | "F" | "Other";
       }[]
       */
-      turnParam.moving.forEach(async (f) => {});
+      /*table group_moving {
+       id: auto_increment, ----> id de la row.
+       id_crew: int ----> qué equipo.
+       origin: int -----> id de la ciudad
+       destiny: int/null ---> es null si esta staying.
+     }*/
+      //DATO: las ids "from" y "to" hacen referencias a map_locations.id
+      turnParam.moving.forEach(async (moving_crew) => {
+        let query = `INSERT INTO groupmoving VALUES (null, ${moving_crew.team.id}, ${moving_crew.from}, ${moving_crew.to});`;
+        await Promise.resolve(
+          new Promise((res, rej) => {
+            connection.query(query, (err, result) => {
+              if (err) throw err;
+              res(console.log("inserted group Moving. id: " + result.insertId));
+            });
+          })
+        );
+      });
+
+      turnParam.staying.forEach(async (staying_crew) => {
+        let query = `INSERT INTO groupmoving VALUES (null, ${staying_crew.team.id}, ${staying_crew.where}, null);`;
+        await Promise.resolve(
+          new Promise((res, rej) => {
+            connection.query(query, (err, result) => {
+              if (err) throw err;
+              res(
+                console.log("inserted group staying. id: " + result.insertId)
+              );
+            });
+          })
+        );
+      });
     });
+
+    let a = 0;
+
+    console.log("para aqui. que coño pasa");
 
     //Descargar
     //TODO: cargar comprobantes. Ha acabado el combate?
@@ -335,6 +365,30 @@ export class EventMap {
         c.teams.Other.map((c) => c.id),
       ])
     );
+  };
+
+  getInfoFromCities = (citieIndex: number) => {
+    this.cities.forEach((c) => {
+      if (citieIndex === c.id) {
+        console.log(`---------- ${c.id} - ${c.name} ----------`);
+        console.log(`MALE TEAMS:`);
+        c.teams.M.forEach((mTeam) => {
+          console.log(
+            `${mTeam.id} - ${mTeam.name}: alive: ${mTeam.heros_alive}. death: ${
+              mTeam.heros_death
+            }. in game?: ${!!mTeam.ingame}`
+          );
+        });
+        console.log(`FEMALE TEAMS:`);
+        c.teams.F.forEach((fTeam) => {
+          console.log(
+            `${fTeam.id} - ${fTeam.name}: alive: ${fTeam.heros_alive}. death: ${
+              fTeam.heros_death
+            }. in game?: ${!!fTeam.ingame}`
+          );
+        });
+      }
+    });
   };
 
   getProb: () => number = () => Math.random();

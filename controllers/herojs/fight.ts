@@ -164,7 +164,7 @@ export const teamFight: (
         if (groupA.heros.length) {
           await Promise.all(
             attackersB.map(async (att, i) => {
-             // console.log(att.heroStats.id + " attacks");
+              // console.log(att.heroStats.id + " attacks");
 
               let hittedA = groupA.getRandomHero();
 
@@ -195,21 +195,24 @@ export const teamFight: (
     turnUntil += 60;
     fightDrawed = drawProb > Math.random();
     turns++;
-    console.log({turns});
+    console.log({ turns });
   } while (!fightDrawed && !flagA && !flagB);
 
   //console.log({ turns });
 
   await new Promise((resolve, reject) => {
-    connection.query(
-      `update groupfight set ${
-        fightDrawed ? ` drawed = 1, turns = ${turns} ` : ` turns = ${turns} `
-      } where id = ${id_fight};`,
-      async (err, result) => {
-        // console.log(result);
-        resolve(true);
-      }
-    );
+    let query = `update groupfight set ${
+      fightDrawed ? ` drawed = 1, turns = ${turns} ` : ` turns = ${turns} `
+    } where id = ${id_fight};`;
+
+    if (!fightDrawed) {
+      console.log(query);
+    }
+
+    connection.query(query, async (err, result) => {
+      // console.log(result);
+      resolve(true);
+    });
   });
 
   if (groupA.heros.length) {
@@ -243,7 +246,7 @@ export const teamFight: (
 	3: draw -stopped before end
 	4: both death.
 	*/
-	/*
+  /*
 	A/B: {
 		id_crew: number,
 		heros_alives: number[],
@@ -252,17 +255,17 @@ export const teamFight: (
 	*/
   let result: IGroupFightSolution = {
     A: {
-		id_crew: groupA.idCrew,
-		heros_alives: groupA.heros.map( h => h.heroStats.id),
-		heros_deaths: groupA.deaths.map( h => h.hero.heroStats.id)
-	},
-    B:  {
-		id_crew: groupB.idCrew,
-		heros_alives: groupB.heros.map( h => h.heroStats.id),
-		heros_deaths: groupB.deaths.map( h => h.hero.heroStats.id)
-	},
+      id_crew: groupA.idCrew,
+      heros_alives: groupA.heros.map((h) => h.heroStats.id),
+      heros_deaths: groupA.deaths.map((h) => h.hero.heroStats.id),
+    },
+    B: {
+      id_crew: groupB.idCrew,
+      heros_alives: groupB.heros.map((h) => h.heroStats.id),
+      heros_deaths: groupB.deaths.map((h) => h.hero.heroStats.id),
+    },
     groupFightResult: -1,
-    id_groupFight: id_fight
+    id_groupFight: id_fight,
   };
 
   //solucion de la pelea en equipo.
@@ -277,5 +280,4 @@ export const teamFight: (
   }
   console.log(`fight result ${result}`);
   return result;
-
 };
