@@ -77,7 +77,8 @@ export class HeroGroup {
         hero: this.heros.splice(indexToRemove, 1)[0],
       }); //devuelve los elementos, ergo es un array.
     } else {
-      console.log("hero " + id + " does not exist");
+      //si entro aquí, significa que se le ha pegado a un heroes ya muerto.
+      // console.log("hero " + id + " does not exist");
     }
   };
 
@@ -136,10 +137,10 @@ export class HeroGroup {
 
     query += `);`;
 
-   // console.log(query);
+    // console.log(query);
     await new Promise((resolve, reject) => {
       connection.query(query, (err, result) => {
-      //  console.log("heros who survived updated");
+        //  console.log("heros who survived updated");
         resolve(true);
       });
     });
@@ -238,7 +239,7 @@ export class HeroGroup {
 
     query += ` );`;
 
-   // console.log(query);
+    // console.log(query);
     await new Promise((resolve, reject) => {
       connection.query(query, (err, result) => {
         //console.log("heros who died, updated")

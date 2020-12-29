@@ -278,6 +278,6 @@ export const teamFight: (
   } else if (groupA.heros.length && groupA.heros.length) {
     result.groupFightResult = 3;
   }
-  console.log(`fight result ${result}`);
+  console.log(`fight result ${result.groupFightResult}`);
   return result;
 };

@@ -23,6 +23,7 @@ export class EventMap {
 
   cities: ICity[] = [];
   teams: ITeam[] = [];
+  teamsOut: ITeam[] = [];//DATO: unused puede que para algo futuro.
 
   eventType: number;
   eventId: number = -1;
@@ -33,6 +34,7 @@ export class EventMap {
   eventTurn = 0;
 
   //init event tendría que cargar randomly los grupos en lugares random.
+  //DATO: no filtro por "ingame", es decir, traigo a los equipos que están fuera del equipo. 
   init: () => Promise<void> = async () => {
     let q = `select crew.id,
 			nombre as name,
@@ -62,10 +64,16 @@ export class EventMap {
 			) as a on heros_crew.id_crew = a.id
 		group by crew.id;`;
 
-    //cargo equios
+    //cargo equios filtrando por "ingame"
     await new Promise((resolve, reject) => {
       connection.query(q, (err, result: ITeam[]) => {
-        this.teams = result;
+        result.forEach( team => {
+          if(team.ingame){
+            this.teams.push(team);
+          }else{
+            this.teamsOut.push(team);
+          }
+        })
         resolve(true);
       });
     });
