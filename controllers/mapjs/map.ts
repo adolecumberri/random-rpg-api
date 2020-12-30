@@ -23,7 +23,7 @@ export class EventMap {
 
   cities: ICity[] = [];
   teams: ITeam[] = [];
-  teamsOut: ITeam[] = [];//DATO: unused puede que para algo futuro.
+  teamsOut: ITeam[] = []; //DATO: unused puede que para algo futuro.
 
   eventType: number;
   eventId: number = -1;
@@ -34,49 +34,9 @@ export class EventMap {
   eventTurn = 0;
 
   //init event tendría que cargar randomly los grupos en lugares random.
-  //DATO: no filtro por "ingame", es decir, traigo a los equipos que están fuera del equipo. 
+  //DATO: no filtro por "ingame", es decir, traigo a los equipos que están fuera del equipo.
   init: () => Promise<void> = async () => {
-    let q = `select crew.id,
-			nombre as name,
-			crew.side,
-			ingame,
-			a.alive_heros,
-			a.death_heros,
-			a.alive_heros + a.death_heros as 'total_heros'
-		from crew
-			inner join heros_crew on crew.id = heros_crew.id_crew
-			inner join (
-				select a.id as id,
-					alive_heros,
-					death_heros
-				from (
-						select id_crew as id,
-							COALESCE(sum(if(hero_isalive = 1, 1, 0)), 0) as 'alive_heros'
-						from heros_crew
-						group by id_crew
-					) as a
-					inner join (
-						select id_crew as id,
-							COALESCE(sum(if(hero_isalive = 0, 1, 0)), 0) as 'death_heros'
-						from heros_crew
-						group by id_crew
-					) as b on a.id = b.id
-			) as a on heros_crew.id_crew = a.id
-		group by crew.id;`;
-
-    //cargo equios filtrando por "ingame"
-    await new Promise((resolve, reject) => {
-      connection.query(q, (err, result: ITeam[]) => {
-        result.forEach( team => {
-          if(team.ingame){
-            this.teams.push(team);
-          }else{
-            this.teamsOut.push(team);
-          }
-        })
-        resolve(true);
-      });
-    });
+    await this.loadTurn();
 
     //cargo evento_Id generando el evento
     await new Promise((resolve, reject) => {
@@ -293,19 +253,21 @@ export class EventMap {
         /* inserting event_journal fights */
         await Promise.resolve(
           new Promise((res, rej) => {
-            connection.query(query, async (err1, res1) => {
-              if (err1) throw err1;
+            //si query tiene algo, entro.
+            if (!!query)
+              connection.query(query, async (err1, res1) => {
+                if (err1) throw err1;
 
-              //id, id_event, event_turn, action, id_groupfight
-              connection.query(
-                `INSERT INTO event_journal VALUES (null, ${this.eventType}, ${this.eventTurn}, "FIGHTING", ${figthResult.id_groupFight} );`,
-                (err2, res2) => {
-                  if (err2) throw err2;
-                  console.log("inserted_event journal. id:" + res2.insertId);
-                  res(res2.insertId);
-                }
-              );
-            });
+                //id, id_event, event_turn, action, id_groupfight
+                connection.query(
+                  `INSERT INTO event_journal VALUES (null, ${this.eventType}, ${this.eventTurn}, "FIGHTING", ${figthResult.id_groupFight} );`,
+                  (err2, res2) => {
+                    if (err2) throw err2;
+                    console.log("inserted_event journal. id:" + res2.insertId);
+                    res(res2.insertId);
+                  }
+                );
+              });
           })
         );
       });
@@ -331,6 +293,16 @@ export class EventMap {
           new Promise((res, rej) => {
             connection.query(query, (err, result) => {
               if (err) throw err;
+              //"FIGHTING", "MOVING", "STAYING"
+              connection.query(
+                `INSERT INTO event_journal VALUES (null, ${this.eventType}, ${this.eventTurn}, "MOVING", ${result.insertId} );`,
+                (err2, res2) => {
+                  if (err2) throw err2;
+                  console.log("inserted_event journal. id:" + res2.insertId);
+                  res(res2.insertId);
+                }
+              );
+
               res(console.log("inserted group Moving. id: " + result.insertId));
             });
           })
@@ -343,6 +315,15 @@ export class EventMap {
           new Promise((res, rej) => {
             connection.query(query, (err, result) => {
               if (err) throw err;
+              //"FIGHTING", "MOVING", "STAYING"
+              connection.query(
+                `INSERT INTO event_journal VALUES (null, ${this.eventType}, ${this.eventTurn}, "STAYING", ${result.insertId} );`,
+                (err2, res2) => {
+                  if (err2) throw err2;
+                  console.log("inserted_event journal. id:" + res2.insertId);
+                  res(res2.insertId);
+                }
+              );
               res(
                 console.log("inserted group staying. id: " + result.insertId)
               );
@@ -397,6 +378,53 @@ export class EventMap {
         });
       }
     });
+  };
+
+  loadTurn = async () => {
+    let q = `select crew.id,
+    nombre as name,
+    crew.side,
+    ingame,
+    a.alive_heros,
+    a.death_heros,
+    a.alive_heros + a.death_heros as 'total_heros'
+  from crew
+    inner join heros_crew on crew.id = heros_crew.id_crew
+    inner join (
+      select a.id as id,
+        alive_heros,
+        death_heros
+      from (
+          select id_crew as id,
+            COALESCE(sum(if(hero_isalive = 1, 1, 0)), 0) as 'alive_heros'
+          from heros_crew
+          group by id_crew
+        ) as a
+        inner join (
+          select id_crew as id,
+            COALESCE(sum(if(hero_isalive = 0, 1, 0)), 0) as 'death_heros'
+          from heros_crew
+          group by id_crew
+        ) as b on a.id = b.id
+    ) as a on heros_crew.id_crew = a.id
+  group by crew.id;`;
+
+    //cargo equios filtrando por "ingame"
+
+    return Promise.resolve(
+      await new Promise((resolve, reject) => {
+        connection.query(q, (err, result: ITeam[]) => {
+          result.forEach((team) => {
+            if (team.ingame) {
+              this.teams.push(team);
+            } else {
+              this.teamsOut.push(team);
+            }
+          });
+          resolve(this.teams.length);
+        });
+      })
+    ).then((v) => v);
   };
 
   getProb: () => number = () => Math.random();

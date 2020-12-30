@@ -51,7 +51,7 @@ let getCrewByCrewIdInEvent = (id_crew: number) => {
   let query = `select hero.*, heros_crew.currentHp as currenthp from hero
 	left join heros_crew
 	on hero.id = heros_crew.id_hero
-	where heros_crew.id_crew = ${id_crew};`;
+  where heros_crew.id_crew = ${id_crew} AND heros_crew.hero_isalive = 1;`;
   console.log("query", query);
   return new Promise<AnyHero[]>((res, rej) => {
     connection.query(query, (err, result: IHero[]) => {

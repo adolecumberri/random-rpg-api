@@ -115,6 +115,10 @@ export const teamFight: (
   if (snipersB.length) {
     let hittedA = groupA.getRandomGroup(snipersB.length);
     snipersB.forEach(async (sniper, i) => {
+
+      if(hittedA[i] === undefined){
+         throw(console.log(groupA.idCrew, groupB.idCrew));
+      }
       hittedA[i].defend(sniper);
       hittedA[i].end();
       if (hittedA[i].heroStats.currentHp <= 0) {
@@ -272,9 +276,9 @@ export const teamFight: (
   if (!groupA.heros.length && !groupB.heros.length) {
     result.groupFightResult = 4;
   } else if (!groupA.heros.length) {
-    result.groupFightResult = 2;
-  } else if (!groupB.heros.length) {
     result.groupFightResult = 1;
+  } else if (!groupB.heros.length) {
+    result.groupFightResult = 2;
   } else if (groupA.heros.length && groupA.heros.length) {
     result.groupFightResult = 3;
   }
