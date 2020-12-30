@@ -69,7 +69,7 @@ export class EventMap {
 
   //ejecutar turno:
   // ejecutar peleas y mover resultantes
-  execTurn = () => {
+  execTurn = async () => {
     //pasa un turno
     this.eventTurn++;
     let turnParams: IMapTurn[] = [];
@@ -95,20 +95,23 @@ export class EventMap {
       ) {
         //cargo los parametros de fighting.
         /*
-                    1 && DEFAULT - Male-female
-                    2- Male-Other
-                    3- Female-Other
-                */
+            1 && DEFAULT - Male-female
+            2- Male-Other
+            3- Female-Other
+        */
         switch (Math.round(Math.random() * 2 + 1)) {
           case 2:
             //console.log('case 2');
             if (c.teams.Other.length) {
               params.fighting.push({
-                A: c.teams.M[Math.floor(Math.random() * c.teams.M.length)],
-                B:
-                  c.teams.Other[
-                    Math.floor(Math.random() * c.teams.Other.length)
-                  ],
+                A: c.teams.M.splice(
+                  Math.floor(Math.random() * c.teams.M.length),
+                  1
+                )[0],
+                B: c.teams.Other.splice(
+                  Math.floor(Math.random() * c.teams.Other.length),
+                  1
+                )[0],
               });
               break;
             }
@@ -117,19 +120,28 @@ export class EventMap {
             //si hay Others, pelean Others, sino male-female
             if (c.teams.Other.length) {
               params.fighting.push({
-                A:
-                  c.teams.Other[
-                    Math.floor(Math.random() * c.teams.Other.length)
-                  ],
-                B: c.teams.F[Math.floor(Math.random() * c.teams.F.length)],
+                A: c.teams.Other.splice(
+                  Math.floor(Math.random() * c.teams.Other.length),
+                  1
+                )[0],
+                B: c.teams.F.splice(
+                  Math.floor(Math.random() * c.teams.F.length),
+                  1
+                )[0],
               });
               break;
             }
           default:
             //console.log('case 1');
             params.fighting.push({
-              A: c.teams.M[Math.floor(Math.random() * c.teams.M.length)],
-              B: c.teams.F[Math.floor(Math.random() * c.teams.F.length)],
+              A: c.teams.M.splice(
+                Math.floor(Math.random() * c.teams.M.length),
+                1
+              )[0],
+              B: c.teams.F.splice(
+                Math.floor(Math.random() * c.teams.F.length),
+                1
+              )[0],
             });
             break;
         }

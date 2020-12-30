@@ -6,7 +6,7 @@ let triggerEvent = async (req: Request, res: Response) => {
 
   let map = new EventMap(Number(eventType));
   await map.init();
-  map.execTurn();
+  await map.execTurn();
   //  map.listCities();
 
   setTimeout(async () => {
