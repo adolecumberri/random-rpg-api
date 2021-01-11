@@ -32,5 +32,6 @@ from crew
                 group by id_crew
             ) as b on a.id = b.id
     ) as a on heros_crew.id_crew = a.id
+where crew.evento = 1
 group by crew.id;
 -- 

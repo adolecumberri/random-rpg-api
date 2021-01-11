@@ -5,9 +5,11 @@ import { GroupFightByIds } from "../groupFight.controller";
 import { CIUDADES } from "./map.dictionary";
 
 export class EventMap {
-  constructor(eventType: number) {
+  constructor(eventType: number, eventId?: number) {
     //   TODO: Cargar de la base de datos el mapa y el evento.
     this.eventType = eventType;
+    this.eventId = eventId ? eventId : -1;
+
     //Carga de ciudades
     this.cities = CIUDADES.map((city) => {
       return {
@@ -239,6 +241,9 @@ export class EventMap {
             3: draw -stopped before end
             4: both death.
         */
+        if (f.A.id === f.B.id) {
+          console.log("A == B", f.A.id, f.B.id);
+        }
         let figthResult = await GroupFightByIds(f.A.id, f.B.id);
 
         let query: string = "";
@@ -419,10 +424,11 @@ export class EventMap {
           group by id_crew
         ) as b on a.id = b.id
     ) as a on heros_crew.id_crew = a.id
+    where crew.evento = 1
   group by crew.id;`;
+    //this.eventId ? this.eventId : 1 <<<---- arriba.
 
     //cargo equios filtrando por "ingame"
-
     return Promise.resolve(
       await new Promise((resolve, reject) => {
         connection.query(q, (err, result: ITeam[]) => {

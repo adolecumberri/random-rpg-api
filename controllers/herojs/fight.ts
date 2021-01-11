@@ -115,9 +115,8 @@ export const teamFight: (
   if (snipersB.length) {
     let hittedA = groupA.getRandomGroup(snipersB.length);
     snipersB.forEach(async (sniper, i) => {
-
-      if(hittedA[i] === undefined){
-         throw(console.log(groupA.idCrew, groupB.idCrew));
+      if (hittedA[i] === undefined) {
+        throw console.log(groupA.idCrew, groupB.idCrew);
       }
       hittedA[i].defend(sniper);
       hittedA[i].end();
@@ -205,9 +204,9 @@ export const teamFight: (
   //console.log({ turns });
 
   await new Promise((resolve, reject) => {
-    let query = `update groupfight set ${
-      fightDrawed ? ` drawed = 1, turns = ${turns} ` : ` turns = ${turns} `
-    } where id = ${id_fight};`;
+    let query = `update groupfight set drawed = ${
+      fightDrawed ? `1` : `0`
+    }, turns = ${turns} where id = ${id_fight};`;
 
     if (!fightDrawed) {
       console.log(query);
