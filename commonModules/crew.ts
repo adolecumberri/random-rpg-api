@@ -6,18 +6,24 @@ import { IHero } from "../interfaces/Hero.Interface";
 import { switchClass } from "./heros";
 import { createCrewsByEvent } from "./dictionary";
 
-let createCrews: (eventType: number) => Promise<boolean> = async (
+let createCrews: (eventType: number) => Promise<string> = async (
   eventType
 ) => {
+  debugger;
   let query = createCrewsByEvent(eventType);
   console.log(query);
+  if(!query){
+    return new Promise((res, rej) => { 
+      rej('Event number not included in current events.');
+    });
+  }
 
   return new Promise((res, rej) => {
     connection.query(query, (err, result) => {
       if (err) {
         rej(err);
       }
-      res(true);
+      res('200');
     });
   });
 };

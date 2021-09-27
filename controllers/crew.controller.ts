@@ -9,7 +9,7 @@ import { createCrews, getCrewByCrewId } from "../commonModules/crew";
 export async function createCrewsByGender(req: Request, res: Response) {
   let { eventType } = req.params;
 
-  await createCrews(Number(eventType));
+  let result = await createCrews(Number(eventType));
   res.sendStatus(200);
 }
 
@@ -50,10 +50,11 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
     let idCrew = infoCrew.filter(
       (b) => b.surname === apellido && b.side === "MALE"
     )[0].id;
-    
+
     await (async () => {
       await new Promise((resolve, reject) => {
         let q = `select id, hp from hero where surname like "${apellido}" AND gender = 1`;
+        console.log(q);
         connection.query(q, async (err, result) => {
           idsMale = result;
           resolve(true);
@@ -65,6 +66,9 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
 		VALUES `;
 
     idsMale.forEach((male, i) => {
+      if (male === undefined) {
+        debugger;
+      }
       query += `(${idCrew}, ${male.id}, 1, ${male.hp} )`;
       if (i !== idsMale.length - 1) {
         query += `,`;
@@ -78,7 +82,7 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
     promises.push(
       new Promise((err, res) => {
         connection.query(query, (err, result) => {
-          if(err) throw err;
+          if (err) throw err;
           res(result);
         });
       })
@@ -87,41 +91,50 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
 
   //FEMALE
   APELLIDOS.forEach(async (apellido: string, index: number) => {
-    let idsFemale: { id: number; hp: number }[] = [];
-    let idCrew = infoCrew.filter(
-      (b) => b.surname === apellido && b.side === "FEMALE"
-    )[0].id;
+    try {
+      let idsFemale: { id: number; hp: number }[] = [];
+      let idCrew = infoCrew.filter(
+        (b) => b.surname === apellido && b.side === "FEMALE"
+      )[0].id;
 
-    await (async () => {
-      await new Promise((resolve, reject) => {
-        let q = `select id, hp from hero where surname like "${apellido}" AND gender = 0`;
-        connection.query(q, async (err, result) => {
-          idsFemale = result;
-          resolve(true);
+      await (async () => {
+        await new Promise((resolve, reject) => {
+          let q = `select id, hp from hero where surname like "${apellido}" AND gender = 0`;
+          connection.query(q, async (err, result) => {
+            idsFemale = result;
+            resolve(true);
+          });
         });
-      });
-    })();
+      })();
 
-    let query = `INSERT INTO heros_crew
+      let query = `INSERT INTO heros_crew
 		VALUES `;
 
-    idsFemale.forEach((female, i) => {
-      query += `(${idCrew}, ${female.id}, 1, ${female.hp} )`;
-      if (i !== idsFemale.length - 1) {
-        query += `,`;
-      } else {
-        query += `;`;
-      }
-    });
+      idsFemale.forEach((female, i) => {
+        query += `(${idCrew}, ${female.id}, 1, ${female.hp} )`;
+        if (i !== idsFemale.length - 1) {
+          query += `,`;
+        } else {
+          query += `;`;
+        }
+      });
 
-    promises.push(
-      new Promise((err, res) => {
-        connection.query(query, (err, result) => {
-          if(err) throw err;
-          res(result);
-        });
-      })
-    );
+      console.log(query);
+      promises.push(
+        new Promise((err, res) => {
+          try {
+            connection.query(query, (err, result) => {
+              if (err) throw err;
+              res(result);
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   await Promise.all(promises);
@@ -130,7 +143,7 @@ export async function asignCrewsToHerBySurname(req: Request, res: Response) {
 }
 
 export async function getCrew({ params }: Request, res: Response) {
-  let id_crew = params.id_crew; 
+  let id_crew = params.id_crew;
 
   let crew = await getCrewByCrewId(Number(id_crew));
   res.send(JSON.stringify(crew));

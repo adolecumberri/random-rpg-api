@@ -1,0 +1,11 @@
+
+
+1º-first of all: Create the heros.
+route:
+    /hero/create/numberToCreate
+
+
+2º-Crea familias.
+    eventype selecciona la condición con la que se crean las familias.
+route:
+    /crew/create/eventtype=1

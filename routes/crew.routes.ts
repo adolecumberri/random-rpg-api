@@ -3,6 +3,8 @@ import { createCrewsByGender, asignCrewsToHerBySurname, getCrew } from '../contr
 
 const router = Router();
 
+//Aquí tendría que haber un middleware que segun el tipo de evento, llamara a una funcion para crear crews.
+//checked. 306 families.
 router.route('/create/eventtype=:eventType').get(createCrewsByGender);
 
 router.route('/asign/event=:event').get(asignCrewsToHerBySurname);
