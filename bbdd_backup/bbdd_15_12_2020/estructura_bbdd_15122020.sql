@@ -1,3 +1,5 @@
+
+create database hero;
 use hero;
 /* Class: tabla primaria de clases.*/
 CREATE TABLE `class` (
@@ -143,7 +145,7 @@ CREATE TABLE `events` (
   `id_map` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_map_fk_idx` (`id_map`),
-  CONSTRAINT `id_map_fk` FOREIGN KEY (`id_map`) REFERENCES `map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `id_map_fk2` FOREIGN KEY (`id_map`) REFERENCES `map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /* las jornadas de los eventos.*/
 /*

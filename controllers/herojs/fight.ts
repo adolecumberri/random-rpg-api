@@ -87,7 +87,7 @@ export const teamFight: (
     let prueba = "prueba";
     await new Promise((resolve, reject) => {
       connection.query(
-        `insert into groupfight set name = "${prueba}";`,
+        `insert into groupfight set name = "${prueba}-${id_fight}";`,
         async (err, result) => {
           console.log("Id de la batalla", result.insertId);
           id_fight = result.insertId as number;
