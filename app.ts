@@ -1,7 +1,11 @@
 import express, { Application } from 'express';
-import cluster from 'cluster';
-// import morgan from 'morgan';
+// import cluster from 'cluster';
+import morgan from 'morgan';
 import bodyParser from 'body-parser';
+
+//Routes
+import { heroRouter } from './routes'
+
 
 // Routes
 // import IndexRoutes from './routes/index.routes';
@@ -50,7 +54,7 @@ export class App {
     }
 
 	private middlewares() {
-		// this.app?.use(morgan('dev')); //Morgan establishment
+		this.app?.use(morgan('dev')); //Morgan establishment
 		this.app?.use(express.json());
 		this.app?.use(
 			bodyParser.urlencoded({
@@ -64,6 +68,7 @@ export class App {
 	}
 
 	private routes() {
+        this.app?.use('/hero', heroRouter)
 		// this.app?.use('/', IndexRoutes); //main route.
 		// this.app?.use('/hero', HeroRouter); //hero route.
 		// this.app?.use('/fight', FightRouter); //hero route.
@@ -74,12 +79,8 @@ export class App {
 
 	async listen(): Promise<void> {
 		await this.app?.listen(this.port);
-		// console.log(
-		// 	` ${
-		// 		!cluster.isMaster
-		// 			? `Server Thread nº ${cluster.worker.id} listening port ${this.app?.get('port')}`
-		// 			: 'Server Master displayed'
-		// 	} `
-		// );
+		console.log(
+			`Server Master displayed in port[${this.port}]`
+		);
 	}
 }

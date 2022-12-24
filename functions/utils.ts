@@ -1,0 +1,1 @@
+export const rand = (max: number, min = 0) => Math.round(Math.random() * (max - min) + min);
