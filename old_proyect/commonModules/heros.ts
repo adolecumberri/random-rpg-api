@@ -70,7 +70,7 @@ let getRandomHero = () => {
 	});
 };
 
-let getHeroById = (id:number) => {
+let getHeroById = (id: number) => {
 	return new Promise((resolve, reject) => {
 		let query = `SELECT * FROM hero WHERE id = ${id};`;
 		connection.query(query, (err, result: ({ id: number; name: string } & IHeroStats)[]) => {
@@ -82,7 +82,7 @@ let getHeroById = (id:number) => {
 	});
 }
 
-let getRandomHeroByClass = (id_class :number) => {
+let getRandomHeroByClass = (id_class: number) => {
 	return new Promise((resolve, reject) => {
 		let query = `SELECT * FROM hero WHERE id_class = ${id_class} ORDER BY RAND() LIMIT 1;`;
 		connection.query(query, (err, result: ({ id: number; name: string } & IHeroStats)[]) => {
