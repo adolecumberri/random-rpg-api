@@ -1,17 +1,22 @@
 import { GENDERS } from '../constants';
 import { VARIATION } from '../constants/general';
-import { hero_stats } from '../interfaces/hero.interfaces';
+import { hero_stats, hero_with_class_stats } from '../interfaces/hero.interfaces';
 import { BASE_STATS, CLASS_STATS_BY_NAME } from '../jsons/stats'
 import { getRandomNameByGender, rand } from './utils'
 
+interface createHeroParams {
+    heroClass?: keyof typeof CLASS_STATS_BY_NAME,
+    gender?: keyof typeof GENDERS
+}
+
 const createHero = ({
     heroClass,
-    gender,
+    gender
 }: {
     heroClass?: keyof typeof CLASS_STATS_BY_NAME,
     gender?: keyof typeof GENDERS
-}) => {
-    let choosen_hero_class_stats: hero_stats;
+} = {}) => {
+    let choosen_hero_class_stats: hero_with_class_stats;
     let choosen_gender: typeof GENDERS[keyof typeof GENDERS];
 
     //Choosed Hero.
@@ -35,11 +40,42 @@ const createHero = ({
     }
 
     let full_name = getRandomNameByGender(choosen_gender)
-    let final_stats = calculateHeroStats(BASE_STATS, choosen_hero_class_stats, VARIATION)
+    let final_stats: hero_with_class_stats = {
+        name: full_name.name,
+        surname: full_name.surname,
+        id_class: choosen_hero_class_stats.id_class,
+        class_name: choosen_hero_class_stats.class_name,
+        ...calculateHeroStats(BASE_STATS, choosen_hero_class_stats, VARIATION)
+    }
+
+    final_stats.hp = Math.round(final_stats.hp)
+    final_stats.attack = Math.round(final_stats.attack)
+    final_stats.defence = Math.round(final_stats.defence)
+
+    return final_stats
 }
 
-const calculateHeroStats: (baseStats: hero_stats, classStats: hero_stats, variation: number) => void = (baseStats, classStats, variation) => {
+const calculateHeroStats: (baseStats: hero_stats, classStats: hero_stats, variation: number) => hero_stats = (baseStats, classStats, variation) => {
+    let finalStat: any | hero_stats = { //ts throws error.
+        hp: 0,
+        attack: 0,
+        defence: 0,
+        crit: 0,
+        crit_multiplier: 0,
+        accuracy: 0,
+        evasion: 0,
+        attack_interval: 0,
+        reg: 0
+    };
 
+    Object.keys(baseStats).forEach((key) => {
+        let value = Number(baseStats[key as keyof hero_stats]) + Number(classStats[key as keyof hero_stats]) + Number.EPSILON;
+        finalStat[key as keyof hero_stats] = Math.round((Math.random() * (value * (1 + variation) - value * (1 - variation)) + value * (1 - variation)) * 100) / 100;
+
+    });
+
+    console.log(finalStat)
+    return finalStat;
 }
 
 
@@ -50,5 +86,6 @@ const getCharacterStats = () => {
 }
 
 export {
-    getCharacterStats
+    getCharacterStats,
+    createHero
 }

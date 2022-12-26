@@ -1,5 +1,5 @@
 import { CLASS_NAMES } from "../constants/class_names"
-import { hero_stats } from "../interfaces/hero.interfaces"
+import { hero_stats, hero_with_class_stats } from "../interfaces/hero.interfaces"
 
 export const BASE_STATS: hero_stats = {
 	hp: 70,
@@ -17,7 +17,7 @@ export const BASE_STATS: hero_stats = {
 export const CLASS_STATS_ARRAY = [
 	{
 		name: CLASS_NAMES.ARCHER,
-		id: 1,
+		id_class: 1,
 		hp: 18,
 		attack: 13,
 		defence: -1,
@@ -30,7 +30,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.BERSERKER,
-		id: 2,
+		id_class: 2,
 		hp: 70,
 		attack: 25,
 		defence: -2,
@@ -43,7 +43,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.DEFFENDER,
-		id: 3,
+		id_class: 3,
 		hp: 42,
 		attack: 6,
 		defence: 31,
@@ -56,7 +56,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.FENCER,
-		id: 4,
+		id_class: 4,
 		hp: 34,
 		attack: 16,
 		defence: 11,
@@ -69,7 +69,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.NINJA,
-		id: 5,
+		id_class: 5,
 		hp: -28,
 		attack: 14,
 		defence: -2,
@@ -82,7 +82,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.PALADIN,
-		id: 6,
+		id_class: 6,
 		hp: 50,
 		attack: 19,
 		defence: 21,
@@ -95,7 +95,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.SNIPER,
-		id: 7,
+		id_class: 7,
 		hp: 5,
 		attack: 33,
 		defence: -2,
@@ -108,7 +108,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.SOLDIER,
-		id: 8,
+		id_class: 8,
 		hp: 35,
 		attack: 21,
 		defence: 16,
@@ -121,7 +121,7 @@ export const CLASS_STATS_ARRAY = [
 	},
 	{
 		name: CLASS_NAMES.THIEVE,
-		id: 9,
+		id_class: 9,
 		hp: 25,
 		attack: 14,
 		defence: 3,
@@ -135,11 +135,13 @@ export const CLASS_STATS_ARRAY = [
 ]
 
 export const CLASS_STATS_BY_NAME: {
-	[x in typeof CLASS_NAMES[keyof typeof CLASS_NAMES]]: hero_stats
+	[x in typeof CLASS_NAMES[keyof typeof CLASS_NAMES]]: hero_with_class_stats
 } = {
 	'Archer': {
-		name: CLASS_NAMES.ARCHER,
-		id: 1,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.ARCHER,
+		id_class: 1,
 		hp: 18,
 		attack: 13,
 		defence: -1,
@@ -151,8 +153,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0
 	},
 	'Berserker': {
-		name: CLASS_NAMES.BERSERKER,
-		id: 2,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.BERSERKER,
+		id_class: 2,
 		hp: 70,
 		attack: 25,
 		defence: -2,
@@ -164,8 +168,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0.2
 	},
 	'Deffender': {
-		name: CLASS_NAMES.DEFFENDER,
-		id: 3,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.DEFFENDER,
+		id_class: 3,
 		hp: 42,
 		attack: 6,
 		defence: 31,
@@ -177,8 +183,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0.2
 	},
 	'Fencers': {
-		name: CLASS_NAMES.FENCER,
-		id: 4,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.FENCER,
+		id_class: 4,
 		hp: 34,
 		attack: 16,
 		defence: 11,
@@ -190,8 +198,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0
 	},
 	'Ninja': {
-		name: CLASS_NAMES.NINJA,
-		id: 5,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.NINJA,
+		id_class: 5,
 		hp: -28,
 		attack: 14,
 		defence: -2,
@@ -203,8 +213,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0
 	},
 	'Paladin': {
-		name: CLASS_NAMES.PALADIN,
-		id: 6,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.PALADIN,
+		id_class: 6,
 		hp: 50,
 		attack: 19,
 		defence: 21,
@@ -216,8 +228,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0.2
 	},
 	'Sniper': {
-		name: CLASS_NAMES.SNIPER,
-		id: 7,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.SNIPER,
+		id_class: 7,
 		hp: 5,
 		attack: 33,
 		defence: -2,
@@ -229,8 +243,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: -0.2
 	},
 	'Soldier': {
-		name: CLASS_NAMES.SOLDIER,
-		id: 8,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.SOLDIER,
+		id_class: 8,
 		hp: 35,
 		attack: 21,
 		defence: 16,
@@ -242,8 +258,10 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0
 	},
 	'Thieve': {
-		name: CLASS_NAMES.THIEVE,
-		id: 9,
+		name: '',
+		surname: '',
+		class_name: CLASS_NAMES.THIEVE,
+		id_class: 9,
 		hp: 25,
 		attack: 14,
 		defence: 3,

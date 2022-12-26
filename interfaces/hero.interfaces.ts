@@ -1,8 +1,6 @@
 import { CLASS_NAMES } from "../constants";
 
 interface hero_stats {
-    name?: typeof CLASS_NAMES[keyof typeof CLASS_NAMES],
-    id?: number,
     hp: number,
     attack: number,
     defence: number,
@@ -14,6 +12,14 @@ interface hero_stats {
     reg: number
 }
 
+interface hero_with_class_stats extends hero_stats {
+    name: string,
+    surname: string,
+    class_name: typeof CLASS_NAMES[keyof typeof CLASS_NAMES],
+    id_class: number,
+}
+
 export {
-    hero_stats
+    hero_stats,
+    hero_with_class_stats
 }
