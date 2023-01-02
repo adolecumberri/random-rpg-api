@@ -20,7 +20,7 @@ const createHero = ({
     let choosen_gender: typeof GENDERS[keyof typeof GENDERS];
 
     //Choosed Hero.
-    if (heroClass) {
+    if (heroClass && heroClass in CLASS_STATS_BY_NAME) {
         choosen_hero_class_stats = CLASS_STATS_BY_NAME[heroClass]
     } else {
         let number_of_hero_classes = Object.keys(CLASS_STATS_BY_NAME).length
@@ -30,7 +30,7 @@ const createHero = ({
     }
 
     //Choosed Gender
-    if (gender) {
+    if (gender && gender in GENDERS) {
         choosen_gender = GENDERS[gender]
     } else {
         let gender_of_the_hero = Object.keys(GENDERS).length
@@ -43,6 +43,7 @@ const createHero = ({
     let final_stats: hero_with_class_stats = {
         name: full_name.name,
         surname: full_name.surname,
+        gender: choosen_gender,
         id_class: choosen_hero_class_stats.id_class,
         class_name: choosen_hero_class_stats.class_name,
         ...calculateHeroStats(BASE_STATS, choosen_hero_class_stats, VARIATION)

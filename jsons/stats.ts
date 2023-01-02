@@ -140,6 +140,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Archer': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.ARCHER,
 		id_class: 1,
 		hp: 18,
@@ -155,6 +156,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Berserker': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.BERSERKER,
 		id_class: 2,
 		hp: 70,
@@ -170,6 +172,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Deffender': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.DEFFENDER,
 		id_class: 3,
 		hp: 42,
@@ -185,6 +188,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Fencers': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.FENCER,
 		id_class: 4,
 		hp: 34,
@@ -200,6 +204,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Ninja': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.NINJA,
 		id_class: 5,
 		hp: -28,
@@ -215,6 +220,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Paladin': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.PALADIN,
 		id_class: 6,
 		hp: 50,
@@ -230,6 +236,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Sniper': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.SNIPER,
 		id_class: 7,
 		hp: 5,
@@ -245,6 +252,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Soldier': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.SOLDIER,
 		id_class: 8,
 		hp: 35,
@@ -260,6 +268,7 @@ export const CLASS_STATS_BY_NAME: {
 	'Thieve': {
 		name: '',
 		surname: '',
+		gender: "Other",
 		class_name: CLASS_NAMES.THIEVE,
 		id_class: 9,
 		hp: 25,
