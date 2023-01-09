@@ -151,7 +151,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: -0.05,
 		evasion: 0.24,
 		attack_interval: -5,
-		reg: 0
+		reg: 0,
+		total_hp: 18,
 	},
 	'Berserker': {
 		name: '',
@@ -167,7 +168,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: -0.05,
 		evasion: 0.05,
 		attack_interval: -1,
-		reg: 0.2
+		reg: 0.2,
+		total_hp: 70
 	},
 	'Deffender': {
 		name: '',
@@ -183,7 +185,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: 0.04,
 		evasion: -0.05,
 		attack_interval: 3,
-		reg: 0.2
+		reg: 0.2,
+		total_hp: 42
 	},
 	'Fencers': {
 		name: '',
@@ -199,7 +202,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: -0.05,
 		evasion: 0.1,
 		attack_interval: 0,
-		reg: 0
+		reg: 0,
+		total_hp: 34
 	},
 	'Ninja': {
 		name: '',
@@ -215,7 +219,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: 0,
 		evasion: 0.33,
 		attack_interval: -2,
-		reg: 0
+		reg: 0,
+		total_hp: -28
 	},
 	'Paladin': {
 		name: '',
@@ -231,7 +236,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: 0,
 		evasion: 0,
 		attack_interval: -1,
-		reg: 0.2
+		reg: 0.2,
+		total_hp: 50
 	},
 	'Sniper': {
 		name: '',
@@ -247,7 +253,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: -0.6,
 		evasion: 0,
 		attack_interval: 14,
-		reg: -0.2
+		reg: -0.2,
+		total_hp: 5
 	},
 	'Soldier': {
 		name: '',
@@ -263,7 +270,8 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: 0,
 		evasion: 0.1,
 		attack_interval: 0,
-		reg: 0
+		reg: 0,
+		total_hp: 35
 	},
 	'Thieve': {
 		name: '',
@@ -279,6 +287,7 @@ export const CLASS_STATS_BY_NAME: {
 		accuracy: -0.19,
 		evasion: 0.22,
 		attack_interval: -1,
-		reg: 0.3
+		reg: 0.3,
+		total_hp: 25
 	}
 }

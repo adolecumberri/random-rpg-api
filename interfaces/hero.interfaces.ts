@@ -17,7 +17,8 @@ interface hero_with_class_stats extends hero_stats {
     surname: string,
     class_name: typeof CLASS_NAMES[keyof typeof CLASS_NAMES],
     id_class: number,
-    gender: typeof GENDERS[keyof typeof GENDERS]
+    gender: typeof GENDERS[keyof typeof GENDERS],
+    total_hp: number,
 }
 
 export {

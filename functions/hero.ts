@@ -46,13 +46,14 @@ const createHero = ({
         gender: choosen_gender,
         id_class: choosen_hero_class_stats.id_class,
         class_name: choosen_hero_class_stats.class_name,
+        total_hp: 0,
         ...calculateHeroStats(BASE_STATS, choosen_hero_class_stats, VARIATION)
     }
 
     final_stats.hp = Math.round(final_stats.hp)
     final_stats.attack = Math.round(final_stats.attack)
     final_stats.defence = Math.round(final_stats.defence)
-
+    final_stats.total_hp = final_stats.hp
     return final_stats
 }
 
@@ -72,18 +73,14 @@ const calculateHeroStats: (baseStats: hero_stats, classStats: hero_stats, variat
     Object.keys(baseStats).forEach((key) => {
         let value = Number(baseStats[key as keyof hero_stats]) + Number(classStats[key as keyof hero_stats]) + Number.EPSILON;
         finalStat[key as keyof hero_stats] = Math.round((Math.random() * (value * (1 + variation) - value * (1 - variation)) + value * (1 - variation)) * 100) / 100;
-
     });
 
     console.log(finalStat)
     return finalStat;
 }
 
-
 const getCharacterStats = () => {
     let basic_stats = BASE_STATS
-
-
 }
 
 export {
