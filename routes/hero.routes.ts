@@ -1,39 +1,17 @@
 import { Router } from "express";
-import { setHero } from "../controller/bbdd.controller";
-import { createRandomHero } from '../controller/hero.controller'
-import { createHero } from "../functions/hero";
+import { create_random_hero_and_save_it } from "../controller/bbdd.controller";
+import { create_random_hero } from '../controller/hero.controller'
 const router = Router()
 
 
 router.route([
-    '/save/random?gender=:gender&heroClass=:heroClass',
-    '/save/random?heroClass=:heroClass',
-    '/save/random?gender=:gender',
     '/save/random',
 ]).get(
-    (req, res) => {
-        
-        console.log(req.query)
-        let hero_created = createHero({
-            ...req.query
-        })
-
-        //guardar hero_created con la funcion setHero
-        setHero(hero_created)  
-        
-        res.send(hero_created)
-    }
+    create_random_hero_and_save_it
 )
 
-
-// '/hero'  added from app.
-router.route([
-    '/random?gender=:gender&heroClass=:heroClass',
-    '/random?heroClass=:heroClass',
-    '/random?gender=:gender',
-    '/random/'
-]).get(
-   createRandomHero
+router.route('/random').get(
+    create_random_hero
 )
 
 export default router;

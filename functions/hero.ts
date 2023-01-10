@@ -5,23 +5,24 @@ import { BASE_STATS, CLASS_STATS_BY_NAME } from '../jsons/stats'
 import { getRandomNameByGender, rand } from './utils'
 
 interface createHeroParams {
-    heroClass?: keyof typeof CLASS_STATS_BY_NAME,
+    class?: keyof typeof CLASS_STATS_BY_NAME,
     gender?: keyof typeof GENDERS
 }
 
 const createHero = ({
-    heroClass,
+    type,
     gender
 }: {
-    heroClass?: keyof typeof CLASS_STATS_BY_NAME,
+    type?: keyof typeof CLASS_STATS_BY_NAME,
     gender?: keyof typeof GENDERS
 } = {}) => {
     let choosen_hero_class_stats: hero_with_class_stats;
     let choosen_gender: typeof GENDERS[keyof typeof GENDERS];
 
     //Choosed Hero.
-    if (heroClass && heroClass in CLASS_STATS_BY_NAME) {
-        choosen_hero_class_stats = CLASS_STATS_BY_NAME[heroClass]
+    type = type?.toLocaleUpperCase() as keyof typeof CLASS_STATS_BY_NAME
+    if (type && type in CLASS_STATS_BY_NAME) {
+        choosen_hero_class_stats = CLASS_STATS_BY_NAME[type]
     } else {
         let number_of_hero_classes = Object.keys(CLASS_STATS_BY_NAME).length
         let id_random_hero_class = rand(0, number_of_hero_classes - 1) //indice del CLASS_STATS que se escoge
@@ -30,6 +31,7 @@ const createHero = ({
     }
 
     //Choosed Gender
+    gender = gender?.toLocaleUpperCase() as keyof typeof GENDERS
     if (gender && gender in GENDERS) {
         choosen_gender = GENDERS[gender]
     } else {
@@ -75,7 +77,6 @@ const calculateHeroStats: (baseStats: hero_stats, classStats: hero_stats, variat
         finalStat[key as keyof hero_stats] = Math.round((Math.random() * (value * (1 + variation) - value * (1 - variation)) + value * (1 - variation)) * 100) / 100;
     });
 
-    console.log(finalStat)
     return finalStat;
 }
 

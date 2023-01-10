@@ -137,7 +137,7 @@ export const CLASS_STATS_ARRAY = [
 export const CLASS_STATS_BY_NAME: {
 	[x in typeof CLASS_NAMES[keyof typeof CLASS_NAMES]]: hero_with_class_stats
 } = {
-	'Archer': {
+	'ARCHER': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -154,7 +154,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0,
 		total_hp: 18,
 	},
-	'Berserker': {
+	'BERSERKER': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -171,7 +171,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0.2,
 		total_hp: 70
 	},
-	'Deffender': {
+	'DEFFENDER': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -188,7 +188,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0.2,
 		total_hp: 42
 	},
-	'Fencers': {
+	'FENCER': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -205,7 +205,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0,
 		total_hp: 34
 	},
-	'Ninja': {
+	'NINJA': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -222,7 +222,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0,
 		total_hp: -28
 	},
-	'Paladin': {
+	'PALADIN': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -239,7 +239,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0.2,
 		total_hp: 50
 	},
-	'Sniper': {
+	'SNIPER': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -256,7 +256,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: -0.2,
 		total_hp: 5
 	},
-	'Soldier': {
+	'SOLDIER': {
 		name: '',
 		surname: '',
 		gender: "Other",
@@ -273,7 +273,7 @@ export const CLASS_STATS_BY_NAME: {
 		reg: 0,
 		total_hp: 35
 	},
-	'Thieve': {
+	'THIEVE': {
 		name: '',
 		surname: '',
 		gender: "Other",
