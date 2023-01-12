@@ -18,7 +18,25 @@ const setHero = (hero: hero_with_class_stats) => {
     });
 }
 
+const setHeroes = async (heroes: hero_with_class_stats[]) => {
+    let values = 'name, surname, gender, id_class, hp, total_hp, attack, defence, crit, crit_multiplier, accuracy, evasion, attack_interval, regeneration'
+    
+    await new Promise((res, rej) => {
+        connection.query(`INSERT INTO hero (${values}) VALUES ?`,
+            [heroes.map(hero =>
+                [hero.name, hero.surname, hero.gender, hero.id_class, hero.hp, hero.total_hp, hero.attack, hero.defence, hero.crit, hero.crit_multiplier, hero.accuracy, hero.evasion, hero.attack_interval, hero.reg]
+            )],
+            (err, rows, fields) => {
+                if (err) rej(err);
+                console.log(rows.message);
+                res('200')
+            }
+        )
+    });
+}
+
 export {
     connection,
-    setHero
+    setHero,
+    setHeroes
 }

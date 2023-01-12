@@ -16,6 +16,12 @@ const createHero = ({
     type?: keyof typeof CLASS_STATS_BY_NAME,
     gender?: keyof typeof GENDERS
 } = {}) => {
+
+    console.log({
+        type,
+        gender
+    })
+
     let choosen_hero_class_stats: hero_with_class_stats;
     let choosen_gender: typeof GENDERS[keyof typeof GENDERS];
 

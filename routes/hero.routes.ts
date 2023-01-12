@@ -4,9 +4,9 @@ import { create_random_hero } from '../controller/hero.controller'
 const router = Router()
 
 
-router.route([
-    '/save/random',
-]).get(
+router.route(
+    '/save/random'
+).get(
     create_random_hero_and_save_it
 )
 
