@@ -11,16 +11,15 @@ interface createHeroParams {
 
 const createHero = ({
     type,
-    gender
+    gender,
+    name,
+    surname
 }: {
     type?: keyof typeof CLASS_STATS_BY_NAME,
-    gender?: keyof typeof GENDERS
+    gender?: keyof typeof GENDERS,
+    name?: string,
+    surname?: string
 } = {}) => {
-
-    console.log({
-        type,
-        gender
-    })
 
     let choosen_hero_class_stats: hero_with_class_stats;
     let choosen_gender: typeof GENDERS[keyof typeof GENDERS];
@@ -48,9 +47,10 @@ const createHero = ({
     }
 
     let full_name = getRandomNameByGender(choosen_gender)
+
     let final_stats: hero_with_class_stats = {
-        name: full_name.name,
-        surname: full_name.surname,
+        name: name ? name : full_name.name,
+        surname: surname ? surname : full_name.surname,
         gender: choosen_gender,
         id_class: choosen_hero_class_stats.id_class,
         class_name: choosen_hero_class_stats.class_name,
