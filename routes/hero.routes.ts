@@ -27,11 +27,6 @@ router.route('/something').get(
         archer.surname = hero.surname
         archer.stats = hero;
 
-        //removing circular rependencies from archer
-        archer.SkillManager = null as unknown as SkillManager;
-        archer.StatusManager = null as unknown as StatusManager;
-        archer.LogManager = null as unknown as LogManager;
-
         res.send( archer )
     }
 )
