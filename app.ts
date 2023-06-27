@@ -1,58 +1,56 @@
 import express, { Application } from 'express';
 // import cluster from 'cluster';
+import readline from 'readline';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-
-//Routes
-import { heroRouter } from './routes'
-
-
-// Routes
-// import IndexRoutes from './routes/index.routes';
-// import HeroRouter from './routes/hero.routes';
-// import CrewRouter from './routes/crew.routes';
-// import FightRouter from './routes/fight.routes';
-// import MapRouter from './routes/map.routes';
+import { configHandler, configuration } from './src/config';
 
 export class App {
-	app: Application | undefined; //creation of the propertie "application"
+	app: Application | undefined = express(); //creation of the propertie "application"
 
-    port: number | string = 3000;
-	// constructor(
-	//   private port?: number | string //
-	// ) {
-	//   if (cluster.isMaster) {
-	//     //If it's master thread, I will create 1 thread per cpu the cp has
-	//     let cpuCount: number = require("os").cpus().length;
-	//     for (let i = 0; i < cpuCount; i++) {
-	//       cluster.fork();
-	//     }
-	//     // Listen for dying threads
-	//     cluster.on("exit", function(thread) {
-	//       //console.log(`Thread ${ thread.id } died `);
-	//       cluster.fork();
-	//     });
-	//   } else {
-	//     //functions which contains my whole app.
-	//     this.app = express(); //app type aplication receive "express()"
-	//     this.settings(); //add settings
-	//     this.middlewares(); //add middlewares
-	//     this.routes(); //add routes
-	//   }
-	// }
+	port: number | string = 3000;
+
+	rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
 
 	constructor(port?: number | string) {
-        if(port) this.port = port;
+		if (port) this.port = port;
 		this.app = express(); //app type aplication receive "express()"
 		this.settings(); //add settings
 		this.middlewares(); //add middlewares
 		this.routes(); //add routes
 	}
 
-	private settings() {
-        //empty.
-    }
+	private async settings() {
+		configHandler.setConfig('service', 'fs');
 
+		// Configuración inicial
+// 		while (!configuration.service) {
+// 		  await new Promise((resolve) => {
+// 			this.rl.question(`Choose Type of service used:
+// (1) fileSystem. (default)
+// (2) mySQL. \n
+// `, (answer) => {
+// 			  switch (answer) {
+// 				case '1':
+// 				  configHandler.setConfig('service', 'fs');
+// 				  break;
+// 				case '2':
+// 				  configHandler.setConfig('service', 'mysql');
+// 				  break;
+// 				default:
+// 				  configHandler.setConfig('service', 'fs');
+// 				  break;
+// 			  }
+// 			  resolve(undefined);
+// 			});
+// 		  });
+// 		}
+// 		this.rl.close();
+	  }
+	  
 	private middlewares() {
 		this.app?.use(morgan('dev')); //Morgan establishment
 		this.app?.use(express.json());
@@ -62,19 +60,10 @@ export class App {
 			})
 		);
 		this.app?.set('etag', false);
-		// this.app?.use((req,res,next)=>{
-		//   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-		// });
 	}
 
 	private routes() {
-        this.app?.use('/hero', heroRouter)
-		// this.app?.use('/', IndexRoutes); //main route.
-		// this.app?.use('/hero', HeroRouter); //hero route.
-		// this.app?.use('/fight', FightRouter); //hero route.
-		// this.app?.use('/crew', CrewRouter) //crews routes
-		
-		// this.app?.use('/map', MapRouter) //map routes
+
 	}
 
 	async listen(): Promise<void> {

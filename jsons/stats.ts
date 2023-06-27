@@ -1,4 +1,4 @@
-import { CLASS_NAMES } from "../constants/class_names"
+import { CLASS_NAMES } from "../old_proyect2/constants/class_names"
 import { hero_stats, hero_with_class_stats } from "../interfaces/hero.interfaces"
 
 export const BASE_STATS: hero_stats = {
