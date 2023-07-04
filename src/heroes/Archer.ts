@@ -47,4 +47,6 @@ const createArcher = (options?: HeroOptions) => {
     });
 }
 
-export default createArcher;
+export {
+    createArcher
+}

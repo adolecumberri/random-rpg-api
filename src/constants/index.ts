@@ -1,4 +1,4 @@
 export * from './heroConstants';
-export * from './femaleNames';
-export * from './maleNames';
-export * from './surnames';
+export * from './naming/femaleNames';
+export * from './naming/maleNames';
+export * from './naming/surnames';
