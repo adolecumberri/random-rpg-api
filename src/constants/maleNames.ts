@@ -1,4 +1,4 @@
-export default [
+const MALE_NAMES = [
     "AARON",
     "ABEL",
     "ABIAN",
@@ -628,4 +628,8 @@ export default [
     "XAVI",
     "XAVIER",
     "ZEUS"
-]
+];
+
+export {
+    MALE_NAMES
+}

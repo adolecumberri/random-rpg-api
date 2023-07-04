@@ -1,4 +1,4 @@
-export default [
+const FEMALE_NAMES = [
     "ABIBATOU",
     "ADA",
     "ADELINE",
@@ -715,4 +715,8 @@ export default [
     "YENNY",
     "ZAIDA",
     "ZUZANA"
-]
+];
+
+export {
+    FEMALE_NAMES
+}

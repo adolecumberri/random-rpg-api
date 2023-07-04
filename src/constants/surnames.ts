@@ -1,4 +1,4 @@
-export default [
+const SURNAMES = [
     "AGUILAR",
     "AGUSTIN",
     "ALONSO",
@@ -152,4 +152,8 @@ export default [
     "VICENTE",
     "VIDAL",
     "VILA"
-]
+];
+
+export {
+    SURNAMES
+}
