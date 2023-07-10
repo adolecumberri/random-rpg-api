@@ -1,6 +1,6 @@
 import { Status, Character } from "rpg-ts";
 import { ARCHER_SKILL_PROBABILITY } from "../constants";
-import { getFemaleName, getMaleName, getProb, getStatsByClassId, getSurname, rand } from "../helpers";
+import { getFemaleName, getMaleName, getProb, getStatsByClassId, getSurname, getRandomInt } from "../helpers";
 import { CLASS_NAMES } from "../../old_proyect2/constants";
 import { HeroOptions } from "../types";
 
@@ -27,7 +27,7 @@ const ARCHER_SKILL = (character: Character) => {
 
 
 const createArcher = (options?: HeroOptions) => {
-    let gender = options?.gender !== undefined ? options.gender : rand(0, 1);
+    let gender = options?.gender !== undefined ? options.gender : getRandomInt(0, 1);
     let name = options?.name || (gender ? getMaleName() : getFemaleName());
     let surname = options?.surname || getSurname();
 

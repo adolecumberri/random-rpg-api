@@ -1,4 +1,4 @@
-export function rand(min: number = 0, max: number = 100) {
+export function getRandomInt(min: number = 0, max: number = 100) {
 	return Math.round(Math.random() * (max - min) + min);
 }
 

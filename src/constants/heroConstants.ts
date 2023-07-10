@@ -1,16 +1,16 @@
 import { HeroStats } from "../types/heroModel";
 
 const HEROES_NAMES = {
-    ARCHER: 'Archer',
-    BERSERKER: 'Berserker',
-    DEFENDER: 'Defender',
-    FENCER: 'Fencer',
-    NINJA: 'Ninja',
-    PALADIN: 'Paladin',
-    SNIPER: 'Sniper',
-    SOLDIER: 'Soldier',
-    THIEVE: 'Thieve',
-} as const;
+    ARCHER: 'ARCHER',
+    BERSERKER: 'BERSERKER',
+    DEFENDER: 'DEFENDER',
+    FENCER: 'FENCER',
+    NINJA: 'NINJA',
+    PALADIN: 'PALADIN',
+    SNIPER: 'SNIPER',
+    SOLDIER: 'SOLDIER',
+    THIEVE: 'THIEVE',
+    } as const;
 
 const COMMON_STATS: Omit<HeroStats, 'idClass' | 'className'> = {
     "hp": 70,
@@ -25,8 +25,8 @@ const COMMON_STATS: Omit<HeroStats, 'idClass' | 'className'> = {
     "reg": 0.6
 };
 
-const CLASSES_STATS: {[x: number]: HeroStats} = {
-    1: {
+const CLASSES_STATS = {
+    [HEROES_NAMES.ARCHER]: {
         "idClass": 1,
         "className": HEROES_NAMES.ARCHER,
         "hp": 18,
@@ -40,7 +40,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0
     },
-    2: {
+    [HEROES_NAMES.BERSERKER]: {
         "idClass": 2,
         "className": HEROES_NAMES.BERSERKER,
         "hp": 70,
@@ -54,7 +54,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0.2
     },
-    3: {
+    [HEROES_NAMES.DEFENDER]: {
         "idClass": 3,
         "className": HEROES_NAMES.DEFENDER,
         "hp": 42,
@@ -68,7 +68,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0.2
     },
-    4: {
+    [HEROES_NAMES.FENCER]: {
         "idClass": 4,
         "className": HEROES_NAMES.FENCER,
         "hp": 34,
@@ -82,7 +82,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0
     },
-    5: {
+    [HEROES_NAMES.NINJA]: {
         "idClass": 5,
         "className": HEROES_NAMES.NINJA,
         "hp": -28,
@@ -96,7 +96,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0
     },
-    6: {
+    [HEROES_NAMES.PALADIN]: {
         "idClass": 6,
         "className": HEROES_NAMES.PALADIN,
         "hp": 50,
@@ -110,7 +110,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0.2
     },
-    7: {
+    [HEROES_NAMES.SNIPER]: {
         "idClass": 7,
         "className": HEROES_NAMES.SNIPER,
         "hp": 5,
@@ -124,7 +124,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": -0.2
     },
-    8: {
+    [ HEROES_NAMES.SOLDIER]: {
         "idClass": 8,
         "className": HEROES_NAMES.SOLDIER,
         "hp": 35,
@@ -138,7 +138,7 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
         "attackSpeed": 1,
         "reg": 0
     },
-    9: {
+    [HEROES_NAMES.THIEVE]: {
         "idClass": 9,
         "className": HEROES_NAMES.THIEVE,
         "hp": 25,
@@ -154,11 +154,21 @@ const CLASSES_STATS: {[x: number]: HeroStats} = {
     }
 };
 
-const ARCHER_SKILL_PROBABILITY = 0.23;
+const SKILL_PROBABILITY =  {
+    [HEROES_NAMES.ARCHER]: 23,
+    [HEROES_NAMES.BERSERKER]: 100,
+    [HEROES_NAMES.DEFENDER]: 100,
+    [HEROES_NAMES.FENCER]: 22,
+    [HEROES_NAMES.NINJA]: 19,
+    [HEROES_NAMES.PALADIN]: 100,
+    [HEROES_NAMES.SNIPER]: 75,
+    [HEROES_NAMES.SOLDIER]: 23,
+    [HEROES_NAMES.THIEVE]: 60,
+} as const;
 
 export { 
     HEROES_NAMES,
     COMMON_STATS,
     CLASSES_STATS,
-    ARCHER_SKILL_PROBABILITY,
+    SKILL_PROBABILITY,
  };

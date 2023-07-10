@@ -1,10 +1,26 @@
-import { CLASSES_STATS, COMMON_STATS, FEMALE_NAMES, MALE_NAMES, SURNAMES } from "../constants";
+import { CLASSES_STATS, COMMON_STATS, FEMALE_NAMES, HEROES_NAMES, MALE_NAMES, SURNAMES } from "../constants";
 import { HeroStats } from "../types";
-import { rand } from "./commonHelper";
+import { getRandomInt } from "./commonHelper";
 
+const getIdByClassName = (className: string) => {
+    for (let key in CLASSES_STATS) {
+        if (CLASSES_STATS[key as keyof typeof CLASSES_STATS].className === className) {
+            return CLASSES_STATS[key as keyof typeof CLASSES_STATS].idClass;
+        }
+    }
+};
+
+const getNameByClassId = (classId: number) => {
+    for (let key in CLASSES_STATS) {
+        if (CLASSES_STATS[key as keyof typeof CLASSES_STATS].idClass === classId) {
+            return CLASSES_STATS[key as keyof typeof CLASSES_STATS].className;
+        }
+    }
+};
 
 const getStatsByClassId = (classId: number, variation = 0.15): Partial<HeroStats> => {
-    const classStats = CLASSES_STATS[classId];
+
+    const classStats = CLASSES_STATS[getNameByClassId(classId) as keyof typeof CLASSES_STATS];
 
     if (!classStats) {
         throw new Error(`ClassId ${classId} not found`);
@@ -22,21 +38,50 @@ const getStatsByClassId = (classId: number, variation = 0.15): Partial<HeroStats
         const upperBound = total * (1 + variation);
 
         // Calcula un valor aleatorio entre el límite inferior y superior
-        stats[key as keyof typeof COMMON_STATS] = Math.random() * (upperBound - lowerBound) + lowerBound;
+        stats[key as keyof typeof COMMON_STATS] = getRandomInt(lowerBound, upperBound);
     }
 
     return stats;
 }
 
-const getMaleName = () => MALE_NAMES[rand(0, MALE_NAMES.length)];
+const getStatsByClassName = (className: keyof typeof HEROES_NAMES, variation = 0.15): Partial<HeroStats> => {
 
-const getFemaleName = () => FEMALE_NAMES[rand(0, FEMALE_NAMES.length)];
+    const classStats = CLASSES_STATS[className];
 
-const getSurname = () => SURNAMES[rand(0, SURNAMES.length)];
+    if (!classStats) {
+        throw new Error(`ClassName ${className} not found`);
+    }
+
+    const stats: Partial<HeroStats> = {};
+
+    for (let key in COMMON_STATS) {
+        const common = COMMON_STATS[key as keyof typeof COMMON_STATS];
+        const classValue = classStats[key as keyof typeof COMMON_STATS];
+        const total = common + classValue;
+
+        // Asegura que la variación sea entre 0.85 y 1.15
+        const lowerBound = total * (1 - variation);
+        const upperBound = total * (1 + variation);
+
+        // Calcula un valor aleatorio entre el límite inferior y superior
+        stats[key as keyof typeof COMMON_STATS] = getRandomInt(lowerBound, upperBound);
+    }
+
+    return stats;
+}
+
+const getMaleName = () => MALE_NAMES[getRandomInt(0, MALE_NAMES.length)];
+
+const getFemaleName = () => FEMALE_NAMES[getRandomInt(0, FEMALE_NAMES.length)];
+
+const getSurname = () => SURNAMES[getRandomInt(0, SURNAMES.length)];
 
 
 export {
+    getIdByClassName,
+    getNameByClassId,
     getStatsByClassId,
+    getStatsByClassName,
     getMaleName,
     getFemaleName,
     getSurname
