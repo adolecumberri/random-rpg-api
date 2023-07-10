@@ -111,7 +111,7 @@ const riposte: CharacterCallbacks['afterAnyDefence'] = ({ c, attack, defence }) 
     return solution;
 };
 
-const tripleAttack = ({ atacker, value }: AttackResult) => {
+const tripleAttack = ({ atacker }: AttackResult) => {
     if ( !atacker ) return undefined;
     if ( atacker!.skill.probability < getRandomInt() ) return undefined;
     const results: AttackResult = { type: ATTACK_TYPE_CONST.SKILL, value: 0, atacker };
@@ -190,7 +190,7 @@ const shieldGesture: CharacterCallbacks['afterTurn'] = (c) => {
     }
 };
 
-const fervorSkill = (c: Character) => {
+const fervor = (c: Character) => {
     const fervor = new Status({
         duration: { type: 'PERMANENT' },
         name: 'Fervor',
@@ -243,5 +243,5 @@ export {
     holyLight,
     unoticedShot,
     shieldGesture,
-    fervorSkill,
+    fervor,
 }
