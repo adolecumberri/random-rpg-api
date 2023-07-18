@@ -1,3 +1,4 @@
+import { Stats } from "rpg-ts";
 import { HeroStats } from "../types/heroModel";
 
 const HEROES_NAMES = {
@@ -12,7 +13,7 @@ const HEROES_NAMES = {
     THIEVE: 'THIEVE',
 } as const;
 
-const COMMON_STATS: Omit<HeroStats, 'idClass' | 'className'> = {
+const COMMON_STATS: HeroStats = {
     "hp": 70,
     "attack": 10,
     "defence": 7,
@@ -25,7 +26,9 @@ const COMMON_STATS: Omit<HeroStats, 'idClass' | 'className'> = {
     "reg": 0.6
 };
 
-const CLASSES_STATS = {
+const CLASSES_STATS: {
+    [x in keyof typeof HEROES_NAMES]: HeroStats
+} = {
     [HEROES_NAMES.ARCHER]: {
         "idClass": 1,
         "className": HEROES_NAMES.ARCHER,

@@ -1,19 +1,11 @@
+import { Stats } from "rpg-ts";
 import { HEROES_NAMES } from "../constants";
 
 type HeroName = typeof HEROES_NAMES[keyof typeof HEROES_NAMES];
 
-type HeroStats =  {
+type HeroStats =  Omit<Stats, 'totalHp'> & {
     idClass?: number;
     className?: HeroName;
-    hp: number;
-    attack: number;
-    defence: number;
-    crit: number;
-    critMultiplier: number;
-    accuracy: number;
-    evasion: number;
-    attackInterval: number;
-    attackSpeed: number;
     reg: number;
 }
 

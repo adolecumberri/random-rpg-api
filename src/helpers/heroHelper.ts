@@ -1,5 +1,5 @@
 import { CLASSES_STATS, COMMON_STATS, FEMALE_NAMES, HEROES_NAMES, MALE_NAMES, SURNAMES } from "../constants";
-import { HeroStats } from "../types";
+import { HeroName, HeroStats } from "../types";
 import { getRandomInt } from "./commonHelper";
 
 const getIdByClassName = (className: string) => {
@@ -26,48 +26,52 @@ const getStatsByClassId = (classId: number, variation = 0.15): Partial<HeroStats
         throw new Error(`ClassId ${classId} not found`);
     }
 
-    const stats: Partial<HeroStats> = {};
+    const stats: { [x in keyof typeof COMMON_STATS]?: number} = {};
 
     for (let key in COMMON_STATS) {
-        const common = COMMON_STATS[key as keyof typeof COMMON_STATS];
-        const classValue = classStats[key as keyof typeof COMMON_STATS];
+        const common = COMMON_STATS[key as keyof typeof COMMON_STATS] as number;
+        const classValue = classStats[key as keyof typeof COMMON_STATS] as number;
         const total = common + classValue;
 
         // Asegura que la variación sea entre 0.85 y 1.15
         const lowerBound = total * (1 - variation);
         const upperBound = total * (1 + variation);
 
+        if(!stats[key as keyof typeof COMMON_STATS]) stats[key as keyof typeof COMMON_STATS] = 0;
+
         // Calcula un valor aleatorio entre el límite inferior y superior
         stats[key as keyof typeof COMMON_STATS] = getRandomInt(lowerBound, upperBound);
     }
 
-    return stats;
+    return stats as Partial<HeroStats>;
 }
 
 const getStatsByClassName = (className: keyof typeof HEROES_NAMES, variation = 0.15): Partial<HeroStats> => {
 
     const classStats = CLASSES_STATS[className];
 
-    if (!classStats) {
+     if (!classStats) {
         throw new Error(`ClassName ${className} not found`);
     }
 
-    const stats: Partial<HeroStats> = {};
+    const stats: { [x in keyof typeof COMMON_STATS]?: number} = {};
 
     for (let key in COMMON_STATS) {
-        const common = COMMON_STATS[key as keyof typeof COMMON_STATS];
-        const classValue = classStats[key as keyof typeof COMMON_STATS];
+        const common = COMMON_STATS[key as keyof typeof COMMON_STATS] as number;
+        const classValue = classStats[key as keyof typeof COMMON_STATS] as number;
         const total = common + classValue;
 
         // Asegura que la variación sea entre 0.85 y 1.15
         const lowerBound = total * (1 - variation);
         const upperBound = total * (1 + variation);
 
+        if(!stats[key as keyof typeof COMMON_STATS]) stats[key as keyof typeof COMMON_STATS] = 0;
+
         // Calcula un valor aleatorio entre el límite inferior y superior
         stats[key as keyof typeof COMMON_STATS] = getRandomInt(lowerBound, upperBound);
     }
 
-    return stats;
+    return stats as Partial<HeroStats>;
 }
 
 const getMaleName = () => MALE_NAMES[getRandomInt(0, MALE_NAMES.length)];
