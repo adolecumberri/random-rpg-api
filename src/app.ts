@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { configHandler, configuration } from './config';
 import { heroRouter } from './routes';
+import { BASE_URL, HEROES_URL } from './constants';
 
 export class App {
 	app: Application | undefined = express(); //creation of the propertie "application"
@@ -65,7 +66,7 @@ export class App {
 	
 
 	private routes() {
-		this.app?.use('/api/hero', heroRouter);
+		this.app?.use(`${BASE_URL}${HEROES_URL}`, heroRouter);
 	}
 
 	async listen(): Promise<void> {

@@ -18,7 +18,7 @@ const haste = ({ atacker: c }: AttackResult) => {
     });
 
     if (c.skill.probability >= getRandomInt(0, 100) && !c.skill.isUsed) {
-        c.statusManager?.addStatus(hasteStatus);
+        c.statusManager?.addStatus(hasteStatus, c);
     }
 };
 
@@ -63,8 +63,8 @@ const rage: CharacterCallbacks['receiveDamage'] = ({ c }) => {
         !c.skill.isUsed &&
         c.isAlive
     ) {
-        c.statusManager?.addStatus(rage);
-        c.statusManager?.activate('AFTER_RECEIVE_DAMAGE');
+        c.statusManager?.addStatus(rage, c);
+        c.statusManager?.activate('AFTER_RECEIVE_DAMAGE', c);
     }
 };
 
@@ -186,7 +186,7 @@ const shieldGesture: CharacterCallbacks['afterTurn'] = (c) => {
         c.isAlive &&
         !c.skill.isUsed
     ) {
-        c.statusManager?.addStatus(shieldGesture);
+        c.statusManager?.addStatus(shieldGesture, c);
     }
 };
 
@@ -230,8 +230,8 @@ const fervor = ({ c }: { c?: BaseCharacter }) => {
         !c.skill.isUsed &&
         c.isAlive
     ) {
-        c.statusManager?.addStatus(fervor);
-        c.statusManager?.activate('AFTER_RECEIVE_DAMAGE');
+        c.statusManager?.addStatus(fervor, c);
+        c.statusManager?.activate('AFTER_RECEIVE_DAMAGE', c);
     }
 };
 

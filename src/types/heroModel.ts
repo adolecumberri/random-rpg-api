@@ -9,20 +9,15 @@ type HeroStats =  Omit<Stats, 'totalHp'> & {
     reg: number;
 }
 
-interface HeroOptions {
+interface HeroIdentity {
     gender?: number;
     name?: string;
     surname?: string;
-    skill?: {
-        probability?: number;
-        use?: any;
-        isUsed?: boolean;
-    };
 }
 
 
 export { 
     HeroName,
     HeroStats,
-    HeroOptions
+    HeroIdentity
 };

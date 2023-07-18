@@ -1,14 +1,14 @@
 import { getRandomInt, Character, CharacterCallbacks } from "rpg-ts";
 import { getMaleName, getFemaleName, getSurname, getStatsByClassName } from "../../helpers";
-import { HeroOptions } from "../../types";
+import { HeroIdentity } from "../../types";
 import { HEROES_NAMES, SKILL_PROBABILITY } from "../../constants";
 import { fervor, haste, holyLight, rage, riposte, shieldGesture, skipeShield, tripleAttack, unoticedShot } from '../skills';
 
 function createCharacter(
-    className: keyof typeof HEROES_NAMES, 
-    options?: HeroOptions, 
+    className: keyof typeof HEROES_NAMES,
+    options?: HeroIdentity,
     callbacks?: CharacterCallbacks
-    ) {
+) {
     let gender = options?.gender !== undefined ? options.gender : getRandomInt(0, 1);
     let name = options?.name || (gender ? getMaleName() : getFemaleName());
     let surname = options?.surname || getSurname();
@@ -19,7 +19,6 @@ function createCharacter(
         gender,
         skill: {
             probability: SKILL_PROBABILITY[className],
-            ...options?.skill
         },
         className: className,
         statusManager: true,
@@ -29,44 +28,44 @@ function createCharacter(
     });
 }
 
-const createArcher = (options?: HeroOptions) => {
+const createArcher = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.ARCHER, options, {
         criticalAttack: haste,
         normalAttack: haste,
     });
 }
 
-const createBerserk = (options?: HeroOptions) => {
+const createBerserk = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.BERSERKER, options, {
         receiveDamage: rage,
     });
 }
 
-const createDefender = (options?: HeroOptions) => {
+const createDefender = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.DEFENDER, options, {
         receiveDamage: skipeShield,
     });
 }
 
-const createFencer = (options?: HeroOptions) => {
+const createFencer = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.FENCER, options, {
         afterAnyDefence: riposte,
     });
 }
 
-const createNinja = (options?: HeroOptions) => {
+const createNinja = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.NINJA, options, {
         afterAnyAttack: tripleAttack,
     });
 };
 
-const createPaladin = (options?: HeroOptions) => {
+const createPaladin = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.PALADIN, options, {
         afterTurn: holyLight,
     });
 };
 
-const createSniper = (options?: HeroOptions) => {
+const createSniper = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.SNIPER, options, {
         beforeBattle: unoticedShot,
         afterBattle: (c: Character) => {
@@ -75,13 +74,13 @@ const createSniper = (options?: HeroOptions) => {
     });
 };
 
-const createSoldier = (options?: HeroOptions) => {
+const createSoldier = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.SOLDIER, options, {
         afterTurn: shieldGesture,
     });
 };
 
-const createThieve = (options?: HeroOptions) => {
+const createThieve = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.THIEVE, options, {
         receiveDamage: fervor,
     });

@@ -3,11 +3,11 @@
 import { Request, Response } from "express";
 import { HEROES_NAMES } from "../constants";
 import { heroFactory } from "../heroes/heroes";
-import { HeroOptions } from "../types";
+import { HeroIdentity } from "../types";
 
-export const createHero = (req: Request, res: Response) => {
-    const { className, options }: {className: keyof typeof HEROES_NAMES, options?: HeroOptions} = req.body;
-    
+const createHero = (req: Request, res: Response) => {
+    const { className, options }: { className: keyof typeof HEROES_NAMES, options?: HeroIdentity } = req.body;
+
     let localClassName = className;
     // Verificar si el className es válido
     if (!(localClassName in HEROES_NAMES)) {
@@ -15,13 +15,13 @@ export const createHero = (req: Request, res: Response) => {
         localClassName = Object.keys(HEROES_NAMES)[Math.floor(Math.random() * Object.keys(HEROES_NAMES).length)] as keyof typeof HEROES_NAMES;
     }
 
-    console.log(localClassName, )
+    console.log("localClassName", localClassName)
 
     // Crear el personaje usando la función correspondiente de heroFactory
     try {
         const createHeroFunc = heroFactory[localClassName];
         const character = createHeroFunc(options);
-        
+
         // Suponiendo que el personaje tiene un método para convertirse en JSON
         return res.json(character);
 
@@ -29,3 +29,7 @@ export const createHero = (req: Request, res: Response) => {
         console.log(error);
     }
 };
+
+export {
+    createHero
+}
