@@ -5,14 +5,20 @@ let configuration: { [x: string]: any } = {};
 let Module: FileStorage | MysqlStorage;
 
 const moduleHandler = {
-  setConfig: (key: string, value: any) => {
+  setConfig: (key: string, value: 'fs' | 'mysql') => {
     console.log('Service set to: ', value);
 
     // Crear instancia del módulo de almacenamiento basado en la configuración
-    if (configuration.service === 'mysql') {
-      Module = new MysqlStorage();
-    } else {
-      Module = new FileStorage();
+    switch (value) {
+      case 'fs':
+        Module = new FileStorage();
+        break;
+      case 'mysql':
+        Module = new MysqlStorage();
+        break;
+      default:
+        Module = new FileStorage();
+        break;
     }
 
     configuration[key] = value;

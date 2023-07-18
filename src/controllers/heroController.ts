@@ -2,8 +2,9 @@
 // controllers/heroController.ts
 import { Request, Response } from "express";
 import { HEROES_NAMES } from "../constants";
-import { heroFactory } from "../heroes/heroes";
-import { HeroIdentity } from "../types";
+import { heroFactory, restoreHero } from "../heroes/heroes";
+import { HeroIdentity, StoredHero } from "../types";
+import { Character, Stats } from "rpg-ts";
 
 const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity) => {
 
@@ -63,8 +64,17 @@ const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HERO
     return heroList;
 };
 
+
+function RestoreCharacter(storedHero: StoredHero): Character {
+
+    const createHeroFunc = restoreHero[storedHero.className.toUpperCase() as keyof typeof HEROES_NAMES];
+  
+    return createHeroFunc(storedHero);
+  }
+
 export {
     createHero,
-    createHeroes
+    createHeroes,
+    RestoreCharacter
 }
 // 

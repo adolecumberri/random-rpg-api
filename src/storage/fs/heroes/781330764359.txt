@@ -1,0 +1,1 @@
+{"id":781330764359,"isAlive":true,"name":"CAIFENG","stats":{"accuracy":90,"attack":33,"evasion":18,"totalHp":107,"defence":22,"hp":107,"crit":29,"critMultiplier":12,"attackInterval":10,"attackSpeed":2,"reg":58},"surname":"MORA","skillProbability":23,"className":"SOLDIER"}

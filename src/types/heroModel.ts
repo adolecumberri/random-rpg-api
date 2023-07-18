@@ -15,9 +15,20 @@ interface HeroIdentity {
     surname?: string;
 }
 
+interface StoredHero { 
+    id: number, 
+    isAlive: true, 
+    name: string, 
+    stats: Stats & {reg:number},  
+    surname: string, 
+    className: string,
+    gender: number,
+}
+
 
 export { 
     HeroName,
     HeroStats,
-    HeroIdentity
+    HeroIdentity,
+    StoredHero,
 };

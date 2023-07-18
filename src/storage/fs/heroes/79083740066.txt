@@ -1,0 +1,1 @@
+{"id":79083740066,"isAlive":true,"name":"RESHMA","stats":{"accuracy":97,"attack":31,"evasion":21,"totalHp":100,"defence":20,"hp":100,"crit":34,"critMultiplier":10,"attackInterval":12,"attackSpeed":2,"reg":62},"surname":"BLANCO","skillProbability":23,"className":"SOLDIER"}

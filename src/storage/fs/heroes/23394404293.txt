@@ -1,0 +1,1 @@
+{"id":23394404293,"isAlive":true,"name":"NEFER","stats":{"accuracy":76,"attack":28,"evasion":19,"totalHp":95,"defence":16,"hp":95,"crit":21,"critMultiplier":1,"attackInterval":11,"attackSpeed":2,"reg":60},"surname":"PEREIRA","skillProbability":22,"className":"FENCER"}

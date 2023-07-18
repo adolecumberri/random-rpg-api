@@ -28,29 +28,29 @@ export class App {
 		moduleHandler.setConfig('service', 'fs');
 
 		// Configuración inicial
-				while (!moduleHandler.getConfig().service) {
-					console.log(moduleHandler.getConfig())
-				  await new Promise((resolve) => {
-					this.rl.question(`Choose Type of service used:
-		(1) fileSystem. (default)
-		(2) mySQL. \n
-		`, (answer) => {
-					  switch (answer) {
-						case '1':
-							moduleHandler.setConfig('service', 'fs');
-						  break;
-						case '2':
-							moduleHandler.setConfig('service', 'mysql');
-						  break;
-						default:
-							moduleHandler.setConfig('service', 'fs');
-						  break;
-					  }
-					  resolve(undefined);
-					});
-				  });
-				}
-				this.rl.close();
+		// 		while (!moduleHandler.getConfig().service) {
+		// 			console.log(moduleHandler.getConfig())
+		// 		  await new Promise((resolve) => {
+		// 			this.rl.question(`Choose Type of service used:
+		// (1) fileSystem. (default)
+		// (2) mySQL. \n
+		// `, (answer) => {
+		// 			  switch (answer) {
+		// 				case '1':
+		// 					moduleHandler.setConfig('service', 'fs');
+		// 				  break;
+		// 				case '2':
+		// 					moduleHandler.setConfig('service', 'mysql');
+		// 				  break;
+		// 				default:
+		// 					moduleHandler.setConfig('service', 'fs');
+		// 				  break;
+		// 			  }
+		// 			  resolve(undefined);
+		// 			});
+		// 		  });
+		// 		}
+		// 		this.rl.close();
 	}
 
 	private middlewares() {
