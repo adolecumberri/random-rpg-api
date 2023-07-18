@@ -21,6 +21,11 @@ interface HeroOptions {
     gender?: number;
     name?: string;
     surname?: string;
+    skill?: {
+        probability?: number;
+        use?: any;
+        isUsed?: boolean;
+    };
 }
 
 

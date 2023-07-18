@@ -2,8 +2,8 @@ import { ATTACK_TYPE_CONST, AttackResult, BaseCharacter, Character, CharacterCal
 import { getRandomInt } from "../../helpers";
 
 
-const haste = ({atacker: c}: AttackResult) => {
-    if (!c) return;
+const haste = ({ atacker: c }: AttackResult) => {
+    if (!c) return undefined;
     const hasteStatus = new Status({
         duration: { type: 'TEMPORAL', value: 1 },
         name: 'Haste',
@@ -112,8 +112,8 @@ const riposte: CharacterCallbacks['afterAnyDefence'] = ({ c, attack, defence }) 
 };
 
 const tripleAttack = ({ atacker }: AttackResult) => {
-    if ( !atacker ) return undefined;
-    if ( atacker!.skill.probability < getRandomInt() ) return undefined;
+    if (!atacker) return undefined;
+    if (atacker!.skill.probability < getRandomInt()) return undefined;
     const results: AttackResult = { type: ATTACK_TYPE_CONST.SKILL, value: 0, atacker };
 
     for (let i = 0; i < 3; i++) {
@@ -122,7 +122,7 @@ const tripleAttack = ({ atacker }: AttackResult) => {
 
         let newAttackValue = 0;
 
-        if (atacker.stats.accuracy < accuracyRoll ) {
+        if (atacker.stats.accuracy < accuracyRoll) {
             newAttackValue = atacker.calculateDamage('MISS', atacker.stats);
         } else if (atacker!.stats.crit > critRoll) {
             newAttackValue = atacker.calculateDamage('CRITICAL', atacker.stats);
@@ -151,8 +151,8 @@ const holyLight: CharacterCallbacks['afterTurn'] = (c) => {
 const unoticedShot: CharacterCallbacks['beforeBattle'] = (c) => {
     if (!c) return;
     if (
-    c.skill.probability >= getRandomInt(0, 100) &&
-    !c.skill.isUsed
+        c.skill.probability >= getRandomInt(0, 100) &&
+        !c.skill.isUsed
     ) {
         c!.skill.isUsed = true;
         return c.attack();
@@ -190,7 +190,8 @@ const shieldGesture: CharacterCallbacks['afterTurn'] = (c) => {
     }
 };
 
-const fervor = (c: Character) => {
+const fervor = ({ c }: { c?: BaseCharacter }) => {
+    if (!c) return undefined;
     const fervor = new Status({
         duration: { type: 'PERMANENT' },
         name: 'Fervor',

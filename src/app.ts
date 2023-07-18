@@ -3,7 +3,8 @@ import express, { Application } from 'express';
 import readline from 'readline';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import { configHandler, configuration } from './src/config';
+import { configHandler, configuration } from './config';
+import { heroRouter } from './routes';
 
 export class App {
 	app: Application | undefined = express(); //creation of the propertie "application"
@@ -27,30 +28,30 @@ export class App {
 		configHandler.setConfig('service', 'fs');
 
 		// Configuración inicial
-// 		while (!configuration.service) {
-// 		  await new Promise((resolve) => {
-// 			this.rl.question(`Choose Type of service used:
-// (1) fileSystem. (default)
-// (2) mySQL. \n
-// `, (answer) => {
-// 			  switch (answer) {
-// 				case '1':
-// 				  configHandler.setConfig('service', 'fs');
-// 				  break;
-// 				case '2':
-// 				  configHandler.setConfig('service', 'mysql');
-// 				  break;
-// 				default:
-// 				  configHandler.setConfig('service', 'fs');
-// 				  break;
-// 			  }
-// 			  resolve(undefined);
-// 			});
-// 		  });
-// 		}
-// 		this.rl.close();
-	  }
-	  
+		// 		while (!configuration.service) {
+		// 		  await new Promise((resolve) => {
+		// 			this.rl.question(`Choose Type of service used:
+		// (1) fileSystem. (default)
+		// (2) mySQL. \n
+		// `, (answer) => {
+		// 			  switch (answer) {
+		// 				case '1':
+		// 				  configHandler.setConfig('service', 'fs');
+		// 				  break;
+		// 				case '2':
+		// 				  configHandler.setConfig('service', 'mysql');
+		// 				  break;
+		// 				default:
+		// 				  configHandler.setConfig('service', 'fs');
+		// 				  break;
+		// 			  }
+		// 			  resolve(undefined);
+		// 			});
+		// 		  });
+		// 		}
+		// 		this.rl.close();
+	}
+
 	private middlewares() {
 		this.app?.use(morgan('dev')); //Morgan establishment
 		this.app?.use(express.json());
@@ -59,11 +60,12 @@ export class App {
 				extended: true,
 			})
 		);
-		this.app?.set('etag', false);
+		this.app?.set('etag', false);	
 	}
+	
 
 	private routes() {
-
+		this.app?.use('/api/hero', heroRouter);
 	}
 
 	async listen(): Promise<void> {

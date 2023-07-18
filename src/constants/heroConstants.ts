@@ -10,7 +10,7 @@ const HEROES_NAMES = {
     SNIPER: 'SNIPER',
     SOLDIER: 'SOLDIER',
     THIEVE: 'THIEVE',
-    } as const;
+} as const;
 
 const COMMON_STATS: Omit<HeroStats, 'idClass' | 'className'> = {
     "hp": 70,
@@ -124,7 +124,7 @@ const CLASSES_STATS = {
         "attackSpeed": 1,
         "reg": -0.2
     },
-    [ HEROES_NAMES.SOLDIER]: {
+    [HEROES_NAMES.SOLDIER]: {
         "idClass": 8,
         "className": HEROES_NAMES.SOLDIER,
         "hp": 35,
@@ -154,7 +154,7 @@ const CLASSES_STATS = {
     }
 };
 
-const SKILL_PROBABILITY =  {
+const SKILL_PROBABILITY = {
     [HEROES_NAMES.ARCHER]: 23,
     [HEROES_NAMES.BERSERKER]: 100,
     [HEROES_NAMES.DEFENDER]: 100,
@@ -166,9 +166,9 @@ const SKILL_PROBABILITY =  {
     [HEROES_NAMES.THIEVE]: 60,
 } as const;
 
-export { 
+export {
     HEROES_NAMES,
     COMMON_STATS,
     CLASSES_STATS,
     SKILL_PROBABILITY,
- };
+};
