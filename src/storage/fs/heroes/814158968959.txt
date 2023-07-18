@@ -1,0 +1,1 @@
+{"id":814158968959,"isAlive":true,"name":"SOKHNA","stats":{"accuracy":81,"attack":18,"evasion":5,"totalHp":103,"defence":43,"hp":103,"crit":0,"critMultiplier":1,"attackInterval":16,"attackSpeed":2,"reg":86},"surname":"ORTEGA","skillProbability":100,"className":"DEFENDER"}

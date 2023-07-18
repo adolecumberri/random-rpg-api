@@ -3,7 +3,7 @@ import express, { Application } from 'express';
 import readline from 'readline';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import { configHandler, configuration } from './config';
+import { moduleHandler } from './storage/storageConfguration';
 import { heroRouter } from './routes';
 import { BASE_URL, HEROES_URL } from './constants';
 
@@ -19,38 +19,38 @@ export class App {
 
 	constructor(port?: number | string) {
 		if (port) this.port = port;
-		this.app = express(); //app type aplication receive "express()"
-		this.settings(); //add settings
+		this.app = express(); //app type aplication receive "express()"	
 		this.middlewares(); //add middlewares
 		this.routes(); //add routes
 	}
 
 	private async settings() {
-		configHandler.setConfig('service', 'fs');
+		moduleHandler.setConfig('service', 'fs');
 
 		// Configuración inicial
-		// 		while (!configuration.service) {
-		// 		  await new Promise((resolve) => {
-		// 			this.rl.question(`Choose Type of service used:
-		// (1) fileSystem. (default)
-		// (2) mySQL. \n
-		// `, (answer) => {
-		// 			  switch (answer) {
-		// 				case '1':
-		// 				  configHandler.setConfig('service', 'fs');
-		// 				  break;
-		// 				case '2':
-		// 				  configHandler.setConfig('service', 'mysql');
-		// 				  break;
-		// 				default:
-		// 				  configHandler.setConfig('service', 'fs');
-		// 				  break;
-		// 			  }
-		// 			  resolve(undefined);
-		// 			});
-		// 		  });
-		// 		}
-		// 		this.rl.close();
+				while (!moduleHandler.getConfig().service) {
+					console.log(moduleHandler.getConfig())
+				  await new Promise((resolve) => {
+					this.rl.question(`Choose Type of service used:
+		(1) fileSystem. (default)
+		(2) mySQL. \n
+		`, (answer) => {
+					  switch (answer) {
+						case '1':
+							moduleHandler.setConfig('service', 'fs');
+						  break;
+						case '2':
+							moduleHandler.setConfig('service', 'mysql');
+						  break;
+						default:
+							moduleHandler.setConfig('service', 'fs');
+						  break;
+					  }
+					  resolve(undefined);
+					});
+				  });
+				}
+				this.rl.close();
 	}
 
 	private middlewares() {
@@ -71,6 +71,7 @@ export class App {
 
 	async listen(): Promise<void> {
 		await this.app?.listen(this.port);
+		await this.settings(); //add settings
 		console.log(
 			`Server Master displayed in port[${this.port}]`
 		);

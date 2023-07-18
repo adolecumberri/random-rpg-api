@@ -2,14 +2,18 @@
 import { Router, Request, Response } from 'express';
 import { createHero, createHeroes } from '../controllers';
 import { HEROES_NAMES, URL_CREATE, URL_CREATE_MULTIPLE } from '../constants';
+import { moduleHandler } from '../storage/storageConfguration';
 
 const heroRouter = Router();
 
-heroRouter.post(URL_CREATE, (req: Request, res: Response) => {
+heroRouter.post(URL_CREATE, async (req: Request, res: Response) => {
     const body = req.body;
     const response = createHero(body.className, body.options);
+
+    await moduleHandler.getModule().saveData(response);
     res.json(response);
 });
+
 heroRouter.post(URL_CREATE_MULTIPLE, (req: Request, res: Response) => {
     let { totalHeroes, heroTypes } = req.body;
 

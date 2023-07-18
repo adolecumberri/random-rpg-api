@@ -1,0 +1,1 @@
+{"id":462234239227,"isAlive":true,"name":"WEIYAN","stats":{"accuracy":32,"attack":49,"evasion":10,"totalHp":84,"defence":4,"hp":84,"crit":91,"critMultiplier":289,"attackInterval":23,"attackSpeed":2,"reg":43},"surname":"GIMENO","skillProbability":75,"className":"SNIPER"}

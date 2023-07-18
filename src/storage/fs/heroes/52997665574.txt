@@ -1,0 +1,1 @@
+{"id":52997665574,"isAlive":true,"name":"VALERIJA","stats":{"accuracy":85,"attack":36,"evasion":17,"totalHp":155,"defence":5,"hp":155,"crit":13,"critMultiplier":1,"attackInterval":11,"attackSpeed":2,"reg":84},"surname":"VARGAS","skillProbability":100,"className":"BERSERKER"}
