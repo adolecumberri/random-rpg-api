@@ -3,7 +3,7 @@ import { HEROES_NAMES } from "../constants";
 
 type HeroName = typeof HEROES_NAMES[keyof typeof HEROES_NAMES];
 
-type HeroStats =  Omit<Stats, 'totalHp'> & {
+type RawHeroStats =  Omit<Stats, 'totalHp'> & {
     idClass?: number;
     className?: HeroName;
     reg: number;
@@ -28,7 +28,7 @@ interface StoredHero {
 
 export { 
     HeroName,
-    HeroStats,
+    RawHeroStats,
     HeroIdentity,
     StoredHero,
 };

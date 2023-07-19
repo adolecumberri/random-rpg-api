@@ -1,5 +1,5 @@
 import { CLASSES_STATS, COMMON_STATS, FEMALE_NAMES, HEROES_NAMES, MALE_NAMES, SURNAMES } from "../constants";
-import { HeroName, HeroStats } from "../types";
+import { RawHeroStats, StoredHero } from "../types";
 import { getRandomInt } from "./commonHelper";
 
 const getIdByClassName = (className: string) => {
@@ -18,7 +18,7 @@ const getNameByClassId = (classId: number) => {
     }
 };
 
-const getStatsByClassId = (classId: number, variation = 0.15): Partial<HeroStats> => {
+const getStatsByClassId = (classId: number, variation = 0.15): Partial<RawHeroStats> => {
 
     const classStats = CLASSES_STATS[getNameByClassId(classId) as keyof typeof CLASSES_STATS];
 
@@ -43,10 +43,10 @@ const getStatsByClassId = (classId: number, variation = 0.15): Partial<HeroStats
         stats[key as keyof typeof COMMON_STATS] = getRandomInt(lowerBound, upperBound);
     }
 
-    return stats as Partial<HeroStats>;
+    return stats as Partial<RawHeroStats>;
 }
 
-const getStatsByClassName = (className: keyof typeof HEROES_NAMES, variation = 0.15): Partial<HeroStats> => {
+const getStatsByClassName = (className: keyof typeof HEROES_NAMES, variation = 0.15): Partial<RawHeroStats> => {
 
     const classStats = CLASSES_STATS[className];
 
@@ -71,7 +71,7 @@ const getStatsByClassName = (className: keyof typeof HEROES_NAMES, variation = 0
         stats[key as keyof typeof COMMON_STATS] = getRandomInt(lowerBound, upperBound);
     }
 
-    return stats as Partial<HeroStats>;
+    return stats as Partial<RawHeroStats>;
 }
 
 const getMaleName = () => MALE_NAMES[getRandomInt(0, MALE_NAMES.length)];
@@ -80,6 +80,17 @@ const getFemaleName = () => FEMALE_NAMES[getRandomInt(0, FEMALE_NAMES.length)];
 
 const getSurname = () => SURNAMES[getRandomInt(0, SURNAMES.length)];
 
+const convertCharacterToStoredHero = (character: any): StoredHero => {
+    return {
+        id: character.id,
+        isAlive: character.isAlive,
+        name: character.name,
+        stats: character.stats,
+        surname: character.surname,
+        className: character.className,
+        gender: character.gender,
+    }
+}
 
 export {
     getIdByClassName,
@@ -88,5 +99,6 @@ export {
     getStatsByClassName,
     getMaleName,
     getFemaleName,
-    getSurname
+    getSurname,
+    convertCharacterToStoredHero
 }

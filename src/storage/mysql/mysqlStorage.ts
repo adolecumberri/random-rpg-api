@@ -1,15 +1,14 @@
-
 import { Character } from 'rpg-ts';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
-import { HeroIdentity, StoredHero } from '../../types';
-import { RestoreCharacter } from '../../controllers';
+import { Hero, StoredHero } from '../../types';
+import { restoreCharacter } from '../../controllers';
 
 class MysqlStorage implements StorageModule {
     constructor() {
         console.log("MysqlStorage constructor");
     }
-    async saveData(character: Character & HeroIdentity & {className: string}): Promise<void> {
+    async saveData(character: Hero): Promise<void> {
         // Lógica para guardar el personaje en la base de datos MySQL
         // Utiliza los valores necesarios del objeto Character
         console.log('Guardando personaje en la base de datos');
@@ -42,7 +41,7 @@ class MysqlStorage implements StorageModule {
                 const characterData = result[0] as StoredHero;
     
                 // Restore the character using the RestoreCharacter function
-                solution = RestoreCharacter(characterData);
+                solution = restoreCharacter(characterData);
             } else {
                 return null;
             }
