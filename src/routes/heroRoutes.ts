@@ -10,7 +10,7 @@ heroRouter.post(URL_CREATE, async (req: Request, res: Response) => {
     const body = req.body;
     const response = createHero(body.className, body.options);
 
-    await moduleHandler.getModule().saveData(response);
+    await moduleHandler.getModule().saveHero(response);
     res.json(response);
 });
 
@@ -31,7 +31,7 @@ heroRouter.get(URL_RESTORE, async (req: Request, res: Response) => {
     const { id } = req.params;
     let response = null;
     try {
-        response = await moduleHandler.getModule().restoreCharacterById(Number(id));
+        response = await moduleHandler.getModule().restoreHeroById(Number(id));
     } catch (e: any) {
         res.status(404).json({ error: e.message });
     }

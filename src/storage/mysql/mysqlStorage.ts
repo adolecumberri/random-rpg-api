@@ -2,19 +2,19 @@ import { Character } from 'rpg-ts';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
 import { Hero, StoredHero } from '../../types';
-import { restoreCharacter } from '../../controllers';
+import { restoreStoredHero } from '../../controllers';
 
 class MysqlStorage implements StorageModule {
     constructor() {
         console.log("MysqlStorage constructor");
     }
-    async saveData(character: Hero): Promise<void> {
+    async saveHero(Hero: Hero): Promise<void> {
         // Lógica para guardar el personaje en la base de datos MySQL
-        // Utiliza los valores necesarios del objeto Character
+        // Utiliza los valores necesarios del objeto Hero
         console.log('Guardando personaje en la base de datos');
 
-        const { id, isAlive, name, stats, surname, className, gender } = character;
-        const query = `INSERT INTO characters (id, isAlive, name, stats, surname, className, gender) 
+        const { id, isAlive, name, stats, surname, className, gender } = Hero;
+        const query = `INSERT INTO Heroes (id, isAlive, name, stats, surname, className, gender) 
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
         const params = [id, isAlive, name, stats, surname, className, gender];
 
@@ -31,17 +31,17 @@ class MysqlStorage implements StorageModule {
         console.log('done con sql', solucion);
     }
 
-    async restoreCharacterById(id: number): Promise<Character | null> {
-        const query = 'SELECT * FROM characters WHERE id = ?';
+    async restoreHeroById(id: number): Promise<Character | null> {
+        const query = 'SELECT * FROM Heroes WHERE id = ?';
         const params = [id];
 
         let solution: Character | null = null;
         await mysqlClient.execute(query, params, (err, result) => {
             if (Array.isArray(result) && result.length > 0) {
-                const characterData = result[0] as StoredHero;
+                const heroData = result[0] as StoredHero;
     
                 // Restore the character using the RestoreCharacter function
-                solution = restoreCharacter(characterData);
+                solution = restoreStoredHero(heroData);
             } else {
                 return null;
             }

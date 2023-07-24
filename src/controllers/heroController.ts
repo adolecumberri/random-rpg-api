@@ -25,7 +25,6 @@ const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity)
 
 };
 
-
 const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HEROES_NAMES]?: number }) => {
     const heroList: any[] = [];
 
@@ -64,8 +63,7 @@ const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HERO
     return heroList;
 };
 
-
-const restoreCharacter = (storedHero: StoredHero): Character => {
+const restoreStoredHero = (storedHero: StoredHero): Character => {
 
     const createHeroFunc = restoreHero[storedHero.className.toUpperCase() as keyof typeof HEROES_NAMES];
   
@@ -75,6 +73,6 @@ const restoreCharacter = (storedHero: StoredHero): Character => {
 export {
     createHero,
     createHeroes,
-    restoreCharacter
+    restoreStoredHero
 }
 // 

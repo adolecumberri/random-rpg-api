@@ -3,7 +3,7 @@ import path from 'path';
 import StorageModule from './../storageModule';
 import { Character } from 'rpg-ts';
 import { Hero, StoredHero } from '../../types';
-import { restoreCharacter } from '../../controllers';
+import { restoreStoredHero } from '../../controllers';
 
 class FileStorage implements StorageModule {
     fileType: string = 'txt';
@@ -17,10 +17,10 @@ class FileStorage implements StorageModule {
         this.filePath = filePath;
     }
 
-    async saveData(character: Hero): Promise<void> {
-        // Logic to save the character in a text file
-        // Use the necessary values from the Character object
-        const { id, isAlive, name, stats, surname, className, gender } = character;
+    async saveHero(Hero: Hero): Promise<void> {
+        // Logic to save the Hero in a text file
+        // Use the necessary values from the Hero object
+        const { id, isAlive, name, stats, surname, className, gender } = Hero;
 
         const data = {
             id,
@@ -44,7 +44,7 @@ class FileStorage implements StorageModule {
         fs.writeFileSync(filePath, JSON.stringify(data));
     }
 
-    async restoreCharacterById(id: number): Promise<Character | null> {
+    async restoreHeroById(id: number): Promise<Character | null> {
         const filePath = path.join(this.filePath, `${id}.${this.fileType}`);
 
         let solution: Character | null = null;
@@ -54,8 +54,8 @@ class FileStorage implements StorageModule {
             const fileData = fs.readFileSync(filePath, 'utf8');
             const characterData = JSON.parse(fileData) as StoredHero;
 
-            // Restore the character using the RestoreCharacter function
-            solution = restoreCharacter(characterData);
+            // Restore the character using the restoreStoredHero function
+            solution = restoreStoredHero(characterData);
         }
         
         return solution;

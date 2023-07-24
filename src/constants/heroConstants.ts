@@ -1,5 +1,5 @@
 import { Stats } from "rpg-ts";
-import { HeroStats } from "../types/heroModel";
+import { RawHeroStats } from "../types/heroModel";
 
 const HEROES_NAMES = {
     ARCHER: 'ARCHER',
@@ -13,7 +13,7 @@ const HEROES_NAMES = {
     THIEVE: 'THIEVE',
 } as const;
 
-const COMMON_STATS: HeroStats = {
+const COMMON_STATS: Omit<Stats, 'totalHp'> & {reg: number} = {
     "hp": 70,
     "attack": 10,
     "defence": 7,
@@ -27,7 +27,7 @@ const COMMON_STATS: HeroStats = {
 };
 
 const CLASSES_STATS: {
-    [x in keyof typeof HEROES_NAMES]: HeroStats
+    [x in keyof typeof HEROES_NAMES]: RawHeroStats
   } = {
     [HEROES_NAMES.ARCHER]: {
       idClass: 1,

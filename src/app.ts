@@ -4,8 +4,8 @@ import readline from 'readline';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { moduleHandler } from './storage/storageConfguration';
-import { heroRouter } from './routes';
-import { BASE_URL, HEROES_URL } from './constants';
+import { heroRouter, teamRouter } from './routes';
+import { BASE_URL, HEROES_URL, TEAMS_URL } from './constants';
 
 export class App {
 	app: Application | undefined = express(); //creation of the propertie "application"
@@ -63,10 +63,10 @@ export class App {
 		);
 		this.app?.set('etag', false);	
 	}
-	
 
 	private routes() {
 		this.app?.use(`${BASE_URL}${HEROES_URL}`, heroRouter);
+		this.app?.use(`${BASE_URL}${TEAMS_URL}`, teamRouter);
 	}
 
 	async listen(): Promise<void> {

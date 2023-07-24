@@ -1,8 +1,8 @@
 import { Character } from "rpg-ts";
 
 interface StorageModule {
-  saveData(character: Character): Promise<void>;
-  restoreCharacterById(id: number): Promise<Character | null>;
+  saveHero(Hero: Character): Promise<void>;
+  restoreHeroById(id: number): Promise<Character | null>;
 }
 
 export default StorageModule;
