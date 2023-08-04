@@ -30,9 +30,10 @@ heroRouter.post(URL_CREATE_MULTIPLE, (req: Request, res: Response) => {
 
 heroRouter.get(URL_RESTORE, async (req: Request, res: Response) => {
     const { id } = req.params;
+    console.log("id", id);
     let response = null;
     try {
-        response = await moduleHandler.getModule().restoreHeroById(Number(id));
+        response = await moduleHandler.getModule().getHeroById(Number(id));
     } catch (e: any) {
         res.status(404).json({ error: e.message });
     }

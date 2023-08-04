@@ -44,18 +44,15 @@ class FileStorage implements StorageModule {
         fs.writeFileSync(filePath, JSON.stringify(data));
     }
 
-    async restoreHeroById(id: number): Promise<Character | null> {
+    async getHeroById(id: number): Promise<StoredHero | null> {
         const filePath = path.join(this.filePath, `${id}.${this.fileType}`);
 
-        let solution: Character | null = null;
+        let solution: StoredHero | null = null;
 
         // Check if the file exists
         if (fs.existsSync(filePath)) {
             const fileData = fs.readFileSync(filePath, 'utf8');
-            const characterData = JSON.parse(fileData) as StoredHero;
-
-            // Restore the character using the restoreStoredHero function
-            solution = restoreStoredHero(characterData);
+            solution = JSON.parse(fileData) as StoredHero;
         }
         
         return solution;

@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { HEROES_NAMES } from "../constants";
 import { heroFactory, restoreHero } from "../heroes/heroes";
 import { Hero, HeroIdentity, StoredHero } from "../types";
-import { Character, Stats } from "rpg-ts";
+import { Character, Stats, getRandomInt } from "rpg-ts";
 
 const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity): Hero => {
 
