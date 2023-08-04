@@ -1,0 +1,1 @@
+{"id":1.6911887139285963e+24,"heroId":596246745976,"isAlive":true,"name":"TONI","surname":"MACIAS","className":"ARCHER","gender":"F","accuracy":92,"attack":23,"attackInterval":6,"attackSpeed":2,"crit":36,"critMultiplier":29,"defence":7,"evasion":32,"hp":90,"regeneration":60,"totalHp":90}

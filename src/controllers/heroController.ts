@@ -5,6 +5,7 @@ import { HEROES_NAMES } from "../constants";
 import { heroFactory, restoreHero } from "../heroes/heroes";
 import { Hero, HeroIdentity, StoredHero } from "../types";
 import { Character, Stats, getRandomInt } from "rpg-ts";
+import { moduleHandler } from "../storage/storageConfguration";
 
 const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity): Hero => {
 
@@ -26,7 +27,7 @@ const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity)
 };
 
 const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HEROES_NAMES]?: number }) => {
-    const heroList: any[] = [];
+    const heroList: Hero[] = [];
 
     // Verificar si se especificó el número total de héroes
     if (!totalHeroes || totalHeroes === 0) {
@@ -59,6 +60,8 @@ const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HERO
         const character = createHeroFunc({} as HeroIdentity);
         heroList.push(character);
     }
+
+    moduleHandler.getModule().saveHeroes(heroList);
 
     return heroList;
 };

@@ -44,6 +44,31 @@ class FileStorage implements StorageModule {
         fs.writeFileSync(filePath, JSON.stringify(data));
     }
 
+    async saveHeroes(heroes: Hero[]): Promise<void> {
+        const folderPath = path.join(this.filePath);
+        if (!fs.existsSync(folderPath)) {
+            fs.mkdirSync(folderPath);
+        }
+
+        // Save each hero in a separate file
+        for (const hero of heroes) {
+            const data = {
+                id: hero.id, //cant keep track. id can not be unique
+                heroId: hero.id,
+                isAlive: hero.isAlive,
+                name: hero.name,
+                surname: hero.surname,
+                className: hero.className,
+                gender: hero.gender,
+                ...hero.stats,
+            } as StoredHero;
+
+            const filePath = path.join(folderPath, `${hero.id}.${this.fileType}`);
+
+            fs.writeFileSync(filePath, JSON.stringify(data));
+        }
+    }
+
     async getHeroById(id: number): Promise<StoredHero | null> {
         const filePath = path.join(this.filePath, `${id}.${this.fileType}`);
 
@@ -54,7 +79,7 @@ class FileStorage implements StorageModule {
             const fileData = fs.readFileSync(filePath, 'utf8');
             solution = JSON.parse(fileData) as StoredHero;
         }
-        
+
         return solution;
     }
 }
