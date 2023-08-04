@@ -10,7 +10,7 @@ teamRouter.post(URL_CREATE, async (req: Request, res: Response) => {
     const body = req.body;
     const parsedHeroTypes: { [x in keyof typeof HEROES_NAMES]?: number } = JSON.parse(body.heroTypes);
     body.totalHeroes = Number(body.totalHeroes);
-    const response = createTeam(body.name, body.toalMembers, parsedHeroTypes);
+    // const response = createTeam(body.name, body.toalMembers, parsedHeroTypes);
     
 
     // await moduleHandler.getModule().saveData(response);

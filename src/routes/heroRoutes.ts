@@ -3,6 +3,7 @@ import { Router, Request, Response } from 'express';
 import { createHero, createHeroes } from '../controllers';
 import { HEROES_NAMES, URL_CREATE, URL_CREATE_MULTIPLE, URL_RESTORE } from '../constants';
 import { moduleHandler } from '../storage/storageConfguration';
+import { Hero } from '../types';
 
 const heroRouter = Router();
 

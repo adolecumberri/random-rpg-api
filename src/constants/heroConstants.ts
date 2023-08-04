@@ -1,5 +1,4 @@
 import { Stats } from "rpg-ts";
-import { RawHeroStats } from "../types/heroModel";
 
 const HEROES_NAMES = {
     ARCHER: 'ARCHER',
@@ -13,7 +12,7 @@ const HEROES_NAMES = {
     THIEVE: 'THIEVE',
 } as const;
 
-const COMMON_STATS: Omit<Stats, 'totalHp'> & {reg: number} = {
+const COMMON_STATS: Omit<Stats, 'totalHp'> = {
     "hp": 70,
     "attack": 10,
     "defence": 7,
@@ -23,15 +22,13 @@ const COMMON_STATS: Omit<Stats, 'totalHp'> & {reg: number} = {
     "evasion": 10,
     "attackInterval": 12,
     "attackSpeed": 1,
-    "reg": 60
+    "regeneration": 60
 };
 
 const CLASSES_STATS: {
-    [x in keyof typeof HEROES_NAMES]: RawHeroStats
+    [x in keyof typeof HEROES_NAMES]: Omit<Stats, 'totalHp'>
   } = {
     [HEROES_NAMES.ARCHER]: {
-      idClass: 1,
-      className: HEROES_NAMES.ARCHER,
       hp: 18,
       attack: 13,
       defence: -1,
@@ -41,11 +38,9 @@ const CLASSES_STATS: {
       evasion: 24,
       attackInterval: -5,
       attackSpeed: 1,
-      reg: 0,
+      regeneration: 0,
     },
     [HEROES_NAMES.BERSERKER]: {
-      idClass: 2,
-      className: HEROES_NAMES.BERSERKER,
       hp: 70,
       attack: 25,
       defence: -2,
@@ -55,11 +50,9 @@ const CLASSES_STATS: {
       evasion: 5,
       attackInterval: -1,
       attackSpeed: 1,
-      reg: 20,
+      regeneration: 20,
     },
     [HEROES_NAMES.DEFENDER]: {
-      idClass: 3,
-      className: HEROES_NAMES.DEFENDER,
       hp: 42,
       attack: 6,
       defence: 31,
@@ -69,11 +62,9 @@ const CLASSES_STATS: {
       evasion: -5,
       attackInterval: 3,
       attackSpeed: 1,
-      reg: 20,
+      regeneration: 20,
     },
     [HEROES_NAMES.FENCER]: {
-      idClass: 4,
-      className: HEROES_NAMES.FENCER,
       hp: 34,
       attack: 16,
       defence: 11,
@@ -83,11 +74,9 @@ const CLASSES_STATS: {
       evasion: 10,
       attackInterval: 0,
       attackSpeed: 1,
-      reg: 0,
+      regeneration: 0,
     },
     [HEROES_NAMES.NINJA]: {
-      idClass: 5,
-      className: HEROES_NAMES.NINJA,
       hp: -28,
       attack: 14,
       defence: -2,
@@ -97,11 +86,9 @@ const CLASSES_STATS: {
       evasion: 33,
       attackInterval: -2,
       attackSpeed: 1,
-      reg: 0,
+      regeneration: 0,
     },
     [HEROES_NAMES.PALADIN]: {
-      idClass: 6,
-      className: HEROES_NAMES.PALADIN,
       hp: 50,
       attack: 19,
       defence: 21,
@@ -111,11 +98,9 @@ const CLASSES_STATS: {
       evasion: 0,
       attackInterval: -1,
       attackSpeed: 1,
-      reg: 20,
+      regeneration: 20,
     },
     [HEROES_NAMES.SNIPER]: {
-      idClass: 7,
-      className: HEROES_NAMES.SNIPER,
       hp: 5,
       attack: 33,
       defence: -2,
@@ -125,11 +110,9 @@ const CLASSES_STATS: {
       evasion: 0,
       attackInterval: 14,
       attackSpeed: 1,
-      reg: -20,
+      regeneration: -20,
     },
     [HEROES_NAMES.SOLDIER]: {
-      idClass: 8,
-      className: HEROES_NAMES.SOLDIER,
       hp: 35,
       attack: 21,
       defence: 16,
@@ -139,11 +122,9 @@ const CLASSES_STATS: {
       evasion: 10,
       attackInterval: 0,
       attackSpeed: 1,
-      reg: 0,
+      regeneration: 0,
     },
     [HEROES_NAMES.THIEVE]: {
-      idClass: 9,
-      className: HEROES_NAMES.THIEVE,
       hp: 25,
       attack: 14,
       defence: 3,
@@ -153,7 +134,7 @@ const CLASSES_STATS: {
       evasion: 22,
       attackInterval: -1,
       attackSpeed: 1,
-      reg: 30,
+      regeneration: 30,
     },
   };
 

@@ -17,23 +17,23 @@ class FileStorage implements StorageModule {
         this.filePath = filePath;
     }
 
-    async saveHero(Hero: Hero): Promise<void> {
+    async saveHero(hero: Hero): Promise<void> {
         // Logic to save the Hero in a text file
         // Use the necessary values from the Hero object
-        const { id, isAlive, name, stats, surname, className, gender } = Hero;
 
         const data = {
-            id,
-            isAlive,
-            name,
-            stats,
-            surname,
-            className,
-            gender,
-        };
+            id: Number(String(new Date().getTime()) + String(hero.id)),
+            heroId: hero.id,
+            isAlive: hero.isAlive,
+            name: hero.name,
+            surname: hero.surname,
+            className: hero.className,
+            gender: hero.gender,
+            ...hero.stats
+        } as StoredHero
 
         const folderPath = path.join(this.filePath);
-        const filePath = path.join(folderPath, `${id}.${this.fileType}`);
+        const filePath = path.join(folderPath, `${hero.id}.${this.fileType}`);
 
         // Create the 'heroes' folder if it doesn't exist
         if (!fs.existsSync(folderPath)) {

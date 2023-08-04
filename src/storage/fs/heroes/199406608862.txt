@@ -1,1 +1,0 @@
-{"id":199406608862,"isAlive":true,"name":"PAMELA","stats":{"accuracy":92,"attack":37,"evasion":16,"totalHp":131,"defence":6,"hp":131,"crit":15,"critMultiplier":1,"attackInterval":10,"attackSpeed":2,"reg":85},"surname":"VARGAS","skillProbability":100,"className":"BERSERKER"}

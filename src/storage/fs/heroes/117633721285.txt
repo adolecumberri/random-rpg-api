@@ -1,1 +1,0 @@
-{"id":117633721285,"isAlive":true,"name":"WEILI","stats":{"accuracy":91,"attack":29,"evasion":9,"totalHp":137,"defence":26,"hp":137,"crit":19,"critMultiplier":1,"attackInterval":10,"attackSpeed":2,"reg":84},"surname":"CABRERA","skillProbability":100,"className":"PALADIN"}

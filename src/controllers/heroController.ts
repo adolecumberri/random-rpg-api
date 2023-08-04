@@ -3,22 +3,22 @@
 import { Request, Response } from "express";
 import { HEROES_NAMES } from "../constants";
 import { heroFactory, restoreHero } from "../heroes/heroes";
-import { HeroIdentity, StoredHero } from "../types";
+import { Hero, HeroIdentity, StoredHero } from "../types";
 import { Character, Stats } from "rpg-ts";
 
-const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity) => {
+const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity): Hero => {
 
-    let localClassName = className?.toLocaleUpperCase() as keyof typeof HEROES_NAMES;
+    let className_key = className?.toLocaleUpperCase() as keyof typeof HEROES_NAMES;
     // Verificar si el className es válido
-    if (!(localClassName in HEROES_NAMES)) {
+    if (!(className_key in HEROES_NAMES)) {
         //get random classname from HEROES_NAMES
-        localClassName = Object.keys(HEROES_NAMES)[Math.floor(Math.random() * Object.keys(HEROES_NAMES).length)] as keyof typeof HEROES_NAMES;
+        className_key = Object.keys(HEROES_NAMES)[Math.floor(Math.random() * Object.keys(HEROES_NAMES).length)] as keyof typeof HEROES_NAMES;
     }
 
-    console.log("localClassName", localClassName)
+    console.log("className_key", className_key)
 
     // Crear el personaje usando la función correspondiente de heroFactory
-    const createHeroFunc = heroFactory[localClassName];
+    const createHeroFunc = heroFactory[className_key];
 
     // Suponiendo que el personaje tiene un método para convertirse en JSON
     return createHeroFunc(options);

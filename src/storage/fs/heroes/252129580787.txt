@@ -1,1 +1,0 @@
-{"id":252129580787,"isAlive":true,"name":"MAHDIA","stats":{"accuracy":100,"attack":26,"evasion":46,"totalHp":44,"defence":5,"hp":44,"crit":48,"critMultiplier":28,"attackInterval":9,"attackSpeed":2,"reg":61},"surname":"DIAZ","skillProbability":19,"className":"NINJA"}

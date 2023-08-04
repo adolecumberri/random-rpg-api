@@ -1,6 +1,6 @@
 import { getRandomInt, Character, CharacterCallbacks } from "rpg-ts";
 import { getMaleName, getFemaleName, getSurname, getStatsByClassName } from "../../helpers";
-import { HeroIdentity, StoredHero } from "../../types";
+import { Hero, HeroIdentity, StoredHero } from "../../types";
 import { HEROES_NAMES, SKILL_PROBABILITY } from "../../constants";
 import { fervor, haste, holyLight, rage, riposte, shieldGesture, skipeShield, tripleAttack, unoticedShot } from '../skills';
 
@@ -9,7 +9,7 @@ function createCharacter(
     options?: HeroIdentity,
     callbacks?: CharacterCallbacks
 ) {
-    let gender = options?.gender !== undefined ? options.gender : getRandomInt(0, 1);
+    let gender = options?.gender !== undefined ? options.gender : getRandomInt(0, 1) ? 'F' : 'M';
     let name = options?.name || (gender ? getMaleName() : getFemaleName());
     let surname = options?.surname || getSurname();
 
@@ -25,7 +25,7 @@ function createCharacter(
         actionRecord: true,
         callbacks,
         stats: getStatsByClassName(className),
-    });
+    }) as Hero;
 }
 
 const createArcher = (options?: HeroIdentity) => {
@@ -99,21 +99,32 @@ const heroFactory = {
 }
 
 
-function restoreCharacter({stats, name, surname, gender, className, isAlive, id}: StoredHero, callbacks: CharacterCallbacks){
+function restoreCharacter(storedHero: StoredHero, callbacks: CharacterCallbacks){
     return new Character({
-        name,
-        surname,
-        gender,
+        name: storedHero.name,
+        surname: storedHero.surname,
+        gender: storedHero.gender,
         skill: {
-            probability: SKILL_PROBABILITY[className as keyof typeof HEROES_NAMES],
+            probability: SKILL_PROBABILITY[storedHero.className as keyof typeof HEROES_NAMES],
         },
-        isAlive,
-        id,
-        className: className,
+        isAlive: storedHero.isAlive,
+        id: storedHero.heroId,
+        className: storedHero.className,
         statusManager: true,
         actionRecord: true,
         callbacks,
-        stats: stats,
+        stats: {
+            hp: storedHero.hp,
+            totalHp: storedHero.totalHp,
+            attack: storedHero.attack,
+            defence: storedHero.defence,
+            crit: storedHero.crit,
+            critMultiplier: storedHero.critMultiplier,
+            accuracy: storedHero.accuracy,
+            evasion: storedHero.evasion,
+            attackInterval: storedHero.attackInterval,
+            regeneration: storedHero.regeneration,
+        },
     });
 }
 
