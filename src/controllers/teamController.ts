@@ -1,16 +1,21 @@
 import { Team } from "rpg-ts";
 import { HEROES_NAMES } from "../constants";
-import { createHero } from "./heroController";
+import { createHeroes } from "./heroController";
+import { Hero } from "../types";
 
 
 const createTeam = (name: string, totalMembers: number, heroTypes: { [x in keyof typeof HEROES_NAMES]?: number }): Team => {
-    const team: Team = {
-        name,
-        totalMembers,
-        members: [],
-    };
-    for (let i = 0; i < totalMembers; i++) {
-        team.members.push(createHero(heroTypes));
-    }
+    const team = new Team<Hero>({
+        name
+    });
+
+    let crewHeroes = createHeroes(totalMembers, heroTypes);
+
+    team.members.push(...crewHeroes);
+   
     return team;
+}
+
+export {
+    createTeam
 }
