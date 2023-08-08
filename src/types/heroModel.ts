@@ -1,4 +1,4 @@
-import { Character, Stats } from "rpg-ts";
+import { AttackRecord, Character, DefenceRecord, Stats } from "rpg-ts";
 import { HEROES_NAMES } from "../constants";
 
 type HeroName = typeof HEROES_NAMES[keyof typeof HEROES_NAMES];
@@ -27,6 +27,8 @@ interface StoredHero {
     attackInterval: number;
     regeneration: number;
     isAlive: boolean;
+    actionRecordAttacks: AttackRecord[];
+    actionRecordDefences: DefenceRecord[];
 } // valores guardados en los modulos de storage.
 
 type Hero = Character & HeroIdentity & {className: string}

@@ -1,0 +1,1 @@
+{"id":36665795218,"heroId":36665795218,"isAlive":true,"name":"VICTOR","surname":"SIERRA","className":"ARCHER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":80,"attack":26,"attackInterval":6,"attackSpeed":2,"crit":41,"critMultiplier":31,"defence":6,"evasion":32,"hp":83,"regeneration":55,"totalHp":83}

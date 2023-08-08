@@ -1,0 +1,1 @@
+{"id":366815462241,"heroId":366815462241,"isAlive":true,"name":"ANTONIO","surname":"GUERRA","className":"ARCHER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":88,"attack":24,"attackInterval":7,"attackSpeed":2,"crit":43,"critMultiplier":30,"defence":7,"evasion":30,"hp":75,"regeneration":53,"totalHp":75}

@@ -1,0 +1,1 @@
+{"id":266513695330,"heroId":266513695330,"isAlive":true,"name":"DIMITRIY","surname":"SORELL","className":"SOLDIER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":86,"attack":33,"attackInterval":11,"attackSpeed":2,"crit":31,"critMultiplier":12,"defence":20,"evasion":19,"hp":96,"regeneration":62,"totalHp":96}

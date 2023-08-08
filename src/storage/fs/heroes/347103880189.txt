@@ -1,0 +1,1 @@
+{"id":347103880189,"heroId":347103880189,"isAlive":true,"name":"ARTZAI","surname":"HIDALGO","className":"PALADIN","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":102,"attack":28,"attackInterval":9,"attackSpeed":2,"crit":18,"critMultiplier":1,"defence":29,"evasion":10,"hp":104,"regeneration":80,"totalHp":104}

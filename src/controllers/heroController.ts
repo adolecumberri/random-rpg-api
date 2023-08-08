@@ -26,6 +26,12 @@ const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity)
 
 };
 
+/**
+ * This function will create a number of random heroes equal to totalHeroes, but will have on consideration the heroTypes object that request certain types of heroes.
+ * @param totalHeroes 
+ * @param heroTypes 
+ * @returns 
+ */
 const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HEROES_NAMES]?: number }) => {
     const heroList: Hero[] = [];
 

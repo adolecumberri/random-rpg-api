@@ -46,6 +46,8 @@ const convertHeroToStoredHero = (hero: Hero): StoredHero => {
         surname: hero.surname,
         className: hero.className,
         gender: hero.gender,
+        actionRecordAttacks: hero.actionRecord?.attacks || [], 
+        actionRecordDefences: hero.actionRecord?.defences || [],
         ...hero.stats,
     }
 }

@@ -2,6 +2,7 @@
 import { Router, Request, Response } from 'express';
 import { createTeam } from '../controllers';
 import { HEROES_NAMES, URL_CREATE, URL_RESTORE } from '../constants';
+import { moduleHandler } from '../storage/storageConfguration';
 
 const teamRouter = Router();
 
@@ -12,7 +13,11 @@ teamRouter.post(URL_CREATE, async (req: Request, res: Response) => {
     totalHeroes = Number(totalHeroes);
 
      try {
-        res.json(createTeam(name, totalHeroes, parsedHeroTypes));
+        let teamCreated = createTeam(name, totalHeroes, parsedHeroTypes);
+
+        moduleHandler.getModule().saveTeam(teamCreated);
+
+        res.json(teamCreated);
     } catch (e: any) {
         res.status(400).json({ error: e.message });
     }

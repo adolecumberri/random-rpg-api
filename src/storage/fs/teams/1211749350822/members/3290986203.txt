@@ -1,0 +1,1 @@
+{"id":3290986203,"heroId":3290986203,"isAlive":true,"name":"GERAI","surname":"SANCHEZ","className":"THIEVE","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":64,"attack":26,"attackInterval":11,"attackSpeed":2,"crit":56,"critMultiplier":22,"defence":11,"evasion":34,"hp":81,"regeneration":95,"totalHp":81}

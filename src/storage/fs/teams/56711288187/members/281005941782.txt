@@ -1,0 +1,1 @@
+{"id":281005941782,"heroId":281005941782,"isAlive":true,"name":"IXAI","surname":"MUÑOZ","className":"NINJA","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":88,"attack":26,"attackInterval":9,"attackSpeed":2,"crit":47,"critMultiplier":22,"defence":5,"evasion":47,"hp":42,"regeneration":63,"totalHp":42}

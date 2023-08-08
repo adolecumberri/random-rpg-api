@@ -1,0 +1,1 @@
+{"id":235346339573,"heroId":235346339573,"isAlive":true,"name":"ARYAN","surname":"DOMINGUEZ","className":"BERSERKER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":90,"attack":38,"attackInterval":10,"attackSpeed":2,"crit":13,"critMultiplier":1,"defence":4,"evasion":14,"hp":130,"regeneration":76,"totalHp":130}

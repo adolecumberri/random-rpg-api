@@ -1,0 +1,1 @@
+{"id":324616047998,"heroId":324616047998,"isAlive":true,"name":"ANDRES","surname":"REDONDO","className":"NINJA","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":97,"attack":27,"attackInterval":10,"attackSpeed":2,"crit":46,"critMultiplier":24,"defence":6,"evasion":37,"hp":44,"regeneration":66,"totalHp":44}

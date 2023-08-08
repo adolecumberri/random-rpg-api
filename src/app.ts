@@ -25,7 +25,7 @@ export class App {
 	}
 
 	private async settings() {
-		moduleHandler.setConfig('service', 'fs');
+		moduleHandler.setConfig('service', 'mysql');
 
 		// Configuración inicial
 		// 		while (!moduleHandler.getConfig().service) {

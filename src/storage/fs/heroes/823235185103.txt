@@ -1,0 +1,1 @@
+{"id":823235185103,"heroId":823235185103,"isAlive":true,"name":"GEORGE","surname":"ROJO","className":"SOLDIER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":102,"attack":34,"attackInterval":12,"attackSpeed":2,"crit":33,"critMultiplier":11,"defence":26,"evasion":19,"hp":112,"regeneration":67,"totalHp":112}
