@@ -2,6 +2,7 @@ import { CharacterCallbacks, Character } from "rpg-ts";
 import { haste, rage, skipeShield, riposte, tripleAttack, holyLight, unoticedShot, shieldGesture, fervor } from "../../heroes/skills";
 import { rowOfTableHeroes } from "./mysqlStorageTypes";
 import { HEROES_NAMES } from "../../constants";
+import { Hero } from "../../types";
 
 function restoreCharacter(storedHero: rowOfTableHeroes, callbacks: CharacterCallbacks){
     return new Character({
@@ -14,7 +15,8 @@ function restoreCharacter(storedHero: rowOfTableHeroes, callbacks: CharacterCall
         isAlive: storedHero.isAlive,
         id: storedHero.heroId,
         className: storedHero.className,
-        // actionRecord: true, TODO: restore ActionRecord
+        statusManager: true,
+        actionRecord: true,
         callbacks,
         stats: {
             hp: storedHero.hp,
@@ -28,7 +30,7 @@ function restoreCharacter(storedHero: rowOfTableHeroes, callbacks: CharacterCall
             attackInterval: storedHero.attackInterval,
             regeneration: storedHero.regeneration,
         },
-    });
+    }) as Hero;
 }
 
 const restoreArcher = (storedHero: rowOfTableHeroes) => {

@@ -1,0 +1,38 @@
+{
+    "id": 20215554601,
+    "isAlive": true,
+    "name": "MARWAN",
+    "originalStats": {
+        "accuracy": 89,
+        "attack": 29,
+        "attackInterval": 12,
+        "attackSpeed": 1,
+        "crit": 22,
+        "critMultiplier": 1,
+        "defence": 24,
+        "evasion": 11,
+        "hp": 110,
+        "regeneration": 88,
+        "totalHp": 110
+    },
+    "skill": {
+        "probability": 100
+    },
+    "stats": {
+        "accuracy": 89,
+        "attack": 29,
+        "attackInterval": 12,
+        "attackSpeed": 1,
+        "crit": 22,
+        "critMultiplier": 1,
+        "defence": 24,
+        "evasion": 11,
+        "hp": 110,
+        "regeneration": 88,
+        "totalHp": 110
+    },
+    "callbacks": {},
+    "damageCalculation": {},
+    "statusManager": "[]",
+    "actionRecord": "{\"attacks\":[],\"defences\":[]}"
+}

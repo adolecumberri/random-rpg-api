@@ -1,24 +1,6 @@
 
-/**
- * id int AI PK 
-heroId bigint 
-name varchar(255) 
-surname varchar(255) 
-gender varchar(10) 
-className varchar(50) 
-hp int 
-totalHp int 
-attack int 
-defence int 
-crit float 
-critMultiplier float 
-accuracy float 
-evasion float 
-attackInterval int 
-regeneration float 
-isAlive tinyint(1)
- */
 type rowOfTableHeroes = {
+    id: number;
     heroId: number;
     name: string;
     surname: string;
@@ -38,7 +20,34 @@ type rowOfTableHeroes = {
     skillProbability: number;
 }
 
+type rowOfTableteams = {
+    id: number; 
+    teamId: number; 
+    name: string; 
+    members: number;
+}
+
+type rowOfAttackRecord = {
+    id: number;
+    attackId: number;
+    attackType: "NORMAL" | "MISS" | "CRITICAL" | "TRUE" | "SKILL";
+    damage: number;
+    characterId: number;
+}
+
+type rowOfDefenceRecord = {
+    id: number;
+    defenceId: number;
+    defenceType: 'NORMAL' |'EVASION' | 'MISS' | 'TRUE' | 'SKILL';
+    damageReceived: number;
+    characterId: number;
+    attackerId: number;
+}
+
 export {
     rowOfTableHeroes,
+    rowOfTableteams,
+    rowOfAttackRecord,
+    rowOfDefenceRecord
 }
 

@@ -7,9 +7,10 @@ import { moduleHandler } from '../storage/storageConfguration';
 const teamRouter = Router();
 
 teamRouter.post(URL_CREATE, async (req: Request, res: Response) => {
-    let { name, totalHeroes, heroTypes } = req.body;
+    let { name, totalHeroes, heroTypes = '{}' } = req.body;
 
     const parsedHeroTypes: { [x in keyof typeof HEROES_NAMES]?: number } = JSON.parse(heroTypes);
+
     totalHeroes = Number(totalHeroes);
 
      try {
@@ -23,20 +24,16 @@ teamRouter.post(URL_CREATE, async (req: Request, res: Response) => {
     }
 });
 
-
-
 teamRouter.get(URL_RESTORE, async (req: Request, res: Response) => {
-    // const { id } = req.params;
-    // let response = null;
-    // try {
-    //     response = await moduleHandler.getModule().restoreCharacterById(Number(id));
-    // } catch (e: any) {
-    //     res.status(404).json({ error: e.message });
-    // }
-    // res.json(response);
+    const { id } = req.params;
+    let response = null;
+    try {
+        response = await moduleHandler.getModule().getTeamById(Number(id));
+    } catch (e: any) {
+        res.status(404).json({ error: e.message });
+    }
+    res.json(response);
 });
-
-
 
 export {
     teamRouter

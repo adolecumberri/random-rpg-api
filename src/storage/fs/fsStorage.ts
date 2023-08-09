@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import StorageModule from './../storageModule';
-import { BaseCharacter, Character, Team } from 'rpg-ts';
+import { BaseCharacter, Team } from 'rpg-ts';
 import { Hero } from '../../types';
 
 class FileStorage implements StorageModule {
@@ -50,7 +50,7 @@ class FileStorage implements StorageModule {
         // Check if the file exists
         if (fs.existsSync(filePath)) {
             const fileData = fs.readFileSync(filePath, 'utf8');
-            solution = BaseCharacter.deserialize(fileData);
+            solution = BaseCharacter.deserialize<Hero>(fileData);
         }
 
         return solution;
@@ -79,6 +79,41 @@ class FileStorage implements StorageModule {
             fs.writeFileSync(memberFilePath, member.serialize());
         }
     }
+
+    async getTeamById(teamId: number): Promise<Team<Hero> | null> {
+        const teamFolderPath = path.join(this.teamFilePath, teamId.toString());
+        const membersFolderPath = path.join(teamFolderPath, 'members');
+    
+        if (!fs.existsSync(teamFolderPath)) {
+            return null; // Team doesn't exist
+        }
+    
+        const teamDataFilePath = path.join(teamFolderPath, `data.${this.fileType}`);
+        if (!fs.existsSync(teamDataFilePath)) {
+            return null; // Team data file doesn't exist
+        }
+    
+        const teamData = fs.readFileSync(teamDataFilePath, 'utf-8');
+        const parsedTeamData = JSON.parse(teamData);
+    
+        // Deserialize the team
+        const team = Team.deserialize<Hero>(parsedTeamData);
+    
+        // Retrieve and deserialize each member
+        if (fs.existsSync(membersFolderPath)) {
+            const memberFiles = fs.readdirSync(membersFolderPath);
+    
+            for (const memberFile of memberFiles) {
+                const memberFilePath = path.join(membersFolderPath, memberFile);
+                const memberData = fs.readFileSync(memberFilePath, 'utf-8');
+                const parsedMemberData = JSON.parse(memberData);
+                const member = BaseCharacter.deserialize<Hero>(parsedMemberData); // Assuming you have a Character.deserialize method
+                team.addMember(member);
+            }
+        }
+        return team;
+    }
+    
 
 
 }
