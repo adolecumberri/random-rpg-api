@@ -1,7 +1,6 @@
 import { HEROES_NAMES } from "../constants";
 import { heroFactory } from "../heroes/heroes";
 import { Hero, HeroIdentity } from "../types";
-import { moduleHandler } from "../storage/storageConfguration";
 
 const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity): Hero => {
 
@@ -62,8 +61,6 @@ const createHeroes = (totalHeroes: number, heroTypes: { [x in keyof typeof HEROE
         const character = createHeroFunc({} as HeroIdentity);
         heroList.push(character);
     }
-
-    moduleHandler.getModule().saveHeroes(heroList);
 
     return heroList;
 };

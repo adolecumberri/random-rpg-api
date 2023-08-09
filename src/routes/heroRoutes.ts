@@ -22,7 +22,9 @@ heroRouter.post(URL_CREATE_MULTIPLE, (req: Request, res: Response) => {
     totalHeroes = Number(totalHeroes);
 
     try {
-        res.json(createHeroes(totalHeroes, parsedHeroTypes));
+        const newHeroes = createHeroes(totalHeroes, parsedHeroTypes);
+        moduleHandler.getModule().saveHeroes(newHeroes);
+        res.json(newHeroes);
     } catch (e: any) {
         res.status(400).json({ error: e.message });
     }
