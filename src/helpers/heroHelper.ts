@@ -1,6 +1,6 @@
 import { Character, Stats } from "rpg-ts";
 import { CLASSES_STATS, COMMON_STATS, FEMALE_NAMES, HEROES_NAMES, MALE_NAMES, SURNAMES } from "../constants";
-import { Hero, StoredHero } from "../types";
+import { Hero } from "../types";
 import { getRandomInt } from "./commonHelper";
 
 const getStatsByClassName = (className: keyof typeof HEROES_NAMES, variation = 0.15): Omit<Stats, 'totalHp'> => {
@@ -37,25 +37,9 @@ const getFemaleName = () => FEMALE_NAMES[getRandomInt(0, FEMALE_NAMES.length)];
 
 const getSurname = () => SURNAMES[getRandomInt(0, SURNAMES.length)];
 
-const convertHeroToStoredHero = (hero: Hero): StoredHero => {
-    return {
-        id: Number(String(new Date().getTime()) + String(hero.id)),
-        heroId: hero.id,
-        isAlive: hero.isAlive,
-        name: hero.name,
-        surname: hero.surname,
-        className: hero.className,
-        gender: hero.gender,
-        actionRecordAttacks: hero.actionRecord?.attacks || [], 
-        actionRecordDefences: hero.actionRecord?.defences || [],
-        ...hero.stats,
-    }
-}
-
 export {
     getStatsByClassName,
     getMaleName,
     getFemaleName,
-    getSurname,
-    convertHeroToStoredHero
+    getSurname
 }

@@ -1,10 +1,14 @@
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
-import { Hero, StoredHero } from '../../types';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import { ActionRecord, AttackRecord, DefenceRecord, Team, TotalActionRecord } from 'rpg-ts';
+import { Hero } from '../../types';
+import { ActionRecord, AttackRecord, Character, DefenceRecord, Team, TotalActionRecord } from 'rpg-ts';
+import { rowOfTableHeroes } from './mysqlStorageTypes';
+import { HEROES_NAMES } from '../../constants';
+import { restoreHero } from './mysqlStorageUtils';
 
 class MysqlStorage implements StorageModule {
+
     constructor() {
         // Conectar al servidor MySQL
         mysqlClient.connect((err) => {
@@ -53,8 +57,8 @@ class MysqlStorage implements StorageModule {
     async saveHero(hero: Hero): Promise<any> {
         console.log('Guardando personaje en la base de datos');
     
-        const values = 'heroId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive';
-        const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}'`;
+        const values = 'heroId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
+        const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}', '${hero.skill.probability}'`;
         const query = `INSERT INTO Heroes (${values}) VALUES (${hero_values})`;
     
         try {
@@ -100,7 +104,7 @@ class MysqlStorage implements StorageModule {
         }
     }
 
-    async getHeroById(id: number): Promise<StoredHero | null> {
+    async getHeroById(id: number): Promise<Hero | null> {
         const heroQuery = `SELECT * FROM Heroes WHERE heroId = ${id}`;
         const attackRecordQuery = `SELECT * FROM attackRecord WHERE characterId = ${id}`;
         const defenceRecordQuery = `SELECT * FROM defenceRecord WHERE characterId = ${id}`;
@@ -111,7 +115,12 @@ class MysqlStorage implements StorageModule {
             this.executeQuery<RowDataPacket[]>(defenceRecordQuery),
         ]);
 
-        const hero: StoredHero = heroResult[0] as StoredHero;
+        if(heroResult.length === 0) {
+            return null;
+        }
+
+        const hero = this.restoreStoredHero(heroResult[0] as rowOfTableHeroes);
+
 
         // Process the attack records
         const attackRecords: AttackRecord[] = attackRecordResult.map((row) => ({
@@ -130,11 +139,12 @@ class MysqlStorage implements StorageModule {
             damageReceived: row.damageReceived,
             characterId: row.characterId,
         }));
-        hero.actionRecordAttacks = attackRecords;
-        hero.actionRecordDefences = defenceRecords;
+        hero.actionRecord!.attacks = attackRecords;
+        hero.actionRecord!.defences = defenceRecords;
 
         return hero;
     }
+
 
     async executeQuery<T>(query: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
@@ -167,6 +177,11 @@ class MysqlStorage implements StorageModule {
     async addHeroToTeam(teamId: number, heroId: number): Promise<void> {
         const insertMemberQuery = `INSERT INTO teams_heroes (teamId, heroId) VALUES (${teamId}, ${heroId})`;
         await this.executeQuery<ResultSetHeader>(insertMemberQuery);
+    }
+
+    restoreStoredHero = (storedHero: rowOfTableHeroes): Hero => {
+        const createHeroFunc = restoreHero[storedHero.className.toUpperCase() as keyof typeof HEROES_NAMES];
+        return createHeroFunc(storedHero);
     }
 
     //Pending to use.

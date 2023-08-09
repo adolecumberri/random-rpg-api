@@ -1,10 +1,6 @@
-
-// controllers/heroController.ts
-import { Request, Response } from "express";
 import { HEROES_NAMES } from "../constants";
-import { heroFactory, restoreHero } from "../heroes/heroes";
-import { Hero, HeroIdentity, StoredHero } from "../types";
-import { Character, Stats, getRandomInt } from "rpg-ts";
+import { heroFactory } from "../heroes/heroes";
+import { Hero, HeroIdentity } from "../types";
 import { moduleHandler } from "../storage/storageConfguration";
 
 const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity): Hero => {
@@ -32,7 +28,7 @@ const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity)
  * @param heroTypes 
  * @returns 
  */
-const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HEROES_NAMES]?: number }) => {
+const createHeroes = (totalHeroes: number, heroTypes: { [x in keyof typeof HEROES_NAMES]?: number }) => {
     const heroList: Hero[] = [];
 
     // Verificar si se especificó el número total de héroes
@@ -72,16 +68,10 @@ const createHeroes = ( totalHeroes: number, heroTypes: { [x in keyof typeof HERO
     return heroList;
 };
 
-const restoreStoredHero = (storedHero: StoredHero): Character => {
 
-    const createHeroFunc = restoreHero[storedHero.className.toUpperCase() as keyof typeof HEROES_NAMES];
-  
-    return createHeroFunc(storedHero);
-  }
 
 export {
     createHero,
     createHeroes,
-    restoreStoredHero
 }
 // 
