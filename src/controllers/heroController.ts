@@ -2,7 +2,7 @@ import { HEROES_NAMES } from "../constants";
 import { heroFactory } from "../heroes/heroes";
 import { Hero, HeroIdentity } from "../types";
 
-const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity): Hero => {
+const createHero = (className: keyof typeof HEROES_NAMES | undefined, options: HeroIdentity | undefined): Hero => {
 
     let className_key = className?.toLocaleUpperCase() as keyof typeof HEROES_NAMES;
     // Verificar si el className es válido
