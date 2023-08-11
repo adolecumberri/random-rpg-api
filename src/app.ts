@@ -5,10 +5,11 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { moduleHandler } from './storage/storageConfguration';
 import { heroRouter, teamRouter } from './routes';
-import { BASE_URL, HEROES_URL, TEAMS_URL } from './constants';
+import { BASE_URL, BATTLES_ULR, HEROES_URL, TEAMS_URL } from './constants';
+import { battleRouter } from './routes/battleRoutes';
 
 export class App {
-	app: Application | undefined = express(); //creation of the propertie "application"
+	app: Application = express(); //creation of the propertie "application"
 
 	port: number | string = 3000;
 
@@ -54,19 +55,20 @@ export class App {
 	}
 
 	private middlewares() {
-		this.app?.use(morgan('dev')); //Morgan establishment
-		this.app?.use(express.json());
-		this.app?.use(
+		this.app.use(morgan('dev')); //Morgan establishment
+		this.app.use(express.json());
+		this.app.use(
 			bodyParser.urlencoded({
 				extended: true,
 			})
 		);
-		this.app?.set('etag', false);	
+		this.app.set('etag', false);	
 	}
 
 	private routes() {
-		this.app?.use(`${BASE_URL}${HEROES_URL}`, heroRouter);
-		this.app?.use(`${BASE_URL}${TEAMS_URL}`, teamRouter);
+		this.app.use(`${BASE_URL}${HEROES_URL}`, heroRouter);
+		this.app.use(`${BASE_URL}${TEAMS_URL}`, teamRouter);
+		this.app.use(`${BASE_URL}${BATTLES_ULR}`, battleRouter);
 	}
 
 	async listen(): Promise<void> {

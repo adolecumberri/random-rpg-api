@@ -11,8 +11,6 @@ const createHero = (className: keyof typeof HEROES_NAMES, options: HeroIdentity)
         className_key = Object.keys(HEROES_NAMES)[Math.floor(Math.random() * Object.keys(HEROES_NAMES).length)] as keyof typeof HEROES_NAMES;
     }
 
-    console.log("className_key", className_key)
-
     // Crear el personaje usando la función correspondiente de heroFactory
     const createHeroFunc = heroFactory[className_key];
 

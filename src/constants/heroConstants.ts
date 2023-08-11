@@ -17,7 +17,7 @@ const COMMON_STATS: Omit<Stats, 'totalHp'> = {
     "attack": 10,
     "defence": 7,
     "crit": 10,
-    "critMultiplier": 1,
+    "critMultiplier": 0,
     "accuracy": 90,
     "evasion": 10,
     "attackInterval": 12,

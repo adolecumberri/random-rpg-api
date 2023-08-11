@@ -11,8 +11,14 @@ interface HeroIdentity {
 
 type Hero = Character & HeroIdentity & {className: string}
 
+interface requestHero {
+    className: keyof typeof HEROES_NAMES; 
+    options: HeroIdentity;
+}
+
 export { 
     HeroName,
     HeroIdentity,
     Hero,
+    requestHero
 };

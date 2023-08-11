@@ -3,11 +3,11 @@ import { Router, Request, Response } from 'express';
 import { createHero, createHeroes } from '../controllers';
 import { HEROES_NAMES, URL_CREATE, URL_CREATE_MULTIPLE, URL_RESTORE } from '../constants';
 import { moduleHandler } from '../storage/storageConfguration';
-import { Hero } from '../types';
+import { requestHero } from '../types';
 
 const heroRouter = Router();
 
-heroRouter.post(URL_CREATE, async (req: Request, res: Response) => {
+heroRouter.post(URL_CREATE, async (req: Request<{}, {}, requestHero>, res: Response) => {
     const body = req.body;
     const response = createHero(body.className, body.options);
 
@@ -32,7 +32,6 @@ heroRouter.post(URL_CREATE_MULTIPLE, (req: Request, res: Response) => {
 
 heroRouter.get(URL_RESTORE, async (req: Request, res: Response) => {
     const { id } = req.params;
-    console.log("id", id);
     let response = null;
     try {
         response = await moduleHandler.getModule().getHeroById(Number(id));
@@ -41,8 +40,6 @@ heroRouter.get(URL_RESTORE, async (req: Request, res: Response) => {
     }
     res.json(response);
 });
-
-
 
 export {
     heroRouter
