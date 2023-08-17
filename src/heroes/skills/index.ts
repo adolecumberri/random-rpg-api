@@ -68,12 +68,12 @@ const rage: CharacterCallbacks['receiveDamage'] = ({ c }) => {
     }
 };
 
-const skipeShield: CharacterCallbacks['receiveDamage'] = ({ c, defence }) => {
-    if (!defence || !c) return;
+const skipeShield: CharacterCallbacks['afterAnyDefence'] = ({ c, defence, attack }) => {
+    if (!defence || !c) return undefined;
     const spikeShield = (attackValue: number) => Math.floor(7 + attackValue * 0.2);
 
     if (defence.type === 'MISS') return;
-    const damage = spikeShield(defence.value);
+    const damage = spikeShield(attack.value);
     defence.attacker!.receiveDamage({
         type: 'SKILL',
         value: damage,
@@ -104,6 +104,7 @@ const riposte: CharacterCallbacks['afterAnyDefence'] = ({ c, attack, defence }) 
     attack?.atacker?.receiveDamage(defenceResult);
 
     const solution = getDefaultDefenceObject({
+        recordId: defence.recordId,
         type: ATTACK_TYPE_CONST.SKILL,
         value: 0,
     });
@@ -111,10 +112,15 @@ const riposte: CharacterCallbacks['afterAnyDefence'] = ({ c, attack, defence }) 
     return solution;
 };
 
-const tripleAttack = ({ atacker }: AttackResult) => {
+const tripleAttack = ({ atacker, recordId }: AttackResult) => {
     if (!atacker) return undefined;
     if (atacker!.skill.probability < getRandomInt()) return undefined;
-    const results: AttackResult = { type: ATTACK_TYPE_CONST.SKILL, value: 0, atacker };
+    const results: AttackResult = { 
+        type: ATTACK_TYPE_CONST.SKILL, 
+        value: 0, 
+        atacker,
+        recordId
+    };
 
     for (let i = 0; i < 3; i++) {
         const accuracyRoll = getRandomInt(); // Genera un número entre 0 y 100.

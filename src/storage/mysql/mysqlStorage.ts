@@ -21,7 +21,7 @@ class MysqlStorage implements StorageModule {
     }
 
     async addHeroToTeam(teamId: number, heroId: number): Promise<void> {
-        const insertMemberQuery = `INSERT INTO teams_heroes (teamId, heroId) VALUES (${teamId}, ${heroId})`;
+        const insertMemberQuery = `INSERT INTO teams_heroes (teamId, characterId) VALUES (${teamId}, ${heroId})`;
         await this.executeQuery<ResultSetHeader>(insertMemberQuery);
     }
 
@@ -33,6 +33,10 @@ class MysqlStorage implements StorageModule {
     async executeQuery<T>(query: string, values?: any[]): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             try {
+                console.log({
+                    query,
+                    values
+                })
                 values ? mysqlClient.execute(query, values, (err, result) => {
                     if (err) throw (err);
                     resolve(result as unknown as T);
@@ -143,19 +147,19 @@ class MysqlStorage implements StorageModule {
     }
 
     async saveAttackRecord(attackRecord: AttackRecord): Promise<void> {
-        const { attackType, damage, characterId } = attackRecord;
+        const { attackType, damage, characterId, id } = attackRecord;
     
-        const insertQuery = `INSERT INTO attackRecord (attackType, damage, characterId) VALUES (?, ?, ?)`;
-        const values = [attackType, damage, characterId];
+        const insertQuery = `INSERT INTO attackrecord (attackrecordId, attackType, damage, characterId) VALUES (?, ?, ?, ?)`;
+        const values = [id, attackType, damage, characterId];
     
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
     async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
-        await this.saveBattleLogs(battleId, battle);
-       
         await this.saveHero(heroA);
         await this.saveHero(heroB);
+
+        await this.saveBattleLogs(battleId, battle);
     }
 
     async saveBattleLogs(battleId: number, battle: Battle) {
@@ -177,7 +181,13 @@ class MysqlStorage implements StorageModule {
         // saving battle logs.
         try {
             await Promise.all( battleLogs.logs.map(async (log) => {
-                const insertBattleLogQuery = `INSERT INTO battleLogs (battleId, intervalOfTurn, idAttackRecord, idDefenceRecord, attackerId, defenderId, attackerHp, defenderHp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+                if(!log.idDefenceRecord || !log.idAttackRecord) {
+                    console.log({
+                        idDefenceRecord: log.idDefenceRecord,
+                        idAttackRecord: log.idAttackRecord
+                    })
+                }
+                const insertBattleLogQuery = `INSERT INTO battlelogs (battleId, intervalOfTurn, idAttackRecord, idDefenceRecord, attackerId, defenderId, attackerHp, defenderHp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
                 const battleLogsValues = [
                     battleLogs.initialLog.battleId,
                     log.intervalOfTurn,
@@ -199,10 +209,10 @@ class MysqlStorage implements StorageModule {
     }
 
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
-        const { defenceType, damageReceived, characterId, attackerId } = defenceRecord;
+        const { defenceType, damageReceived, characterId, attackerId, id } = defenceRecord;
     
-        const insertQuery = `INSERT INTO defenceRecord (defenceType, damageReceived, characterId, attackId) VALUES (?, ?, ?, ?)`;
-        const values = [defenceType, damageReceived, characterId, attackerId];
+        const insertQuery = `INSERT INTO defencerecord (defencerecordId, defenceType, damageReceived, characterId, attackerId) VALUES (?, ?, ?, ?, ?)`;
+        const values = [id, defenceType, damageReceived, characterId, attackerId];
     
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
@@ -211,10 +221,10 @@ class MysqlStorage implements StorageModule {
         console.log('Saving character in the database');
 
         try {
-            const values = 'heroId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
+            const values = 'characterId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
             const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}', '${hero.skill.probability}'`;
-            const query = `INSERT INTO Heroes (${values}) VALUES (${hero_values})`;
-
+            const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
+            console.log(query);
             const solution = await this.executeQuery<any>(query);
 
             if (hero.actionRecord) {
@@ -234,7 +244,7 @@ class MysqlStorage implements StorageModule {
             await Promise.all(heroes.map(async (hero) => {
                 const values = 'heroId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
                 const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}'`;
-                const query = `INSERT INTO Heroes (${values}) VALUES (${hero_values})`;
+                const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
 
                 await this.executeQuery(query)
             }));

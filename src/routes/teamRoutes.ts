@@ -16,7 +16,7 @@ teamRouter.post(URL_CREATE, async (req: Request, res: Response) => {
      try {
         let teamCreated = createTeam(name, totalHeroes, parsedHeroTypes);
 
-        moduleHandler.getModule().saveTeam(teamCreated);
+        await moduleHandler.getModule().saveTeam(teamCreated);
 
         res.json(teamCreated);
     } catch (e: any) {

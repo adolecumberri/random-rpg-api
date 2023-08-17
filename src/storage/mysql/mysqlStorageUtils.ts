@@ -48,7 +48,7 @@ const restoreBerserk = (storedHero: rowOfTableHeroes) => {
 
 const restoreDefender = (storedHero: rowOfTableHeroes) => {
     return restoreCharacter(storedHero, {
-        receiveDamage: skipeShield,
+        afterAnyDefence: skipeShield,
     });
 }
 

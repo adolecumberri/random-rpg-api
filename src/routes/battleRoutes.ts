@@ -26,7 +26,7 @@ battleRouter.get(`${TEAMS_URL}${BATTLES_IDS_REQUESTED}`, (req: Request, res: Res
     res.send(`battle teams /${req.params.idA}/${req.params.idB}, canela.`);
 });
 
-battleRouter.post(`${HEROES_URL}`, (req: Request<{}, {}, { heroA: requestHero | undefined, heroB: requestHero | undefined }>, res: Response) => {
+battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestHero | undefined, heroB: requestHero | undefined }>, res: Response) => {
     const { heroA, heroB } = req.body;
     const newHeroA = createHero(
         heroA ? heroA.className : undefined,
@@ -40,12 +40,13 @@ battleRouter.post(`${HEROES_URL}`, (req: Request<{}, {}, { heroA: requestHero | 
     let b = new Battle();
     b.setBattleType('INTERVAL_BASED');
 
-    const solutionId = b.runBattle(newHeroA, newHeroB);
+   const solutionId = b.runBattle(newHeroA, newHeroB);
 
     const solution = {
         id: solutionId,
         logs: b.logs.get(solutionId),
         heroA: {
+            id: newHeroA.id,
             name: newHeroA.name,
             surname: newHeroA.surname,
             gender: newHeroA.gender,
@@ -55,6 +56,7 @@ battleRouter.post(`${HEROES_URL}`, (req: Request<{}, {}, { heroA: requestHero | 
             defences: newHeroA.actionRecord?.defences!
         },
         heroB: {
+            id: newHeroB.id,
             name: newHeroB.name,
             surname: newHeroB.surname,
             gender: newHeroB.gender,
@@ -65,7 +67,7 @@ battleRouter.post(`${HEROES_URL}`, (req: Request<{}, {}, { heroA: requestHero | 
         }
     }
 
-    moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+    await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
 
     res.json(solution);
 });

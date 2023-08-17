@@ -44,7 +44,7 @@ const createBerserk = (options?: HeroIdentity) => {
 
 const createDefender = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.DEFENDER, options, {
-        receiveDamage: skipeShield,
+        afterAnyDefence: skipeShield,
     });
 }
 
