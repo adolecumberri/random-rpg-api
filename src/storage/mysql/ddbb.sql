@@ -49,7 +49,7 @@ CREATE TABLE `teams_heroes` (
 DROP TABLE IF EXISTS `attackrecord`;
 CREATE TABLE `attackrecord` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `attackrecordId` int NOT NULL,
+  `attackrecordId` bigint NOT NULL,
   `attackType` enum('NORMAL','MISS','CRITICAL','TRUE','SKILL') NOT NULL,
   `damage` int NOT NULL,
   `characterId` bigint DEFAULT NULL,
@@ -139,7 +139,7 @@ CREATE TABLE `battlelogs` (
   `id` int NOT NULL AUTO_INCREMENT,
   `battleId` bigint NOT NULL,
   `intervalOfTurn` int NOT NULL,
-  `idAttackRecord` int NOT NULL,
+  `idAttackRecord` bigint NOT NULL,
   `idDefenceRecord` bigint NOT NULL,
   `attackerId` bigint NOT NULL,
   `defenderId` bigint NOT NULL,

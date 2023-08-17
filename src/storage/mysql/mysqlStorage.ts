@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
 import { Hero } from '../../types';
-import { ActionRecord, AttackRecord, Character, DefenceRecord, Team, TotalActionRecord } from 'rpg-ts';
+import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, TotalActionRecord } from 'rpg-ts';
 import { rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableteams } from './mysqlStorageTypes';
 import { HEROES_NAMES } from '../../constants';
 import { restoreHero } from './mysqlStorageUtils';
@@ -49,7 +49,7 @@ class MysqlStorage implements StorageModule {
 
     async getHeroById(id: number): Promise<Hero | null> {
         try {
-            const heroQuery = `SELECT * FROM Heroes WHERE heroId = ${id}`;
+            const heroQuery = `SELECT * FROM Heroes WHERE characterId = ${id}`;
             const attackRecordQuery = `SELECT * FROM attackRecord WHERE characterId = ${id}`;
             const defenceRecordQuery = `SELECT * FROM defenceRecord WHERE characterId = ${id}`;
 
@@ -151,6 +151,53 @@ class MysqlStorage implements StorageModule {
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
+    async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
+        await this.saveBattleLogs(battleId, battle);
+       
+        await this.saveHero(heroA);
+        await this.saveHero(heroB);
+    }
+
+    async saveBattleLogs(battleId: number, battle: Battle) {
+        const battleLogs = battle.logs.get(battleId);
+
+        if( !battleLogs ) {
+            throw new Error('Battle logs not found');
+        }
+
+        const insertBattleQuery = `INSERT INTO battles (battleId, battleType, battleDimension) VALUES (?, ?, ?)`;
+        const values = [
+            battleLogs.initialLog.battleId,
+            battleLogs.initialLog.battleType,
+            battleLogs.initialLog.battleDimension
+        ];
+        // saving 1st log
+        await this.executeQuery<ResultSetHeader>(insertBattleQuery, values);
+
+        // saving battle logs.
+        try {
+            await Promise.all( battleLogs.logs.map(async (log) => {
+                const insertBattleLogQuery = `INSERT INTO battleLogs (battleId, intervalOfTurn, idAttackRecord, idDefenceRecord, attackerId, defenderId, attackerHp, defenderHp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+                const battleLogsValues = [
+                    battleLogs.initialLog.battleId,
+                    log.intervalOfTurn,
+                    log.idAttackRecord,
+                    log.idDefenceRecord,
+                    log.attackerId,
+                    log.defenderId,
+                    log.attackerHp,
+                    log.defenderHp
+                ];
+    
+                await this.executeQuery(insertBattleLogQuery, battleLogsValues);
+            }));
+        } catch (e){
+            console.error('Error while saving battle logs:', e);
+            throw e;
+        }
+       
+    }
+
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
         const { defenceType, damageReceived, characterId, attackerId } = defenceRecord;
     
@@ -200,14 +247,11 @@ class MysqlStorage implements StorageModule {
     async saveTeam(team: Team<Hero>): Promise<void> {
 
         const insertTeamQuery = `INSERT INTO teams (teamId, name, members) VALUES ('${team.id}','${team.name}', '${team.members.length}')`;
-        const teamResult = await this.executeQuery<ResultSetHeader>(insertTeamQuery);
-        const teamId = teamResult.insertId;
+        await this.executeQuery<ResultSetHeader>(insertTeamQuery);
 
         for (const member of team.members) {
-            const heroResult: any = await this.saveHero(member as Hero);
-            const heroId = heroResult.insertId;
-            await this.addHeroToTeam(teamId, heroId);
-            // await this.saveFightRecord(team.getEveryFightRecord()[member.id], teamId)
+            await this.saveHero(member as Hero);
+            await this.addHeroToTeam(team.id, member.id);
         }
     }
 

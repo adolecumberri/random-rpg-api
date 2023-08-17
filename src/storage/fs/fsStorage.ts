@@ -1,22 +1,25 @@
 import fs from 'fs';
 import path from 'path';
 import StorageModule from './../storageModule';
-import { BaseCharacter, Team } from 'rpg-ts';
+import { BaseCharacter, Battle, Team } from 'rpg-ts';
 import { Hero } from '../../types';
 
 class FileStorage implements StorageModule {
     fileType: string = 'txt';
     heroFilePath: string;
     teamFilePath: string;
+    battleFilePath: string;
 
     constructor(
         fileType = 'txt',
         heroFilePath = path.join(__dirname, 'heroes'),
-        teamFilePath = path.join(__dirname, 'teams')
+        teamFilePath = path.join(__dirname, 'teams'),
+        battleFilePath = path.join(__dirname, 'battle')
     ) {
         this.fileType = fileType;
         this.heroFilePath = heroFilePath;
         this.teamFilePath = teamFilePath;
+        this.battleFilePath = battleFilePath;
 
         if( !fs.existsSync(this.heroFilePath)){
             fs.mkdirSync(this.heroFilePath);
@@ -24,6 +27,10 @@ class FileStorage implements StorageModule {
 
         if (!fs.existsSync(this.teamFilePath)) {
             fs.mkdirSync(this.teamFilePath);
+        }
+
+        if (!fs.existsSync(this.battleFilePath)) {
+            fs.mkdirSync(this.battleFilePath);
         }
     }
 
@@ -62,9 +69,6 @@ class FileStorage implements StorageModule {
     
         if (!fs.existsSync(teamFolderPath)) {
             fs.mkdirSync(teamFolderPath, { recursive: true });
-        }
-    
-        if (!fs.existsSync(membersFolderPath)) {
             fs.mkdirSync(membersFolderPath);
         }
     
@@ -114,6 +118,26 @@ class FileStorage implements StorageModule {
         return team;
     }
     
+    async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
+        const battleFilePath = path.join(this.battleFilePath, battleId.toString());
+
+        if (!fs.existsSync(battleFilePath)) {
+            fs.mkdirSync(battleFilePath, { recursive: true });
+            fs.mkdirSync(heroA.id.toString());
+            fs.mkdirSync(heroB.id.toString());
+        }
+
+        const battleDataFilePath = path.join(battleFilePath, `data.${this.fileType}`);
+        fs.writeFileSync(battleDataFilePath, battle.serialize());
+
+        const heroAFilePath = path.join(battleFilePath, heroA.id.toString(), `data.${this.fileType}`);
+        fs.writeFileSync(heroAFilePath, heroA.serialize());
+
+        const heroBFilePath = path.join(battleFilePath, heroB.id.toString(), `data.${this.fileType}`);
+        fs.writeFileSync(heroBFilePath, heroB.serialize());
+
+    }
+
 
 
 }

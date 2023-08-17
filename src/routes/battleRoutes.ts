@@ -65,6 +65,8 @@ battleRouter.post(`${HEROES_URL}`, (req: Request<{}, {}, { heroA: requestHero | 
         }
     }
 
+    moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+
     res.json(solution);
 });
 
@@ -87,6 +89,7 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
 
     const solutionId = b.runBattle(newHeroA, newHeroB);
 
+    moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
     const solution = {
         id: solutionId,
         initialLog: b.logs.get(solutionId)?.initialLog,
@@ -111,8 +114,6 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
             defences: newHeroB.actionRecord?.defences!
         }
     }
-
-
 
     res.json(solution);
 });
