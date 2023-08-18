@@ -133,26 +133,55 @@ CREATE TABLE `battles` (
   KEY `idx_battleId` (`battleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table structure for table `battlelogs`
-DROP TABLE IF EXISTS `battlelogs`;
-CREATE TABLE `battlelogs` (
+DROP TABLE IF EXISTS `finalcharacterbattlelog`;
+CREATE TABLE `finalcharacterbattlelog` (
   `id` int NOT NULL AUTO_INCREMENT,
   `battleId` bigint NOT NULL,
-  `intervalOfTurn` int NOT NULL,
-  `idAttackRecord` bigint NOT NULL,
-  `idDefenceRecord` bigint NOT NULL,
-  `attackerId` bigint NOT NULL,
-  `defenderId` bigint NOT NULL,
-  `attackerHp` int NOT NULL,
-  `defenderHp` int NOT NULL,
+  `draw` tinyint NOT NULL,
+  `winnerId` bigint NOT NULL,
+  `looserId` bigint NOT NULL,
+  `characterAId` bigint NOT NULL,
+  `characterBId` bigint NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_battleId_bl` (`battleId`),
-  KEY `idx_attackerId` (`attackerId`),
-  KEY `idx_defenderId` (`defenderId`),
-  CONSTRAINT `fk_battlelogs_battle` FOREIGN KEY (`battleId`) REFERENCES `battles` (`battleId`) ON DELETE CASCADE,
-  CONSTRAINT `fk_battlelogs_attackrecord` FOREIGN KEY (`idAttackRecord`) REFERENCES `attackrecord` (`attackrecordId`) ON DELETE CASCADE,
-  CONSTRAINT `fk_battlelogs_defencerecord` FOREIGN KEY (`idDefenceRecord`) REFERENCES `defencerecord` (`defencerecordId`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `idx_battleId` (`battleId`), -- Index for battleId
+  KEY `idx_winnerId` (`winnerId`), -- Index for winnerId
+  KEY `idx_looserId` (`looserId`), -- Index for looserId
+  KEY `idx_cAId` (`winnerId`), -- Index for winnerId
+  KEY `idx_cBId` (`looserId`), -- Index for looserId
+  CONSTRAINT `fk_finallog_battleId` FOREIGN KEY (`battleId`) REFERENCES `battles` (`battleId`) ON DELETE CASCADE,
+  CONSTRAINT `fk_finallog_winnerId` FOREIGN KEY (`winnerId`) REFERENCES `heroes` (`characterId`),
+  CONSTRAINT `fk_finallog_looserId` FOREIGN KEY (`looserId`) REFERENCES `heroes` (`characterId`),
+  CONSTRAINT `fk_finallog_characterAId` FOREIGN KEY (`characterAId`) REFERENCES `heroes` (`characterId`),
+  CONSTRAINT `fk_finallog_characterBId` FOREIGN KEY (`characterBId`) REFERENCES `heroes` (`characterId`)
+);
+
+DROP TABLE IF EXISTS `finalteambattlelog`;
+CREATE TABLE `finalteambattlelog` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `battleId` bigint NOT NULL,
+  `draw` tinyint NOT NULL,
+  `winnerId` bigint NOT NULL,
+  `looserId` bigint NOT NULL,
+  `teamAId` bigint NOT NULL,
+  `teamADeadMembers` INT,
+  `teamAAliveMembers` INT,
+  `teamATotalMembers` INT,
+  `teamBId` bigint NOT NULL,
+  `teamBDeadMembers` INT,
+  `teamBAliveMembers` INT,
+  `teamBTotalMembers` INT,
+  PRIMARY KEY (`id`),
+  KEY `idx_battleId` (`battleId`), -- Index for battleId
+  KEY `idx_winnerId` (`winnerId`), -- Index for winnerId
+  KEY `idx_looserId` (`looserId`), -- Index for looserId
+  KEY `idx_teamAId` (`winnerId`), -- Index for winnerId
+  KEY `idx_teamBId` (`looserId`), -- Index for looserId
+  CONSTRAINT `fk_finallog_bId` FOREIGN KEY (`battleId`) REFERENCES `battles` (`battleId`) ON DELETE CASCADE,
+  CONSTRAINT `fk_finallog_wId` FOREIGN KEY (`winnerId`) REFERENCES `heroes` (`characterId`),
+  CONSTRAINT `fk_finallog_lId` FOREIGN KEY (`looserId`) REFERENCES `heroes` (`characterId`),
+  CONSTRAINT `fk_finallog_tAId` FOREIGN KEY (`teamAId`) REFERENCES `teams` (`teamId`),
+  CONSTRAINT `fk_finallog_tBId` FOREIGN KEY (`teamBId`) REFERENCES `teams` (`teamId`)
+);
 
 -- Table structure for table `finallog`
 DROP TABLE IF EXISTS `finallog`;

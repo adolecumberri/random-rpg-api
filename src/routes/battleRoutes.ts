@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { BATTLES_IDS_REQUESTED, HEROES_NAMES, HEROES_URL, TEAMS_URL } from '../constants';
 import { createHero } from '../controllers';
 import { HeroIdentity, requestHero } from '../types';
-import { AttackRecord, Battle, DefenceRecord, Log, firstLog, lastLog } from 'rpg-ts';
+import { AttackRecord, Battle } from 'rpg-ts';
 import { moduleHandler } from '../storage/storageConfguration';
 
 const battleRouter = Router();

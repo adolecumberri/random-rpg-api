@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
 import { Hero } from '../../types';
-import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, TotalActionRecord } from 'rpg-ts';
+import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, TotalActionRecord, characterBattleLastLog, teamBattleLastLog } from 'rpg-ts';
 import { rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableteams } from './mysqlStorageTypes';
 import { HEROES_NAMES } from '../../constants';
 import { restoreHero } from './mysqlStorageUtils';
@@ -23,11 +23,6 @@ class MysqlStorage implements StorageModule {
     async addHeroToTeam(teamId: number, heroId: number): Promise<void> {
         const insertMemberQuery = `INSERT INTO teams_heroes (teamId, characterId) VALUES (${teamId}, ${heroId})`;
         await this.executeQuery<ResultSetHeader>(insertMemberQuery);
-    }
-
-    async closeConnection(): Promise<void> {
-        // Close the connection pool
-        await mysqlClient.end();
     }
 
     async executeQuery<T>(query: string, values?: any[]): Promise<T> {
@@ -99,18 +94,18 @@ class MysqlStorage implements StorageModule {
 
     async getTeamById(teamId: number): Promise<Team<Hero> | null> {
         const teamQuery = `SELECT * FROM teams WHERE teamId = ${teamId}`;
-        
+
         const [teamRow] = await this.executeQuery<[rowOfTableteams]>(teamQuery);
 
-        if ( !teamRow ) {
+        if (!teamRow) {
             return null; // Team doesn't exist
         }
-    
+
         const team = new Team<Hero>({
             name: teamRow.name,
             id: teamRow.teamId, //this id is the one that the Team creates the first time it's created
         });
-    
+
         const membersQuery = `SELECT h.* FROM heroes h
                              JOIN teams_heroes th ON h.id = th.heroId
                              WHERE th.teamId = ${teamRow.id}`;
@@ -121,7 +116,7 @@ class MysqlStorage implements StorageModule {
             const hero = this.restoreStoredHero(heroRow);
             team.addMember(hero);
         }
-    
+
         return team;
     }
 
@@ -132,13 +127,13 @@ class MysqlStorage implements StorageModule {
 
     async saveActionRecord(actionRecord: ActionRecord): Promise<void> {
         // ... (other logic)
-    
+
         if (actionRecord.attacks && actionRecord.attacks.length > 0) {
             for (const attack of actionRecord.attacks) {
                 await this.saveAttackRecord(attack);
             }
         }
-    
+
         if (actionRecord.defences && actionRecord.defences.length > 0) {
             for (const defence of actionRecord.defences) {
                 await this.saveDefenceRecord(defence);
@@ -148,30 +143,30 @@ class MysqlStorage implements StorageModule {
 
     async saveAttackRecord(attackRecord: AttackRecord): Promise<void> {
         const { attackType, damage, characterId, id } = attackRecord;
-    
+
         const insertQuery = `INSERT INTO attackrecord (attackrecordId, attackType, damage, characterId) VALUES (?, ?, ?, ?)`;
         const values = [id, attackType, damage, characterId];
-    
+
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
     async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
-        await this.saveHero(heroA);
-        await this.saveHero(heroB);
+        let a = await this.saveHero(heroA);
+        let b = await this.saveHero(heroB);
 
-        await this.saveBattleLogs(battleId, battle);
+        let c = await this.saveBattleLogs(battleId, battle);
     }
 
     async saveBattleLogs(battleId: number, battle: Battle) {
         const battleLogs = battle.logs.get(battleId);
 
-        if( !battleLogs ) {
+        if (!battleLogs) {
             throw new Error('Battle logs not found');
         }
 
         const insertBattleQuery = `INSERT INTO battles (battleId, battleType, battleDimension) VALUES (?, ?, ?)`;
-        const values = [
-            battleLogs.initialLog.battleId,
+        let values: string[] = [
+            battleLogs.initialLog.battleId as unknown as string,
             battleLogs.initialLog.battleType,
             battleLogs.initialLog.battleDimension
         ];
@@ -180,8 +175,8 @@ class MysqlStorage implements StorageModule {
 
         // saving battle logs.
         try {
-            await Promise.all( battleLogs.logs.map(async (log) => {
-                if(!log.idDefenceRecord || !log.idAttackRecord) {
+            await Promise.all(battleLogs.logs.map(async (log) => {
+                if (!log.idDefenceRecord || !log.idAttackRecord) {
                     console.log({
                         idDefenceRecord: log.idDefenceRecord,
                         idAttackRecord: log.idAttackRecord
@@ -198,22 +193,69 @@ class MysqlStorage implements StorageModule {
                     log.attackerHp,
                     log.defenderHp
                 ];
-    
+
                 await this.executeQuery(insertBattleLogQuery, battleLogsValues);
             }));
-        } catch (e){
+        } catch (e) {
             console.error('Error while saving battle logs:', e);
             throw e;
         }
-       
+
+        //saving final logs
+        if (battleLogs.initialLog.battleDimension === 'Team') {
+            const insertCharacterBattleLogQuery = `
+                INSERT INTO finalcharacterbattlelog (battleId, draw, winnerId, looserId, characterAId, characterBId)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
+
+            const characterBattleLogValues = [
+                battleId,
+                battleLogs.finalLog.draw ? 1 : 0,
+                battleLogs.finalLog.winnerId,
+                battleLogs.finalLog.looserId,
+                (battleLogs.finalLog as characterBattleLastLog).characterAId,
+                (battleLogs.finalLog as characterBattleLastLog).characterBId
+            ];
+
+            await this.executeQuery<ResultSetHeader>(insertCharacterBattleLogQuery, characterBattleLogValues);
+
+
+        } else {
+            const insertTeamBattleLogQuery = `
+                INSERT INTO finalteambattlelog (
+                    battleId, draw, winnerId, looserId, teamAId, teamADeadMembers, teamAAliveMembers, teamATotalMembers,
+                    teamBId, teamBDeadMembers, teamBAliveMembers, teamBTotalMembers
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            const teamBattleLogValues = [
+                battleId,
+                battleLogs.finalLog.draw ? 1 : 0,
+                battleLogs.finalLog.winnerId,
+                battleLogs.finalLog.looserId,
+                (battleLogs.finalLog as teamBattleLastLog).teamAId,
+                (battleLogs.finalLog as teamBattleLastLog).teamADeadMembers,
+                (battleLogs.finalLog as teamBattleLastLog).teamAAliveMembers,
+                (battleLogs.finalLog as teamBattleLastLog).teamATotalMembers,
+                (battleLogs.finalLog as teamBattleLastLog).teamBId,
+                (battleLogs.finalLog as teamBattleLastLog).teamBDeadMembers,
+                (battleLogs.finalLog as teamBattleLastLog).teamBAliveMembers,
+                (battleLogs.finalLog as teamBattleLastLog).teamBTotalMembers
+            ];
+
+            await this.executeQuery<ResultSetHeader>(insertTeamBattleLogQuery, teamBattleLogValues);
+        }
+
+
     }
 
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
         const { defenceType, damageReceived, characterId, attackerId, id } = defenceRecord;
-    
+
         const insertQuery = `INSERT INTO defencerecord (defencerecordId, defenceType, damageReceived, characterId, attackerId) VALUES (?, ?, ?, ?, ?)`;
         const values = [id, defenceType, damageReceived, characterId, attackerId];
-    
+
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
