@@ -56,6 +56,8 @@ battleRouter.post(`${TEAMS_URL}`, (req: Request<{},{}, {teamA: teamReqBody, team
     b.setBattleType('INTERVAL_BASED');
     const battleId = b.runBattle(teamACreated, teamBCreated);
 
+    console.log({battleId, initial: b.logs.get(battleId)?.initialLog});
+
     moduleHandler.getModule().saveBattleTeams(battleId, teamACreated, teamBCreated);
 
     res.json(battleId);

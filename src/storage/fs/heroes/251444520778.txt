@@ -1,1 +1,0 @@
-{"id":251444520778,"heroId":251444520778,"isAlive":true,"name":"BASSIM","surname":"LARA","className":"NINJA","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":99,"attack":24,"attackInterval":10,"attackSpeed":2,"crit":54,"critMultiplier":28,"defence":5,"evasion":41,"hp":46,"regeneration":67,"totalHp":46}

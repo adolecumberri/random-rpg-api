@@ -1,1 +1,0 @@
-{"id":1.6911887139285318e+24,"heroId":531734324756,"isAlive":true,"name":"ANDERSSON","surname":"CORRAL","className":"ARCHER","gender":"F","accuracy":80,"attack":26,"attackInterval":8,"attackSpeed":2,"crit":34,"critMultiplier":27,"defence":6,"evasion":31,"hp":76,"regeneration":51,"totalHp":76}

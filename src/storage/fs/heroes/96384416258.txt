@@ -1,1 +1,0 @@
-{"id":96384416258,"heroId":96384416258,"isAlive":true,"name":"XANET","surname":"SORIANO","className":"DEFENDER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":104,"attack":17,"attackInterval":13,"attackSpeed":2,"crit":0,"critMultiplier":1,"defence":44,"evasion":5,"hp":125,"regeneration":84,"totalHp":125}

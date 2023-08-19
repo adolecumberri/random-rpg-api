@@ -1,1 +1,0 @@
-{"id":325642771975,"heroId":325642771975,"isAlive":true,"name":"ANOIR","surname":"ESTEBAN","className":"BERSERKER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":86,"attack":33,"attackInterval":11,"attackSpeed":2,"crit":16,"critMultiplier":1,"defence":5,"evasion":15,"hp":156,"regeneration":72,"totalHp":156}

@@ -5,6 +5,12 @@ import { BaseCharacter, Battle, Team } from 'rpg-ts';
 import { Hero } from '../../types';
 import { b } from '../../controllers';
 
+const DIRS = {
+    HEROES: 'heroes',
+    TEAMS: 'teams',
+    BATTLE: 'battle'
+};
+
 class FileStorage implements StorageModule {
     fileType: string = 'txt';
     heroFilePath: string;
@@ -13,30 +19,34 @@ class FileStorage implements StorageModule {
 
     constructor(
         fileType = 'txt',
-        heroFilePath = path.join(__dirname, 'heroes'),
-        teamFilePath = path.join(__dirname, 'teams'),
-        battleFilePath = path.join(__dirname, 'battle')
+        heroFilePath = DIRS.HEROES,
+        teamFilePath = DIRS.TEAMS,
+        battleFilePath = DIRS.BATTLE,
     ) {
         this.fileType = fileType;
         this.heroFilePath = heroFilePath;
         this.teamFilePath = teamFilePath;
         this.battleFilePath = battleFilePath;
 
-        if( !fs.existsSync(this.heroFilePath)){
-            fs.mkdirSync(this.heroFilePath);
+        if( !fs.existsSync(this.createRoute(this.heroFilePath))){
+            fs.mkdirSync(this.createRoute(this.heroFilePath));
         }
 
-        if (!fs.existsSync(this.teamFilePath)) {
-            fs.mkdirSync(this.teamFilePath);
+        if (!fs.existsSync(this.createRoute(this.teamFilePath))) {
+            fs.mkdirSync(this.createRoute(this.teamFilePath));
         }
 
-        if (!fs.existsSync(this.battleFilePath)) {
-            fs.mkdirSync(this.battleFilePath);
+        if (!fs.existsSync(this.createRoute(this.battleFilePath))) {
+            fs.mkdirSync(this.createRoute(this.battleFilePath));
         }
     }
 
+    createRoute(route: string): string {
+        return path.join(__dirname, route);
+    }
+
     async saveHero(hero: Hero): Promise<void> {
-        const filePath = path.join(this.heroFilePath, `${hero.id}.${this.fileType}`);
+        const filePath = this.createRoute(path.join(this.heroFilePath, `${hero.id}.${this.fileType}`));
 
         // Save the file with the character's data
         fs.writeFileSync(filePath, hero.serialize());
@@ -45,13 +55,13 @@ class FileStorage implements StorageModule {
     async saveHeroes(heroes: Hero[]): Promise<void> {
         // Save each hero in a separate file
         for (const hero of heroes) {           
-            const filePath = path.join(this.heroFilePath, `${hero.id}.${this.fileType}`);
+            const filePath = this.createRoute(path.join(this.heroFilePath, `${hero.id}.${this.fileType}`));
             fs.writeFileSync(filePath, hero.serialize());
         }
     }
 
     async getHeroById(id: number): Promise<Hero | null> {
-        const filePath = path.join(this.heroFilePath, `${id}.${this.fileType}`);
+        const filePath = this.createRoute(path.join(this.heroFilePath, `${id}.${this.fileType}`));
 
         let solution: Hero | null = null;
 
@@ -64,10 +74,11 @@ class FileStorage implements StorageModule {
         return solution;
     }
 
-    async saveTeam(team: Team<Hero>): Promise<void> {
-        const teamFolderPath = path.join(this.teamFilePath, team.id.toString());
+    async saveTeam(team: Team<Hero>, rootPath: string = ''): Promise<void> {
+        console.log({rootPath})
+        const teamFolderPath = this.createRoute(path.join(rootPath, this.teamFilePath, team.id.toString()));
         const membersFolderPath = path.join(teamFolderPath, 'members');
-    
+
         if (!fs.existsSync(teamFolderPath)) {
             fs.mkdirSync(teamFolderPath, { recursive: true });
             fs.mkdirSync(membersFolderPath);
@@ -86,7 +97,7 @@ class FileStorage implements StorageModule {
     }
 
     async getTeamById(teamId: number): Promise<Team<Hero> | null> {
-        const teamFolderPath = path.join(this.teamFilePath, teamId.toString());
+        const teamFolderPath = this.createRoute(path.join(this.teamFilePath, teamId.toString()));
         const membersFolderPath = path.join(teamFolderPath, 'members');
     
         if (!fs.existsSync(teamFolderPath)) {
@@ -120,7 +131,7 @@ class FileStorage implements StorageModule {
     }
     
     async saveBattleHeroes(battleId: number, heroA: Hero, heroB: Hero): Promise<void> {
-        const battleFilePath = path.join(this.battleFilePath, battleId.toString());
+        const battleFilePath = this.createRoute(path.join(this.battleFilePath, battleId.toString()));
 
         if (!fs.existsSync(battleFilePath)) {
             fs.mkdirSync(battleFilePath, { recursive: true });
@@ -139,8 +150,19 @@ class FileStorage implements StorageModule {
 
     }
 
-    async saveBattleTeams(battleId: number, teamA: Team, teamB: Team): Promise<void> {
+    async saveBattleTeams(battleId: number, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
+        const battleFilePath = this.createRoute(path.join(this.battleFilePath, battleId.toString()));
         
+        if (!fs.existsSync(battleFilePath)) {
+            fs.mkdirSync(battleFilePath, { recursive: true });
+        }
+        // save data Battle:
+        const battleDataFilePath = path.join(battleFilePath, `data.${this.fileType}`);
+        fs.writeFileSync(battleDataFilePath, b.serialize());
+
+        this.saveTeam(teamA, "battle\\" + battleId.toString() );
+        this.saveTeam(teamB, "battle\\" + battleId.toString() );
+
     }
 
 

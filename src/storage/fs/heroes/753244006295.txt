@@ -1,1 +1,0 @@
-{"id":753244006295,"heroId":753244006295,"isAlive":true,"name":"EDEY","surname":"SERRANO","className":"SNIPER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":29,"attack":43,"attackInterval":26,"attackSpeed":2,"crit":79,"critMultiplier":299,"defence":5,"evasion":11,"hp":66,"regeneration":44,"totalHp":66}

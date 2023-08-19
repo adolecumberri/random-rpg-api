@@ -1,1 +1,0 @@
-{"id":20167366239,"heroId":20167366239,"isAlive":true,"name":"PEP","surname":"FANELLI","className":"DEFENDER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":80,"attack":18,"attackInterval":17,"attackSpeed":2,"crit":0,"critMultiplier":1,"defence":35,"evasion":5,"hp":110,"regeneration":92,"totalHp":110}

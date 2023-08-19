@@ -1,1 +1,0 @@
-{"id":66489881563,"heroId":66489881563,"isAlive":true,"name":"EIZAN","surname":"SANTIAGO","className":"NINJA","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":96,"attack":23,"attackInterval":10,"attackSpeed":2,"crit":51,"critMultiplier":26,"defence":4,"evasion":39,"hp":46,"regeneration":61,"totalHp":46}

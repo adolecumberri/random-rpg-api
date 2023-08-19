@@ -1,1 +1,0 @@
-{"id":1.6911724865278686e+24,"heroId":868484079862,"isAlive":true,"name":"MATT","surname":"MEDINA","className":"DEFENDER","gender":"F","accuracy":93,"attack":16,"attackInterval":13,"attackSpeed":2,"crit":0,"critMultiplier":1,"defence":39,"evasion":5,"hp":126,"regeneration":87,"totalHp":126}

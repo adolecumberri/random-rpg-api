@@ -250,8 +250,11 @@ class MysqlStorage implements StorageModule {
         }
     }
 
-    async saveBattleTeams(battleId: number, teamA: Team, teamB: Team): Promise<void> {
-        
+    async saveBattleTeams(battleId: number, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
+        await this.saveTeam(teamA);
+        await this.saveTeam(teamB);
+
+        await this.saveBattleLogs(battleId);
     }
     
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
