@@ -202,10 +202,10 @@ class MysqlStorage implements StorageModule {
         }
 
         //saving final logs
-        if (battleLogs.initialLog.battleDimension === 'Team') {
+        if (battleLogs.initialLog.battleDimension === 'Character') {
             const insertCharacterBattleLogQuery = `
-                INSERT INTO finalcharacterbattlelog (battleId, draw, winnerId, looserId, characterAId, characterBId)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO finalcharacterbattlelog (battleId, draw, winnerId, looserId, characterAId, characterAHp, characterBId, characterBHp)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `;
 
             const characterBattleLogValues = [
@@ -214,11 +214,12 @@ class MysqlStorage implements StorageModule {
                 battleLogs.finalLog.winnerId,
                 battleLogs.finalLog.looserId,
                 (battleLogs.finalLog as characterBattleLastLog).characterAId,
-                (battleLogs.finalLog as characterBattleLastLog).characterBId
+                (battleLogs.finalLog as characterBattleLastLog).characterAHp,
+                (battleLogs.finalLog as characterBattleLastLog).characterBId,
+                (battleLogs.finalLog as characterBattleLastLog).characterBHp,
             ];
 
             await this.executeQuery<ResultSetHeader>(insertCharacterBattleLogQuery, characterBattleLogValues);
-
 
         } else {
             const insertTeamBattleLogQuery = `
@@ -246,8 +247,6 @@ class MysqlStorage implements StorageModule {
 
             await this.executeQuery<ResultSetHeader>(insertTeamBattleLogQuery, teamBattleLogValues);
         }
-
-
     }
 
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
