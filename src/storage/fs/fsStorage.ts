@@ -123,8 +123,8 @@ class FileStorage implements StorageModule {
 
         if (!fs.existsSync(battleFilePath)) {
             fs.mkdirSync(battleFilePath, { recursive: true });
-            fs.mkdirSync(heroA.id.toString());
-            fs.mkdirSync(heroB.id.toString());
+            fs.mkdirSync(path.join(battleFilePath, heroA.id.toString()));
+            fs.mkdirSync(path.join(battleFilePath, heroB.id.toString()));
         }
 
         const battleDataFilePath = path.join(battleFilePath, `data.${this.fileType}`);
