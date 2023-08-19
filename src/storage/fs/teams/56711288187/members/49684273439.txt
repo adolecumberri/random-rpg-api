@@ -1,1 +1,0 @@
-{"id":49684273439,"heroId":49684273439,"isAlive":true,"name":"TAYLOR","surname":"CABRERA","className":"BERSERKER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":81,"attack":39,"attackInterval":11,"attackSpeed":2,"crit":14,"critMultiplier":1,"defence":5,"evasion":13,"hp":135,"regeneration":74,"totalHp":135}

@@ -1,1 +1,0 @@
-{"id":41995729739,"heroId":41995729739,"isAlive":true,"name":"LARO","surname":"CANO","className":"ARCHER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":90,"attack":26,"attackInterval":7,"attackSpeed":2,"crit":44,"critMultiplier":30,"defence":6,"evasion":37,"hp":96,"regeneration":51,"totalHp":96}

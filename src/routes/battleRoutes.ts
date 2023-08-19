@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
-import { BATTLES_IDS_REQUESTED, HEROES_NAMES, HEROES_URL, TEAMS_URL } from '../constants';
-import { createHero } from '../controllers';
-import { HeroIdentity, requestHero } from '../types';
-import { AttackRecord, Battle } from 'rpg-ts';
+import { BATTLES_IDS_REQUESTED, HEROES_URL, TEAMS_URL } from '../constants';
+import { b, createHero, createTeam } from '../controllers';
+import { requestHero, teamReqBody, parsedHeroTypes } from '../types';
+import { Battle } from 'rpg-ts';
 import { moduleHandler } from '../storage/storageConfguration';
 
 const battleRouter = Router();
@@ -16,9 +16,49 @@ const battleRouter = Router();
  *          /
  *          /id_a/id_b
  */
-battleRouter.post(`${TEAMS_URL}`, (req: Request, res: Response) => {
+battleRouter.post(`${TEAMS_URL}`, (req: Request<{},{}, {teamA: teamReqBody, teamB: teamReqBody}>, res: Response) => {
 
-    res.send('battle teams /, canela.');
+    let { teamA, teamB } = req.body;
+
+    const defaultTeam = {
+        name: "team",
+        totalHeroes: 1,
+        heroTypes: '{}'
+    }
+
+    // Team A
+    let nameA = teamA?.name || defaultTeam.name; 
+    let totalHeroesA = teamA?.totalHeroes || defaultTeam.totalHeroes;
+    let heroTypesA: string | parsedHeroTypes = teamA?.heroTypes || defaultTeam.heroTypes;
+
+    try {
+        heroTypesA = JSON.parse(heroTypesA) as parsedHeroTypes;
+    } catch (error) {
+        return res.status(400).json({ error });
+    }
+    totalHeroesA = Number(totalHeroesA);
+    let teamACreated = createTeam(nameA, totalHeroesA, heroTypesA);
+
+    // Team B
+    let nameB = teamB?.name || defaultTeam.name; 
+    let totalHeroesB = teamB?.totalHeroes || defaultTeam.totalHeroes;
+    let heroTypesB: string | parsedHeroTypes = teamB?.heroTypes || defaultTeam.heroTypes;
+
+    try {
+        heroTypesB = JSON.parse(heroTypesB) as parsedHeroTypes;
+    } catch (error) {
+        return res.status(400).json({ error: 'Wrong JSON format for heroTypes' });
+    }
+    totalHeroesB = Number(totalHeroesB);
+    let teamBCreated = createTeam(nameB, totalHeroesB, heroTypesB);
+
+    // Battle.
+    b.setBattleType('INTERVAL_BASED');
+    const battleId = b.runBattle(teamACreated, teamBCreated);
+
+    moduleHandler.getModule().saveBattleTeams(battleId, teamACreated, teamBCreated);
+
+    res.json(battleId);
 });
 
 battleRouter.get(`${TEAMS_URL}${BATTLES_IDS_REQUESTED}`, (req: Request, res: Response) => {
@@ -37,7 +77,6 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
         heroB ? heroB.options : undefined
     );
 
-    let b = new Battle();
     b.setBattleType('INTERVAL_BASED');
 
    const solutionId = b.runBattle(newHeroA, newHeroB);
@@ -67,7 +106,7 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
         }
     }
 
-    await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+    await moduleHandler.getModule().saveBattleHeroes(solutionId, newHeroA, newHeroB);
 
     res.json(solution);
 });
@@ -91,7 +130,7 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
 
     const solutionId = b.runBattle(newHeroA, newHeroB);
 
-    moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+    moduleHandler.getModule().saveBattleHeroes(solutionId, newHeroA, newHeroB);
     const solution = {
         id: solutionId,
         initialLog: b.logs.get(solutionId)?.initialLog,

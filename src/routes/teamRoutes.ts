@@ -1,20 +1,25 @@
 // routes/heroRoutes.ts
 import { Router, Request, Response } from 'express';
 import { createTeam } from '../controllers';
-import { HEROES_NAMES, URL_CREATE, URL_RESTORE } from '../constants';
+import { URL_CREATE, URL_RESTORE } from '../constants';
 import { moduleHandler } from '../storage/storageConfguration';
+import { teamReqBody, parsedHeroTypes } from '../types';
 
 const teamRouter = Router();
 
-teamRouter.post(URL_CREATE, async (req: Request, res: Response) => {
-    let { name, totalHeroes, heroTypes = '{}' } = req.body;
+teamRouter.post(URL_CREATE, async (req: Request<{}, {}, teamReqBody>, res: Response) => {
+    let { name = "team", totalHeroes = 1, heroTypes = '{}' } = req.body;
 
-    const parsedHeroTypes: { [x in keyof typeof HEROES_NAMES]?: number } = JSON.parse(heroTypes);
-
+    let parsedHeroTypes: parsedHeroTypes;
+    try {
+        parsedHeroTypes = JSON.parse(heroTypes);
+    } catch (error) {
+        return res.status(400).json({ error: 'Wrong JSON format for heroTypes' });
+    }
     totalHeroes = Number(totalHeroes);
+    let teamCreated = createTeam(name, totalHeroes, parsedHeroTypes);
 
-     try {
-        let teamCreated = createTeam(name, totalHeroes, parsedHeroTypes);
+    try {
 
         await moduleHandler.getModule().saveTeam(teamCreated);
 

@@ -2,10 +2,11 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
 import { Hero } from '../../types';
-import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, TotalActionRecord, characterBattleLastLog, teamBattleLastLog } from 'rpg-ts';
+import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, characterBattleLastLog, teamBattleLastLog } from 'rpg-ts';
 import { rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableteams } from './mysqlStorageTypes';
 import { HEROES_NAMES } from '../../constants';
 import { restoreHero } from './mysqlStorageUtils';
+import { b } from '../../controllers';
 
 class MysqlStorage implements StorageModule {
 
@@ -150,15 +151,15 @@ class MysqlStorage implements StorageModule {
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
-    async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
-        let a = await this.saveHero(heroA);
-        let b = await this.saveHero(heroB);
+    async saveBattleHeroes(battleId: number, heroA: Hero, heroB: Hero): Promise<void> {
+        let ha = await this.saveHero(heroA);
+        let hb = await this.saveHero(heroB);
 
-        let c = await this.saveBattleLogs(battleId, battle);
+        let c = await this.saveBattleLogs(battleId);
     }
 
-    async saveBattleLogs(battleId: number, battle: Battle) {
-        const battleLogs = battle.logs.get(battleId);
+    async saveBattleLogs(battleId: number) {
+        const battleLogs = b.logs.get(battleId);
 
         if (!battleLogs) {
             throw new Error('Battle logs not found');
@@ -249,6 +250,10 @@ class MysqlStorage implements StorageModule {
         }
     }
 
+    async saveBattleTeams(battleId: number, teamA: Team, teamB: Team): Promise<void> {
+        
+    }
+    
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
         const { defenceType, damageReceived, characterId, attackerId, id } = defenceRecord;
 

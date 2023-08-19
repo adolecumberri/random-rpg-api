@@ -3,6 +3,7 @@ import path from 'path';
 import StorageModule from './../storageModule';
 import { BaseCharacter, Battle, Team } from 'rpg-ts';
 import { Hero } from '../../types';
+import { b } from '../../controllers';
 
 class FileStorage implements StorageModule {
     fileType: string = 'txt';
@@ -118,7 +119,7 @@ class FileStorage implements StorageModule {
         return team;
     }
     
-    async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
+    async saveBattleHeroes(battleId: number, heroA: Hero, heroB: Hero): Promise<void> {
         const battleFilePath = path.join(this.battleFilePath, battleId.toString());
 
         if (!fs.existsSync(battleFilePath)) {
@@ -128,7 +129,7 @@ class FileStorage implements StorageModule {
         }
 
         const battleDataFilePath = path.join(battleFilePath, `data.${this.fileType}`);
-        fs.writeFileSync(battleDataFilePath, battle.serialize());
+        fs.writeFileSync(battleDataFilePath, b.serialize());
 
         const heroAFilePath = path.join(battleFilePath, heroA.id.toString(), `data.${this.fileType}`);
         fs.writeFileSync(heroAFilePath, heroA.serialize());
@@ -138,6 +139,9 @@ class FileStorage implements StorageModule {
 
     }
 
+    async saveBattleTeams(battleId: number, teamA: Team, teamB: Team): Promise<void> {
+        
+    }
 
 
 }

@@ -1,1 +1,0 @@
-{"id":2314370358,"heroId":2314370358,"isAlive":true,"name":"IULIAN","surname":"COBO","className":"ARCHER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":97,"attack":21,"attackInterval":8,"attackSpeed":2,"crit":42,"critMultiplier":29,"defence":7,"evasion":30,"hp":99,"regeneration":58,"totalHp":99}

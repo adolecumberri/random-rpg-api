@@ -1,1 +1,0 @@
-{"id":608038533442,"heroId":608038533442,"isAlive":true,"name":"LOUAY","surname":"CAMACHO","className":"BERSERKER","gender":"F","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":92,"attack":39,"attackInterval":11,"attackSpeed":2,"crit":16,"critMultiplier":1,"defence":4,"evasion":14,"hp":159,"regeneration":87,"totalHp":159}

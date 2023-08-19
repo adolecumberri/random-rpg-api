@@ -1,1 +1,0 @@
-{"id":352847302494,"heroId":352847302494,"isAlive":true,"name":"IYAD","surname":"ROMERO","className":"ARCHER","gender":"M","actionRecordAttacks":[],"actionRecordDefences":[],"accuracy":74,"attack":25,"attackInterval":7,"attackSpeed":2,"crit":35,"critMultiplier":33,"defence":6,"evasion":38,"hp":91,"regeneration":55,"totalHp":91}
