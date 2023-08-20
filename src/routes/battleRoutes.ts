@@ -16,8 +16,7 @@ const battleRouter = Router();
  *          /
  *          /id_a/id_b
  */
-battleRouter.post(`${TEAMS_URL}`, (req: Request<{},{}, {teamA: teamReqBody, teamB: teamReqBody}>, res: Response) => {
-
+battleRouter.post(`${TEAMS_URL}`, async (req: Request<{}, {}, { teamA: teamReqBody, teamB: teamReqBody }>, res: Response) => {
     let { teamA, teamB } = req.body;
 
     const defaultTeam = {
@@ -27,7 +26,7 @@ battleRouter.post(`${TEAMS_URL}`, (req: Request<{},{}, {teamA: teamReqBody, team
     }
 
     // Team A
-    let nameA = teamA?.name || defaultTeam.name; 
+    let nameA = teamA?.name || defaultTeam.name;
     let totalHeroesA = teamA?.totalHeroes || defaultTeam.totalHeroes;
     let heroTypesA: string | parsedHeroTypes = teamA?.heroTypes || defaultTeam.heroTypes;
 
@@ -40,7 +39,7 @@ battleRouter.post(`${TEAMS_URL}`, (req: Request<{},{}, {teamA: teamReqBody, team
     let teamACreated = createTeam(nameA, totalHeroesA, heroTypesA);
 
     // Team B
-    let nameB = teamB?.name || defaultTeam.name; 
+    let nameB = teamB?.name || defaultTeam.name;
     let totalHeroesB = teamB?.totalHeroes || defaultTeam.totalHeroes;
     let heroTypesB: string | parsedHeroTypes = teamB?.heroTypes || defaultTeam.heroTypes;
 
@@ -56,9 +55,9 @@ battleRouter.post(`${TEAMS_URL}`, (req: Request<{},{}, {teamA: teamReqBody, team
     b.setBattleType('INTERVAL_BASED');
     const battleId = b.runBattle(teamACreated, teamBCreated);
 
-    console.log({battleId, initial: b.logs.get(battleId)?.initialLog});
+    console.log({ battleId, initial: b.logs.get(battleId)?.initialLog });
 
-    moduleHandler.getModule().saveBattleTeams(battleId, teamACreated, teamBCreated);
+    await moduleHandler.getModule().saveBattleTeams(battleId, teamACreated, teamBCreated);
 
     res.json(battleId);
 });
@@ -81,7 +80,7 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
 
     b.setBattleType('INTERVAL_BASED');
 
-   const solutionId = b.runBattle(newHeroA, newHeroB);
+    const solutionId = b.runBattle(newHeroA, newHeroB);
 
     const solution = {
         id: solutionId,
@@ -117,12 +116,12 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
     const newHeroA = await moduleHandler.getModule().getHeroById(Number(req.params.idA));
     const newHeroB = await moduleHandler.getModule().getHeroById(Number(req.params.idB));
 
-    if(!newHeroA) {
+    if (!newHeroA) {
         res.status(404).json({ error: `Hero:${req.params.idA} not found.` });
         return;
-    } 
-    
-    if(!newHeroB) {
+    }
+
+    if (!newHeroB) {
         res.status(404).json({ error: `Hero:${req.params.idB} not found.` });
         return;
     }

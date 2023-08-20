@@ -152,7 +152,7 @@ class FileStorage implements StorageModule {
 
     async saveBattleTeams(battleId: number, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
         const battleFilePath = this.createRoute(path.join(this.battleFilePath, battleId.toString()));
-        
+
         if (!fs.existsSync(battleFilePath)) {
             fs.mkdirSync(battleFilePath, { recursive: true });
         }
@@ -162,9 +162,7 @@ class FileStorage implements StorageModule {
 
         this.saveTeam(teamA, "battle\\" + battleId.toString() );
         this.saveTeam(teamB, "battle\\" + battleId.toString() );
-
     }
-
 
 }
 
