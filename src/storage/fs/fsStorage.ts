@@ -3,7 +3,6 @@ import path from 'path';
 import StorageModule from './../storageModule';
 import { BaseCharacter, Battle, Team } from 'rpg-ts';
 import { Hero } from '../../types';
-import { b } from '../../controllers';
 
 const DIRS = {
     HEROES: 'heroes',
@@ -75,7 +74,6 @@ class FileStorage implements StorageModule {
     }
 
     async saveTeam(team: Team<Hero>, rootPath: string = ''): Promise<void> {
-        console.log({rootPath})
         const teamFolderPath = this.createRoute(path.join(rootPath, this.teamFilePath, team.id.toString()));
         const membersFolderPath = path.join(teamFolderPath, 'members');
 
@@ -130,7 +128,7 @@ class FileStorage implements StorageModule {
         return team;
     }
     
-    async saveBattleHeroes(battleId: number, heroA: Hero, heroB: Hero): Promise<void> {
+    async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void> {
         const battleFilePath = this.createRoute(path.join(this.battleFilePath, battleId.toString()));
 
         if (!fs.existsSync(battleFilePath)) {
@@ -140,7 +138,7 @@ class FileStorage implements StorageModule {
         }
 
         const battleDataFilePath = path.join(battleFilePath, `data.${this.fileType}`);
-        fs.writeFileSync(battleDataFilePath, b.serialize());
+        fs.writeFileSync(battleDataFilePath, battle.serialize());
 
         const heroAFilePath = path.join(battleFilePath, heroA.id.toString(), `data.${this.fileType}`);
         fs.writeFileSync(heroAFilePath, heroA.serialize());
@@ -150,7 +148,7 @@ class FileStorage implements StorageModule {
 
     }
 
-    async saveBattleTeams(battleId: number, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
+    async saveBattleTeams(battleId: number, battle: Battle, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
         const battleFilePath = this.createRoute(path.join(this.battleFilePath, battleId.toString()));
 
         if (!fs.existsSync(battleFilePath)) {
@@ -158,7 +156,7 @@ class FileStorage implements StorageModule {
         }
         // save data Battle:
         const battleDataFilePath = path.join(battleFilePath, `data.${this.fileType}`);
-        fs.writeFileSync(battleDataFilePath, b.serialize());
+        fs.writeFileSync(battleDataFilePath, battle.serialize());
 
         this.saveTeam(teamA, "battle\\" + battleId.toString() );
         this.saveTeam(teamB, "battle\\" + battleId.toString() );

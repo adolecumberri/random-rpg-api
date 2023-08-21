@@ -6,7 +6,6 @@ import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, cha
 import { rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableteams } from './mysqlStorageTypes';
 import { HEROES_NAMES } from '../../constants';
 import { restoreHero } from './mysqlStorageUtils';
-import { b } from '../../controllers';
 
 class MysqlStorage implements StorageModule {
 
@@ -29,10 +28,6 @@ class MysqlStorage implements StorageModule {
     async executeQuery<T>(query: string, values?: any[]): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             try {
-                console.log({
-                    query,
-                    values
-                })
                 values ? mysqlClient.execute(query, values, (err, result) => {
                     if (err) throw (err);
                     resolve(result as unknown as T);
@@ -151,15 +146,15 @@ class MysqlStorage implements StorageModule {
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
-    async saveBattleHeroes(battleId: number, heroA: Hero, heroB: Hero): Promise<void> {
+    async saveBattleHeroes(battleId: number, battle: Battle,  heroA: Hero, heroB: Hero): Promise<void> {
         let ha = await this.saveHero(heroA);
         let hb = await this.saveHero(heroB);
 
-        let c = await this.saveBattleLogs(battleId);
+        let c = await this.saveBattleLogs(battleId, battle);
     }
 
-    async saveBattleLogs(battleId: number) {
-        const battleLogs = b.logs.get(battleId);
+    async saveBattleLogs(battleId: number, battle: Battle) {
+        const battleLogs = battle.logs.get(battleId);
 
         if (!battleLogs) {
             throw new Error('Battle logs not found');
@@ -177,12 +172,6 @@ class MysqlStorage implements StorageModule {
         // saving battle logs.
         try {
             await Promise.all(battleLogs.logs.map(async (log) => {
-                if (!log.idDefenceRecord || !log.idAttackRecord) {
-                    console.log({
-                        idDefenceRecord: log.idDefenceRecord,
-                        idAttackRecord: log.idAttackRecord
-                    })
-                }
                 const insertBattleLogQuery = `INSERT INTO battlelogs (battleId, intervalOfTurn, idAttackRecord, idDefenceRecord, attackerId, defenderId, attackerHp, defenderHp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
                 const battleLogsValues = [
                     battleLogs.initialLog.battleId,
@@ -250,11 +239,11 @@ class MysqlStorage implements StorageModule {
         }
     }
 
-    async saveBattleTeams(battleId: number, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
+    async saveBattleTeams(battleId: number,  battle: Battle, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
         await this.saveTeam(teamA);
         await this.saveTeam(teamB);
 
-        await this.saveBattleLogs(battleId);
+        await this.saveBattleLogs(battleId, battle);
     }
     
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
@@ -267,20 +256,15 @@ class MysqlStorage implements StorageModule {
     }
 
     async saveHero(hero: Hero): Promise<any> {
-        console.log('Saving character in the database');
-
         try {
             const values = 'characterId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
             const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}', '${hero.skill.probability}'`;
             const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
-            console.log(query);
             const solution = await this.executeQuery<any>(query);
 
             if (hero.actionRecord) {
                 await this.saveActionRecord(hero.actionRecord);
             }
-
-            console.log('Character saved in the database');
             return solution;
         } catch (error) {
             console.error('Error while saving character:', error);

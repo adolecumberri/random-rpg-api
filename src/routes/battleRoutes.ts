@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { BATTLES_IDS_REQUESTED, HEROES_URL, TEAMS_URL } from '../constants';
-import { b, createHero, createTeam } from '../controllers';
+import { createHero, createTeam } from '../controllers';
 import { requestHero, teamReqBody, parsedHeroTypes } from '../types';
 import { Battle } from 'rpg-ts';
 import { moduleHandler } from '../storage/storageConfguration';
@@ -52,12 +52,11 @@ battleRouter.post(`${TEAMS_URL}`, async (req: Request<{}, {}, { teamA: teamReqBo
     let teamBCreated = createTeam(nameB, totalHeroesB, heroTypesB);
 
     // Battle.
+    let b = new Battle();
     b.setBattleType('INTERVAL_BASED');
     const battleId = b.runBattle(teamACreated, teamBCreated);
 
-    console.log({ battleId, initial: b.logs.get(battleId)?.initialLog });
-
-    await moduleHandler.getModule().saveBattleTeams(battleId, teamACreated, teamBCreated);
+    await moduleHandler.getModule().saveBattleTeams(battleId, b, teamACreated, teamBCreated);
 
     res.json(battleId);
 });
@@ -78,6 +77,7 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
         heroB ? heroB.options : undefined
     );
 
+    let b = new Battle();
     b.setBattleType('INTERVAL_BASED');
 
     const solutionId = b.runBattle(newHeroA, newHeroB);
@@ -107,9 +107,13 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
         }
     }
 
-    await moduleHandler.getModule().saveBattleHeroes(solutionId, newHeroA, newHeroB);
-
-    res.json(solution);
+    await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+debugger;
+    res.json({
+        rawLogs: b.logs.size,
+        battleId: solutionId,
+        theoricalGoodLogs: b.logs.get(solutionId)?.logs,
+    });
 });
 
 battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, res: Response) => {
@@ -131,7 +135,7 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
 
     const solutionId = b.runBattle(newHeroA, newHeroB);
 
-    moduleHandler.getModule().saveBattleHeroes(solutionId, newHeroA, newHeroB);
+    moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
     const solution = {
         id: solutionId,
         initialLog: b.logs.get(solutionId)?.initialLog,

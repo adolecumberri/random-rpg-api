@@ -2,8 +2,8 @@ import { Battle, Team } from "rpg-ts";
 import { Hero } from "../types";
 
 interface StorageModule {
-  saveBattleTeams(battleId: number, teamA: Team, TeamB: Team): Promise<void>;
-  saveBattleHeroes(battleId: number, heroA: Hero, heroB: Hero): Promise<void>;
+  saveBattleTeams(battleId: number, battle: Battle, teamA: Team, TeamB: Team): Promise<void>;
+  saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero): Promise<void>;
   saveHero(Hero: Hero): Promise<void>;
   saveHeroes(Heroes: Hero[]): Promise<void>;
   saveTeam(team: Team): Promise<void>;

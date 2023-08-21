@@ -16,6 +16,7 @@ teamRouter.post(URL_CREATE, async (req: Request<{}, {}, teamReqBody>, res: Respo
     } catch (error) {
         return res.status(400).json({ error: 'Wrong JSON format for heroTypes' });
     }
+
     totalHeroes = Number(totalHeroes);
     let teamCreated = createTeam(name, totalHeroes, parsedHeroTypes);
 

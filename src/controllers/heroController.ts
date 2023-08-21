@@ -45,6 +45,9 @@ const createHeroes = (totalHeroes: number, heroTypes: { [x in keyof typeof HEROE
         if (count) {
             for (let i = 0; i < count; i++) {
                 const createHeroFunc = heroFactory[heroType.toLocaleUpperCase() as keyof typeof HEROES_NAMES];
+
+                if(!createHeroFunc) throw new Error(`Hero type ${heroType} not found`);
+
                 const character = createHeroFunc({} as HeroIdentity);
                 heroList.push(character);
             }
