@@ -1,3 +1,5 @@
+import { type } from "os";
+import { Stats } from "rpg-ts";
 
 type rowOfTableHeroes = {
     id: number;
@@ -6,19 +8,31 @@ type rowOfTableHeroes = {
     surname: string;
     gender: string;
     className: string;
-    hp: number;
-    totalHp: number;
-    attack: number;
-    defence: number;
-    crit: number;
-    critMultiplier: number;
-    accuracy: number;
-    evasion: number;
-    attackInterval: number;
-    regeneration: number;
-    isAlive: number;
-    skillProbability: number;
+    isAlive: boolean;
+    level: number;
 }
+
+type rowOfTableStats = Stats & {
+    skillProbability: number
+    id: number;
+    heroId: number;
+    originalStats: number;
+
+};
+
+interface heroWithStatsFromTable {
+    id: number;
+    heroId: number;
+    name: string;
+    surname: string;
+    gender: string;
+    className: string;
+    isAlive: boolean;
+    level: number;
+    stats: rowOfTableStats,
+    originalStats: rowOfTableStats
+  }
+
 
 type rowOfTableteams = {
     id: number; 
@@ -48,6 +62,8 @@ export {
     rowOfTableHeroes,
     rowOfTableteams,
     rowOfAttackRecord,
-    rowOfDefenceRecord
+    rowOfDefenceRecord,
+    rowOfTableStats,
+    heroWithStatsFromTable
 }
 

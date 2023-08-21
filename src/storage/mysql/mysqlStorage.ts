@@ -2,8 +2,8 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import StorageModule from './../storageModule';
 import mysqlClient from './dbConfig';
 import { Hero } from '../../types';
-import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Team, characterBattleLastLog, teamBattleLastLog } from 'rpg-ts';
-import { rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableteams } from './mysqlStorageTypes';
+import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Stats, Team, characterBattleLastLog, teamBattleLastLog } from 'rpg-ts';
+import { heroWithStatsFromTable, rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableStats, rowOfTableteams } from './mysqlStorageTypes';
 import { HEROES_NAMES } from '../../constants';
 import { restoreHero } from './mysqlStorageUtils';
 
@@ -47,18 +47,20 @@ class MysqlStorage implements StorageModule {
             const heroQuery = `SELECT * FROM Heroes WHERE characterId = ${id}`;
             const attackRecordQuery = `SELECT * FROM attackRecord WHERE characterId = ${id}`;
             const defenceRecordQuery = `SELECT * FROM defenceRecord WHERE characterId = ${id}`;
+            const statsQuery = `SELECT * FROM heroesstats WHERE heroId = ${id} ORDER BY originalStats ASC;`;
 
-            const [heroResult, attackRecordResult, defenceRecordResult] = await Promise.all([
+            const [heroResult, attackRecordResult, defenceRecordResult, statsResult] = await Promise.all([
                 this.executeQuery<rowOfTableHeroes[]>(heroQuery),
                 this.executeQuery<rowOfAttackRecord[]>(attackRecordQuery),
                 this.executeQuery<rowOfDefenceRecord[]>(defenceRecordQuery),
+                this.executeQuery<rowOfTableStats[]>(statsQuery)
             ]);
 
             if (heroResult.length === 0) {
                 return null;
             }
 
-            const hero = this.restoreStoredHero(heroResult[0] as rowOfTableHeroes);
+            const hero = this.restoreStoredHero({...heroResult[0], stats: statsResult[0], originalStats: statsResult[1]});
 
             // Process the attack records
             const attackRecords: AttackRecord[] = attackRecordResult.map((row) => ({
@@ -102,10 +104,11 @@ class MysqlStorage implements StorageModule {
             id: teamRow.teamId, //this id is the one that the Team creates the first time it's created
         });
 
-        const membersQuery = `SELECT h.* FROM heroes h
-                             JOIN teams_heroes th ON h.id = th.heroId
+        const membersQuery = `SELECT h.*, hs.* FROM heroes h
+                             INNER JOIN heroesstats hs ON h.characterId = hs.heroId
+                             JOIN teams_heroes th ON h.characterId = th.heroId
                              WHERE th.teamId = ${teamRow.id}`;
-        const membersResult = await this.executeQuery<rowOfTableHeroes[]>(membersQuery);
+        const membersResult = await this.executeQuery<heroWithStatsFromTable[]>(membersQuery);
 
         // Process heroes
         for (const heroRow of membersResult) {
@@ -116,7 +119,7 @@ class MysqlStorage implements StorageModule {
         return team;
     }
 
-    restoreStoredHero = (storedHero: rowOfTableHeroes): Hero => {
+    restoreStoredHero = (storedHero: heroWithStatsFromTable): Hero => {
         const createHeroFunc = restoreHero[storedHero.className.toUpperCase() as keyof typeof HEROES_NAMES];
         return createHeroFunc(storedHero);
     }
@@ -257,10 +260,19 @@ class MysqlStorage implements StorageModule {
 
     async saveHero(hero: Hero): Promise<any> {
         try {
-            const values = 'characterId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
-            const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}', '${hero.skill.probability}'`;
+            const values = 'characterId, name, surname, gender, className, isAlive';
+            const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${Number(hero.isAlive)}'`;
             const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
             const solution = await this.executeQuery<any>(query);
+
+            if (solution.insertId) {
+                const statsQuery = `INSERT INTO heroesstats (heroId, originalStats, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, skillProbability) 
+                                   VALUES (${hero.id}, 0, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${hero.skill.probability}'), 
+                                          (${hero.id}, 1, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${hero.skill.probability}')`;
+                
+                // Insertar estadísticas actuales y originales en la tabla `heroes_stats`
+                await this.executeQuery<any>(statsQuery);
+            }
 
             if (hero.actionRecord) {
                 await this.saveActionRecord(hero.actionRecord);
@@ -275,11 +287,22 @@ class MysqlStorage implements StorageModule {
     async saveHeroes(heroes: Hero[]): Promise<void> {
         try {
             await Promise.all(heroes.map(async (hero) => {
-                const values = 'heroId, name, surname, gender, className, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, isAlive, skillProbability';
-                const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${Number(hero.isAlive)}'`;
+                const values = 'characterId, name, surname, gender, className, isAlive, skillProbability';
+                const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${Number(hero.isAlive)}', '${hero.skill.probability}'`;
                 const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
-
-                await this.executeQuery(query)
+                const solution = await this.executeQuery<any>(query);
+    
+                console.log({
+                    solution
+                })
+                if (solution.insertId || solution) {
+                    const statsQuery = `INSERT INTO heroes_stats (heroId, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, originalStats) 
+                                       VALUES (${hero.id}, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', 0), 
+                                              (${hero.id}, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', 1)`;
+                    
+                    // Insertar estadísticas actuales y originales en la tabla `heroes_stats`
+                    const statsInsertResult = await this.executeQuery<any>(statsQuery);
+                }
             }));
         } catch (error) {
             console.error('Error while saving heroes:', error);

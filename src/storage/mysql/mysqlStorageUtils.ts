@@ -1,76 +1,73 @@
 import { CharacterCallbacks, Character } from "rpg-ts";
 import { haste, rage, skipeShield, riposte, tripleAttack, holyLight, unoticedShot, shieldGesture, fervor } from "../../heroes/skills";
-import { rowOfTableHeroes } from "./mysqlStorageTypes";
+import { heroWithStatsFromTable, rowOfTableHeroes, rowOfTableStats } from "./mysqlStorageTypes";
 import { HEROES_NAMES } from "../../constants";
 import { Hero } from "../../types";
 
-function restoreCharacter(storedHero: rowOfTableHeroes, callbacks: CharacterCallbacks){
+function restoreCharacter(storedHero: heroWithStatsFromTable, callbacks: CharacterCallbacks){
+
+    let { stats, originalStats, ...storedHeroRest } = storedHero;
+
+    let { skillProbability: sp, id: _idA, heroId: _hIdA, originalStats: _osA, ...restStats } = stats;
+    let { skillProbability: _spB, id: _idB, heroId: _hIdB, originalStats: _osB, ...restOriginalStats } = originalStats;
+
+
     return new Character({
-        name: storedHero.name,
-        surname: storedHero.surname,
-        gender: storedHero.gender,
+        name: storedHeroRest.name,
+        surname: storedHeroRest.surname,
+        gender: storedHeroRest.gender,
         skill: {
-            probability: storedHero.skillProbability,
+            probability: sp,
         },
         isAlive: storedHero.isAlive,
-        id: storedHero.heroId,
-        className: storedHero.className,
+        id: storedHeroRest.heroId,
+        className: storedHeroRest.className,
         statusManager: true,
         actionRecord: true,
         callbacks,
-        stats: {
-            hp: storedHero.hp,
-            totalHp: storedHero.totalHp,
-            attack: storedHero.attack,
-            defence: storedHero.defence,
-            crit: storedHero.crit,
-            critMultiplier: storedHero.critMultiplier,
-            accuracy: storedHero.accuracy,
-            evasion: storedHero.evasion,
-            attackInterval: storedHero.attackInterval,
-            regeneration: storedHero.regeneration,
-        },
+        originalStats: {...restOriginalStats},
+        stats: {...restStats}
     }) as Hero;
 }
 
-const restoreArcher = (storedHero: rowOfTableHeroes) => {
+const restoreArcher = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         criticalAttack: haste,
         normalAttack: haste,
     });
 }
 
-const restoreBerserk = (storedHero: rowOfTableHeroes) => {
+const restoreBerserk = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         receiveDamage: rage,
     });
 }
 
-const restoreDefender = (storedHero: rowOfTableHeroes) => {
+const restoreDefender = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterAnyDefence: skipeShield,
     });
 }
 
-const restoreFencer = (storedHero: rowOfTableHeroes) => {
+const restoreFencer = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterAnyDefence: riposte,
     });
 }
 
-const restoreNinja = (storedHero: rowOfTableHeroes) => {
+const restoreNinja = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterAnyAttack: tripleAttack,
     });
 };
 
-const restorePaladin = (storedHero: rowOfTableHeroes) => {
+const restorePaladin = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterTurn: holyLight,
     });
 };
 
-const restoreSniper = (storedHero: rowOfTableHeroes) => {
+const restoreSniper = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         beforeBattle: unoticedShot,
         afterBattle: (c: Character) => {
@@ -79,13 +76,13 @@ const restoreSniper = (storedHero: rowOfTableHeroes) => {
     });
 };
 
-const restoreSoldier = (storedHero: rowOfTableHeroes) => {
+const restoreSoldier = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterTurn: shieldGesture,
     });
 };
 
-const restoreThieve = (storedHero: rowOfTableHeroes) => {
+const restoreThieve = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         receiveDamage: fervor,
     });
