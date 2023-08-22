@@ -107,7 +107,7 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
         }
     }
 
-    await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+    await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB, false);
 debugger;
     res.json({
         rawLogs: b.logs.size,
@@ -119,6 +119,11 @@ debugger;
 battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, res: Response) => {
     const newHeroA = await moduleHandler.getModule().getHeroById(Number(req.params.idA));
     const newHeroB = await moduleHandler.getModule().getHeroById(Number(req.params.idB));
+
+    console.log({
+        newHeroA,
+        newHeroB
+    })
 
     if (!newHeroA) {
         res.status(404).json({ error: `Hero:${req.params.idA} not found.` });
@@ -135,7 +140,9 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
 
     const solutionId = b.runBattle(newHeroA, newHeroB);
 
-    moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB);
+    
+
+    await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB, true);
     const solution = {
         id: solutionId,
         initialLog: b.logs.get(solutionId)?.initialLog,

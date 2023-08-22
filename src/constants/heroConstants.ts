@@ -12,8 +12,9 @@ const HEROES_NAMES = {
     THIEVE: 'THIEVE',
 } as const;
 
-const COMMON_STATS: Omit<Stats, 'totalHp'> = {
+const COMMON_STATS: Stats = {
     "hp": 70,
+    "totalHp": 70,
     "attack": 10,
     "defence": 7,
     "crit": 10,
@@ -26,10 +27,11 @@ const COMMON_STATS: Omit<Stats, 'totalHp'> = {
 };
 
 const CLASSES_STATS: {
-    [x in keyof typeof HEROES_NAMES]: Omit<Stats, 'totalHp'>
+    [x in keyof typeof HEROES_NAMES]: Stats
   } = {
     [HEROES_NAMES.ARCHER]: {
       hp: 18,
+      totalHp: 18,
       attack: 13,
       defence: -1,
       crit: 30,
@@ -42,6 +44,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.BERSERKER]: {
       hp: 70,
+      totalHp: 70,
       attack: 25,
       defence: -2,
       crit: 5,
@@ -54,6 +57,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.DEFENDER]: {
       hp: 42,
+      totalHp: 42,
       attack: 6,
       defence: 31,
       crit: -10,
@@ -66,6 +70,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.FENCER]: {
       hp: 34,
+      totalHp: 34,
       attack: 16,
       defence: 11,
       crit: 10,
@@ -78,6 +83,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.NINJA]: {
       hp: -28,
+      totalHp:-28,
       attack: 14,
       defence: -2,
       crit: 40,
@@ -90,6 +96,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.PALADIN]: {
       hp: 50,
+      totalHp: 50,
       attack: 19,
       defence: 21,
       crit: 10,
@@ -102,6 +109,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.SNIPER]: {
       hp: 5,
+      totalHp: 5,
       attack: 33,
       defence: -2,
       crit: 70,
@@ -114,6 +122,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.SOLDIER]: {
       hp: 35,
+      totalHp: 35,
       attack: 21,
       defence: 16,
       crit: 20,
@@ -126,6 +135,7 @@ const CLASSES_STATS: {
     },
     [HEROES_NAMES.THIEVE]: {
       hp: 25,
+      totalHp: 25,
       attack: 14,
       defence: 3,
       crit: 42,

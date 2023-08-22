@@ -6,6 +6,7 @@ import { ActionRecord, AttackRecord, Battle, Character, DefenceRecord, Stats, Te
 import { heroWithStatsFromTable, rowOfAttackRecord, rowOfDefenceRecord, rowOfTableHeroes, rowOfTableStats, rowOfTableteams } from './mysqlStorageTypes';
 import { HEROES_NAMES } from '../../constants';
 import { restoreHero } from './mysqlStorageUtils';
+import { controlHeroStats } from '../../helpers';
 
 class MysqlStorage implements StorageModule {
 
@@ -42,6 +43,18 @@ class MysqlStorage implements StorageModule {
         });
     }
 
+    async getAttackRecordByHeroId(heroId: number) {
+        console.log("heroId_2", heroId);
+
+        const query = `SELECT * FROM attackrecord WHERE characterId like ${heroId}`;
+        return await this.executeQuery<rowOfAttackRecord[]>(query); // a drede que no haya await
+    }
+
+    async getDefenceRecordByHeroId(heroId: number) {
+        const query = `SELECT * FROM defencerecord WHERE characterId like ${heroId}`;
+        return await this.executeQuery<rowOfDefenceRecord[]>(query);
+    }
+
     async getHeroById(id: number): Promise<Hero | null> {
         try {
             const heroQuery = `SELECT * FROM Heroes WHERE characterId = ${id}`;
@@ -60,7 +73,7 @@ class MysqlStorage implements StorageModule {
                 return null;
             }
 
-            const hero = this.restoreStoredHero({...heroResult[0], stats: statsResult[0], originalStats: statsResult[1]});
+            const hero = this.restoreStoredHero({ ...heroResult[0], stats: statsResult[0], originalStats: statsResult[1] });
 
             // Process the attack records
             const attackRecords: AttackRecord[] = attackRecordResult.map((row) => ({
@@ -149,9 +162,14 @@ class MysqlStorage implements StorageModule {
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
 
-    async saveBattleHeroes(battleId: number, battle: Battle,  heroA: Hero, heroB: Hero): Promise<void> {
-        let ha = await this.saveHero(heroA);
-        let hb = await this.saveHero(heroB);
+    async saveBattleHeroes(battleId: number, battle: Battle, heroA: Hero, heroB: Hero, alreadyExist: boolean): Promise<void> {
+        if (!alreadyExist) {
+            let ha = await this.saveHero(heroA);
+            let hb = await this.saveHero(heroB);
+        } else {
+            await this.updateHero(heroA);
+            await this.updateHero(heroB);
+        }
 
         let c = await this.saveBattleLogs(battleId, battle);
     }
@@ -242,13 +260,13 @@ class MysqlStorage implements StorageModule {
         }
     }
 
-    async saveBattleTeams(battleId: number,  battle: Battle, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
+    async saveBattleTeams(battleId: number, battle: Battle, teamA: Team<Hero>, teamB: Team<Hero>): Promise<void> {
         await this.saveTeam(teamA);
         await this.saveTeam(teamB);
 
         await this.saveBattleLogs(battleId, battle);
     }
-    
+
     async saveDefenceRecord(defenceRecord: DefenceRecord): Promise<void> {
         const { defenceType, damageReceived, characterId, attackerId, id } = defenceRecord;
 
@@ -269,7 +287,7 @@ class MysqlStorage implements StorageModule {
                 const statsQuery = `INSERT INTO heroesstats (heroId, originalStats, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, skillProbability) 
                                    VALUES (${hero.id}, 0, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${hero.skill.probability}'), 
                                           (${hero.id}, 1, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', '${hero.skill.probability}')`;
-                
+
                 // Insertar estadísticas actuales y originales en la tabla `heroes_stats`
                 await this.executeQuery<any>(statsQuery);
             }
@@ -286,24 +304,9 @@ class MysqlStorage implements StorageModule {
 
     async saveHeroes(heroes: Hero[]): Promise<void> {
         try {
-            await Promise.all(heroes.map(async (hero) => {
-                const values = 'characterId, name, surname, gender, className, isAlive, skillProbability';
-                const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${Number(hero.isAlive)}', '${hero.skill.probability}'`;
-                const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
-                const solution = await this.executeQuery<any>(query);
-    
-                console.log({
-                    solution
-                })
-                if (solution.insertId || solution) {
-                    const statsQuery = `INSERT INTO heroes_stats (heroId, hp, totalHp, attack, defence, crit, critMultiplier, accuracy, evasion, attackInterval, regeneration, originalStats) 
-                                       VALUES (${hero.id}, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', 0), 
-                                              (${hero.id}, '${hero.stats.hp}', '${hero.stats.totalHp}', '${hero.stats.attack}', '${hero.stats.defence}', '${hero.stats.crit}', '${hero.stats.critMultiplier}', '${hero.stats.accuracy}', '${hero.stats.evasion}', '${hero.stats.attackInterval}', '${hero.stats.regeneration}', 1)`;
-                    
-                    // Insertar estadísticas actuales y originales en la tabla `heroes_stats`
-                    const statsInsertResult = await this.executeQuery<any>(statsQuery);
-                }
-            }));
+            await Promise.all(heroes.map(async (hero) =>
+                this.saveHero(hero)
+            ));
         } catch (error) {
             console.error('Error while saving heroes:', error);
             throw error;
@@ -319,6 +322,51 @@ class MysqlStorage implements StorageModule {
             await this.saveHero(member as Hero);
             await this.addHeroToTeam(team.id, member.id);
         }
+    }
+
+    async updateHero(hero: Hero) {
+        //obtener los records:
+        console.log("heroId_1", hero.id);
+        const [heroAttackRecords, heroDefenceRecords] = await Promise.all([
+            await this.getAttackRecordByHeroId(hero.id),
+            await this.getDefenceRecordByHeroId(hero.id)
+        ]);
+
+        //control if any stat has changed out of desired ranges.
+        hero.stats = controlHeroStats(hero.stats);
+
+        // actualizar el heroe:
+        const query = `UPDATE heroesstats
+        SET hp = ${hero.stats.hp},
+            totalHp = ${hero.stats.totalHp},
+            attack = ${hero.stats.attack},
+            defence = ${hero.stats.defence},
+            crit = ${hero.stats.crit},
+            critMultiplier = ${hero.stats.critMultiplier},
+            accuracy = ${hero.stats.accuracy},
+            evasion = ${hero.stats.evasion},
+            attackInterval = ${hero.stats.attackInterval},
+            regeneration = ${hero.stats.regeneration},
+            skillProbability = ${hero.skill.probability}
+        WHERE heroId = ${hero.id} AND originalStats = 0;`;
+        await this.executeQuery(query);
+
+        // add the records form hero.actionRecord if their ids are not included in the records from the db.
+        if (hero.actionRecord) {
+
+            for (const attack of hero.actionRecord.attacks) {
+                if (!heroAttackRecords.find((attackRecord) => attackRecord.attackId === attack.id)) {
+                    await this.saveAttackRecord(attack);
+                }
+            }
+
+            for (const defence of hero.actionRecord.defences) {
+                if (!heroDefenceRecords.find((defenceRecord) => defenceRecord.defenceId === defence.id)) {
+                    await this.saveDefenceRecord(defence);
+                }
+            }
+        }
+        console.log("colega, what?");
     }
 
 }

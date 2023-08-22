@@ -20,7 +20,7 @@ function restoreCharacter(storedHero: heroWithStatsFromTable, callbacks: Charact
             probability: sp,
         },
         isAlive: storedHero.isAlive,
-        id: storedHeroRest.heroId,
+        id: storedHeroRest.characterId ,
         className: storedHeroRest.className,
         statusManager: true,
         actionRecord: true,

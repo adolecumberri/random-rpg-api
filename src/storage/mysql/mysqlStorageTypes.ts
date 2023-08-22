@@ -3,7 +3,7 @@ import { Stats } from "rpg-ts";
 
 type rowOfTableHeroes = {
     id: number;
-    heroId: number;
+    characterId: number;
     name: string;
     surname: string;
     gender: string;
@@ -20,9 +20,9 @@ type rowOfTableStats = Stats & {
 
 };
 
-interface heroWithStatsFromTable {
+interface heroWithStatsFromTable { // rowOfTableHeroes values...
     id: number;
-    heroId: number;
+    characterId: number;
     name: string;
     surname: string;
     gender: string;
