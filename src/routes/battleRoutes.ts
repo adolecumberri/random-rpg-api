@@ -117,6 +117,11 @@ debugger;
 });
 
 battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, res: Response) => {
+    if(!req.params.idA || !req.params.idB){
+        res.status(400).json({ error: `Missing idA or idB` });
+        return;
+    }
+    
     const newHeroA = await moduleHandler.getModule().getHeroById(Number(req.params.idA));
     const newHeroB = await moduleHandler.getModule().getHeroById(Number(req.params.idB));
 

@@ -43,7 +43,7 @@ type rowOfTableteams = {
 
 type rowOfAttackRecord = {
     id: number;
-    attackId: number;
+    attackrecordId: number;
     attackType: "NORMAL" | "MISS" | "CRITICAL" | "TRUE" | "SKILL";
     damage: number;
     characterId: number;
@@ -51,7 +51,7 @@ type rowOfAttackRecord = {
 
 type rowOfDefenceRecord = {
     id: number;
-    defenceId: number;
+    defencerecordId: number;
     defenceType: 'NORMAL' |'EVASION' | 'MISS' | 'TRUE' | 'SKILL';
     damageReceived: number;
     characterId: number;

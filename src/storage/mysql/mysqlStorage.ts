@@ -77,20 +77,20 @@ class MysqlStorage implements StorageModule {
 
             // Process the attack records
             const attackRecords: AttackRecord[] = attackRecordResult.map((row) => ({
-                id: row.id,
-                attackId: row.attackId,
+                id: row.attackrecordId,
                 attackType: row.attackType,
                 damage: row.damage,
                 characterId: row.characterId,
             }));
 
+            console.log({attackRecords})
+            
             // Process the defence records
             const defenceRecords: DefenceRecord[] = defenceRecordResult.map((row) => ({
-                id: row.id,
-                attackId: row.defenceId,
+                id: row.defencerecordId,
+                characterId: row.characterId,
                 defenceType: row.defenceType,
                 damageReceived: row.damageReceived,
-                characterId: row.characterId,
                 attackerId: row.attackerId,
             }));
             hero.actionRecord!.attacks = attackRecords;
@@ -355,17 +355,23 @@ class MysqlStorage implements StorageModule {
         if (hero.actionRecord) {
 
             for (const attack of hero.actionRecord.attacks) {
-                if (!heroAttackRecords.find((attackRecord) => attackRecord.attackId === attack.id)) {
+                if (!heroAttackRecords.find((attackRecord) => attackRecord.attackrecordId === attack.id)) {
                     await this.saveAttackRecord(attack);
                 }
             }
 
             for (const defence of hero.actionRecord.defences) {
-                if (!heroDefenceRecords.find((defenceRecord) => defenceRecord.defenceId === defence.id)) {
+                if (!heroDefenceRecords.find((defenceRecord) => defenceRecord.defencerecordId === defence.id)) {
                     await this.saveDefenceRecord(defence);
                 }
             }
         }
+
+        const queryHero = `UPDATE heroes
+        SET isAlive = ${Number(hero.isAlive)}
+        WHERE characterId = ${hero.id};`;
+        await this.executeQuery(queryHero);
+
         console.log("colega, what?");
     }
 
