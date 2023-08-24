@@ -46,6 +46,7 @@ type rowOfAttackRecord = {
     attackrecordId: number;
     attackType: "NORMAL" | "MISS" | "CRITICAL" | "TRUE" | "SKILL";
     damage: number;
+    damageDealt: number;
     characterId: number;
 }
 

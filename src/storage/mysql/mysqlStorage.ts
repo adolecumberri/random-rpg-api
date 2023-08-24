@@ -80,6 +80,7 @@ class MysqlStorage implements StorageModule {
                 id: row.attackrecordId,
                 attackType: row.attackType,
                 damage: row.damage,
+                damageDealt: row.damageDealt,
                 characterId: row.characterId,
             }));
 
@@ -154,10 +155,10 @@ class MysqlStorage implements StorageModule {
     }
 
     async saveAttackRecord(attackRecord: AttackRecord): Promise<void> {
-        const { attackType, damage, characterId, id } = attackRecord;
+        const { attackType, damage, characterId, id, damageDealt } = attackRecord;
 
-        const insertQuery = `INSERT INTO attackrecord (attackrecordId, attackType, damage, characterId) VALUES (?, ?, ?, ?)`;
-        const values = [id, attackType, damage, characterId];
+        const insertQuery = `INSERT INTO attackrecord (attackrecordId, attackType, damage, damageDealt, characterId) VALUES (?, ?, ?, ?, ?)`;
+        const values = [id, attackType, damage, damageDealt, characterId];
 
         await this.executeQuery<ResultSetHeader>(insertQuery, values);
     }
