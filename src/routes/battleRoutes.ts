@@ -19,11 +19,18 @@ const battleRouter = Router();
 battleRouter.post(`${TEAMS_URL}`, async (req: Request<{}, {}, { teamA: teamReqBody, teamB: teamReqBody }>, res: Response) => {
     let { teamA, teamB } = req.body;
 
+    try {
+        teamA = JSON.parse(teamA as unknown as string) as any; 
+        teamB = JSON.parse(teamB as unknown as string) as any;
+    } catch (error) {
+        return res.status(400).json({ error: `Wrong JSON format for teams: ${teamA} and ${teamB}` });
+    }
+
     const defaultTeam = {
         name: "team",
         totalHeroes: 1,
         heroTypes: '{}'
-    }
+    };
 
     // Team A
     let nameA = teamA?.name || defaultTeam.name;
@@ -51,19 +58,98 @@ battleRouter.post(`${TEAMS_URL}`, async (req: Request<{}, {}, { teamA: teamReqBo
     totalHeroesB = Number(totalHeroesB);
     let teamBCreated = createTeam(nameB, totalHeroesB, heroTypesB);
 
+    console.log({
+        members: teamBCreated.members.length,
+        totalHeroesB
+    })
+
     // Battle.
     let b = new Battle();
     b.setBattleType('INTERVAL_BASED');
-    const battleId = b.runBattle(teamACreated, teamBCreated);
+    const solutionId = b.runBattle(teamACreated, teamBCreated);
 
-    await moduleHandler.getModule().saveBattleTeams(battleId, b, teamACreated, teamBCreated);
+    await moduleHandler.getModule().saveBattleTeams(solutionId, b, teamACreated, teamBCreated);
 
-    res.json(battleId);
+    res.json({
+        solutionId,
+        initialLog: b.logs.get(solutionId)?.initialLog,
+        logs: b.logs.get(solutionId)?.logs,
+        finalLog: b.logs.get(solutionId)?.finalLog,
+        teamA: {
+            id: teamACreated.id,
+            name: teamACreated.name,
+            members: teamACreated.members.length,
+            dead: teamACreated.getDeadMembers(),
+            alive: teamACreated.getAliveMembers(),
+            everyFightRecord: teamACreated.everyFightRecord,
+            lastFightRecord: teamACreated.lastFightRecord
+        },
+        teamB: {
+            id: teamBCreated.id,
+            name: teamBCreated.name,
+            members: teamBCreated.members.length,
+            dead: teamBCreated.getDeadMembers(),
+            alive: teamBCreated.getAliveMembers(),
+            everyFightRecord: teamBCreated.everyFightRecord,
+            lastFightRecord: teamBCreated.lastFightRecord
+        }
+    });
 });
 
-battleRouter.get(`${TEAMS_URL}${BATTLES_IDS_REQUESTED}`, (req: Request, res: Response) => {
+battleRouter.get(`${TEAMS_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, res: Response) => {
 
-    res.send(`battle teams /${req.params.idA}/${req.params.idB}, canela.`);
+    if(!req.params.idA || !req.params.idB){
+        res.status(400).json({ error: `Missing idA or idB` });
+        return;
+    }
+
+    const teamA = await moduleHandler.getModule().getTeamById(Number(req.params.idA));
+    const teamB = await moduleHandler.getModule().getTeamById(Number(req.params.idB));
+
+    console.log({
+        teamA,
+        teamB
+    })
+
+    if (!teamA) {
+        res.status(404).json({ error: `Hero:${req.params.idA} not found.` });
+        return;
+    }
+
+    if (!teamB) {
+        res.status(404).json({ error: `Hero:${req.params.idB} not found.` });
+        return;
+    }
+
+    let b = new Battle();
+    b.setBattleType('INTERVAL_BASED');
+
+    const solutionId = b.runBattle(teamA, teamB);
+
+    res.json({
+        solutionId,
+        initialLog: b.logs.get(solutionId)?.initialLog,
+        logs: b.logs.get(solutionId)?.logs,
+        finalLog: b.logs.get(solutionId)?.finalLog,
+        teamA: {
+            id: teamA.id,
+            name: teamA.name,
+            members: teamA.members.length,
+            dead: teamA.getDeadMembers(),
+            alive: teamA.getAliveMembers(),
+            everyFightRecord: teamA.everyFightRecord,
+            lastFightRecord: teamA.lastFightRecord
+        },
+        teamB: {
+            id: teamB.id,
+            name: teamB.name,
+            members: teamB.members.length,
+            dead: teamB.getDeadMembers(),
+            alive: teamB.getAliveMembers(),
+            everyFightRecord: teamB.everyFightRecord,
+            lastFightRecord: teamB.lastFightRecord
+        }
+    });
 });
 
 battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestHero | undefined, heroB: requestHero | undefined }>, res: Response) => {
@@ -108,12 +194,8 @@ battleRouter.post(`${HEROES_URL}`, async (req: Request<{}, {}, { heroA: requestH
     }
 
     await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB, false);
-debugger;
-    res.json({
-        rawLogs: b.logs.size,
-        battleId: solutionId,
-        theoricalGoodLogs: b.logs.get(solutionId)?.logs,
-    });
+
+    res.json(solution);
 });
 
 battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, res: Response) => {
@@ -121,14 +203,9 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
         res.status(400).json({ error: `Missing idA or idB` });
         return;
     }
-    
+
     const newHeroA = await moduleHandler.getModule().getHeroById(Number(req.params.idA));
     const newHeroB = await moduleHandler.getModule().getHeroById(Number(req.params.idB));
-
-    console.log({
-        newHeroA,
-        newHeroB
-    })
 
     if (!newHeroA) {
         res.status(404).json({ error: `Hero:${req.params.idA} not found.` });
@@ -144,8 +221,6 @@ battleRouter.get(`${HEROES_URL}${BATTLES_IDS_REQUESTED}`, async (req: Request, r
     b.setBattleType('INTERVAL_BASED');
 
     const solutionId = b.runBattle(newHeroA, newHeroB);
-
-    
 
     await moduleHandler.getModule().saveBattleHeroes(solutionId, b, newHeroA, newHeroB, true);
     const solution = {
