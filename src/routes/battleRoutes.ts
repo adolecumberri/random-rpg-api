@@ -70,6 +70,12 @@ battleRouter.post(`${TEAMS_URL}`, async (req: Request<{}, {}, { teamA: teamReqBo
 
     await moduleHandler.getModule().saveBattleTeams(solutionId, b, teamACreated, teamBCreated);
 
+    console.log({
+        getLast: JSON.stringify(teamACreated.getLastFightRecord()),
+        getEvery: JSON.stringify(teamACreated.getEveryFightRecord()),
+        getOneLast: JSON.stringify(teamACreated.getLastFightRecord()[teamACreated.members[0].id]),
+        getOneEvery: JSON.stringify(teamACreated.getEveryFightRecord()[teamACreated.members[0].id]),
+    })
     res.json({
         solutionId,
         initialLog: b.logs.get(solutionId)?.initialLog,

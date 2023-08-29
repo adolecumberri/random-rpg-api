@@ -8,6 +8,7 @@ function restoreCharacter(storedHero: heroWithStatsFromTable, callbacks: Charact
 
     let { stats, originalStats, ...storedHeroRest } = storedHero;
 
+    
     let { skillProbability: sp, id: _idA, heroId: _hIdA, originalStats: _osA, ...restStats } = stats;
     let { skillProbability: _spB, id: _idB, heroId: _hIdB, originalStats: _osB, ...restOriginalStats } = originalStats;
 

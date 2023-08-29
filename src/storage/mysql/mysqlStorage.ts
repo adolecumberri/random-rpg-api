@@ -118,11 +118,45 @@ class MysqlStorage implements StorageModule {
             id: teamRow.teamId, //this id is the one that the Team creates the first time it's created
         });
 
-        const membersQuery = `SELECT h.*, hs.* FROM heroes h
-                             INNER JOIN heroesstats hs ON h.characterId = hs.heroId
-                             JOIN teams_heroes th ON h.characterId = th.heroId
-                             WHERE th.teamId = ${teamRow.id}`;
+        const membersQuery = `SELECT 
+        h.*, 
+        JSON_OBJECT(
+            'hp', hs.hp, 
+            'totalHp', hs.totalHp, 
+            'attack', hs.attack, 
+            'defence', hs.defence, 
+            'crit', hs.crit, 
+            'critMultiplier', hs.critMultiplier, 
+            'accuracy', hs.accuracy, 
+            'evasion', hs.evasion, 
+            'attackInterval', hs.attackInterval, 
+            'regeneration', hs.regeneration, 
+            'skillProbability', hs.skillProbability
+        ) AS stats,
+        (
+            SELECT JSON_OBJECT(
+                'hp', originalStats.hp, 
+                'totalHp', originalStats.totalHp, 
+                'attack', originalStats.attack, 
+                'defence', originalStats.defence, 
+                'crit', originalStats.crit, 
+                'critMultiplier', originalStats.critMultiplier, 
+                'accuracy', originalStats.accuracy, 
+                'evasion', originalStats.evasion, 
+                'attackInterval', originalStats.attackInterval, 
+                'regeneration', originalStats.regeneration, 
+                'skillProbability', originalStats.skillProbability
+            )
+            FROM heroesstats originalStats
+            WHERE originalStats.heroId = h.characterId AND originalStats.originalStats = 1
+        ) AS originalStats
+    FROM heroes h
+    INNER JOIN heroesstats hs ON h.characterId = hs.heroId
+    INNER JOIN teams_heroes th ON h.characterId = th.characterId
+    WHERE th.teamId = ${teamRow.teamId} AND hs.originalStats = 0;`;
+                             
         const membersResult = await this.executeQuery<heroWithStatsFromTable[]>(membersQuery);
+        console.log(membersResult, membersQuery);
 
         // Process heroes
         for (const heroRow of membersResult) {
@@ -134,7 +168,14 @@ class MysqlStorage implements StorageModule {
     }
 
     restoreStoredHero = (storedHero: heroWithStatsFromTable): Hero => {
+        console.log({
+            storedHero
+        })
         const createHeroFunc = restoreHero[storedHero.className.toUpperCase() as keyof typeof HEROES_NAMES];
+
+        console.log({
+            heroCreated: createHeroFunc(storedHero),
+        })
         return createHeroFunc(storedHero);
     }
 
