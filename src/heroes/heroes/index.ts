@@ -1,18 +1,21 @@
-import { getRandomInt, Character, CharacterCallbacks, StatusManager, ActionRecord } from "rpg-ts";
-import { getMaleName, getFemaleName, getSurname, getStatsByClassName } from "../../helpers";
+import { getRandomInt, Character, CharacterCallbacks, StatusManager, ActionRecord, LevelManager } from "rpg-ts";
+import { getMaleName, getFemaleName, getSurname, getStatsByClassName, killedHeroCallback } from "../../helpers";
 import { Hero, HeroIdentity } from "../../types";
-import { HEROES_NAMES, SKILL_PROBABILITY } from "../../constants";
+import { HEROES_NAMES, LEVEL_MANAGER_DEFAULT, SKILL_PROBABILITY } from "../../constants";
 import { fervor, haste, holyLight, rage, riposte, shieldGesture, skipeShield, tripleAttack, unoticedShot } from '../skills';
-import { rowOfTableHeroes } from "../../storage/mysql/mysqlStorageTypes";
 
 function createCharacter(
     className: keyof typeof HEROES_NAMES,
     options?: HeroIdentity,
     callbacks?: CharacterCallbacks
 ) {
-    let gender = options?.gender !== undefined ? options.gender : getRandomInt(0, 1) ? 'F' : 'M';
-    let name = options?.name || (gender ? getMaleName() : getFemaleName());
+    const genderRol = getRandomInt(0, 1)
+    console.log
+    let gender = options?.gender !== undefined ? options.gender : genderRol ? 'F' : 'M';
+    let name = options?.name !== undefined ? options.name : (gender == 'F' ? getFemaleName() : getMaleName());
     let surname = options?.surname || getSurname();
+
+    console.log(`${name} ${surname} (${gender} - ${genderRol}) has been created`)
 
     return new Character({
         name,
@@ -24,7 +27,9 @@ function createCharacter(
         className: className,
         statusManager: new StatusManager(),
         actionRecord: new ActionRecord(),
-        levelManager: new LevelManager(),
+        levelManager: new LevelManager({
+            ...LEVEL_MANAGER_DEFAULT
+        }),
         callbacks,
         stats: getStatsByClassName(className),
     }) as Hero;
@@ -34,36 +39,42 @@ const createArcher = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.ARCHER, options, {
         criticalAttack: haste,
         normalAttack: haste,
+        die: killedHeroCallback,
     });
 }
 
 const createBerserk = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.BERSERKER, options, {
         receiveDamage: rage,
+        die: killedHeroCallback,
     });
 }
 
 const createDefender = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.DEFENDER, options, {
         afterAnyDefence: skipeShield,
+        die: killedHeroCallback,
     });
 }
 
 const createFencer = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.FENCER, options, {
         afterAnyDefence: riposte,
+        die: killedHeroCallback,
     });
 }
 
 const createNinja = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.NINJA, options, {
         afterAnyAttack: tripleAttack,
+        die: killedHeroCallback,
     });
 };
 
 const createPaladin = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.PALADIN, options, {
         afterTurn: holyLight,
+        die: killedHeroCallback,
     });
 };
 
@@ -73,18 +84,21 @@ const createSniper = (options?: HeroIdentity) => {
         afterBattle: (c: Character) => {
             c.skill.isUsed = false;
         },
+        die: killedHeroCallback,
     });
 };
 
 const createSoldier = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.SOLDIER, options, {
         afterTurn: shieldGesture,
+        die: killedHeroCallback,
     });
 };
 
 const createThieve = (options?: HeroIdentity) => {
     return createCharacter(HEROES_NAMES.THIEVE, options, {
         receiveDamage: fervor,
+        die: killedHeroCallback,
     });
 };
 

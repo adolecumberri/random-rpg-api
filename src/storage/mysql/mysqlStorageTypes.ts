@@ -9,7 +9,8 @@ type rowOfTableHeroes = {
     gender: string;
     className: string;
     isAlive: boolean;
-    level: number;
+    currentLevel: number;
+    experience: number;
 }
 
 type rowOfTableStats = Stats & {
@@ -28,7 +29,8 @@ interface heroWithStatsFromTable { // rowOfTableHeroes values...
     gender: string;
     className: string;
     isAlive: boolean;
-    level: number;
+    currentLevel: number;
+    experience: number;
     stats: rowOfTableStats,
     originalStats: rowOfTableStats
   }

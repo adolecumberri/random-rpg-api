@@ -72,9 +72,15 @@ const skipeShield: CharacterCallbacks['afterAnyDefence'] = ({ c, defence, attack
     if (!defence || !c) return undefined;
     const spikeShield = (attackValue: number) => Math.floor(7 + attackValue * 0.2);
 
-    if (defence.type === 'MISS') return;
+    if (defence.type === 'MISS' || defence.type === 'EVASION') return;
     const damage = spikeShield(attack.value);
-    defence.attacker!.receiveDamage({
+    
+    // El defender genera un ataque de la skill
+    c.actionRecord?.recordAttack('SKILL', damage, c.id);
+    //el attacante genera una defensa de la skill
+    attack.atacker?.actionRecord?.recordDefence('SKILL', damage, attack.atacker.id, c.id);
+
+    attack.atacker!.receiveDamage({
         type: 'SKILL',
         value: damage,
         attacker: c,
@@ -95,6 +101,12 @@ const riposte: CharacterCallbacks['afterAnyDefence'] = ({ c, attack, defence }) 
     const calculateReflectedDamage = (value: number) => getRandomInt(value * 0.85, value * 1.15);
 
     const damageReflected = calculateReflectedDamage(attack?.value);
+    
+    // El defender genera un ataque de la skill
+    c.actionRecord?.recordAttack('SKILL', damageReflected, c.id);
+    //el attacante genera una defensa de la skill
+    attack.atacker?.actionRecord?.recordDefence('SKILL', damageReflected, attack.atacker.id, c.id);
+
 
     const defenceResult = attack.atacker!.defend({
         type: ATTACK_TYPE_CONST.SKILL,
@@ -240,6 +252,7 @@ const fervor = ({ c }: { c?: BaseCharacter }) => {
         c.statusManager?.activate('AFTER_RECEIVE_DAMAGE', c);
     }
 };
+
 
 export {
     haste,

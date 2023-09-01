@@ -1,8 +1,9 @@
-import { CharacterCallbacks, Character } from "rpg-ts";
+import { CharacterCallbacks, Character, Status, StatusManager, ActionRecord, LevelManager } from "rpg-ts";
 import { haste, rage, skipeShield, riposte, tripleAttack, holyLight, unoticedShot, shieldGesture, fervor } from "../../heroes/skills";
 import { heroWithStatsFromTable, rowOfTableHeroes, rowOfTableStats } from "./mysqlStorageTypes";
-import { HEROES_NAMES } from "../../constants";
+import { HEROES_NAMES, LEVEL_MANAGER_DEFAULT } from "../../constants";
 import { Hero } from "../../types";
+import { killedHeroCallback } from "../../helpers";
 
 function restoreCharacter(storedHero: heroWithStatsFromTable, callbacks: CharacterCallbacks){
 
@@ -23,8 +24,13 @@ function restoreCharacter(storedHero: heroWithStatsFromTable, callbacks: Charact
         isAlive: storedHero.isAlive,
         id: storedHeroRest.characterId ,
         className: storedHeroRest.className,
-        statusManager: true,
-        actionRecord: true,
+        statusManager: new StatusManager(),
+        actionRecord: new ActionRecord(),
+        levelManager: new LevelManager({
+            ...LEVEL_MANAGER_DEFAULT,
+            currentLevel: storedHeroRest.currentLevel,
+            experience: storedHeroRest.experience,
+        }),
         callbacks,
         originalStats: {...restOriginalStats},
         stats: {...restStats}
@@ -35,36 +41,42 @@ const restoreArcher = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         criticalAttack: haste,
         normalAttack: haste,
+        die: killedHeroCallback,
     });
 }
 
 const restoreBerserk = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         receiveDamage: rage,
+        die: killedHeroCallback,
     });
 }
 
 const restoreDefender = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterAnyDefence: skipeShield,
+        die: killedHeroCallback,
     });
 }
 
 const restoreFencer = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterAnyDefence: riposte,
+        die: killedHeroCallback,
     });
 }
 
 const restoreNinja = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterAnyAttack: tripleAttack,
+        die: killedHeroCallback,
     });
 };
 
 const restorePaladin = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterTurn: holyLight,
+        die: killedHeroCallback,
     });
 };
 
@@ -74,18 +86,21 @@ const restoreSniper = (storedHero: heroWithStatsFromTable) => {
         afterBattle: (c: Character) => {
             c.skill.isUsed = false;
         },
+        die: killedHeroCallback,
     });
 };
 
 const restoreSoldier = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         afterTurn: shieldGesture,
+        die: killedHeroCallback,
     });
 };
 
 const restoreThieve = (storedHero: heroWithStatsFromTable) => {
     return restoreCharacter(storedHero, {
         receiveDamage: fervor,
+        die: killedHeroCallback,
     });
 };
 

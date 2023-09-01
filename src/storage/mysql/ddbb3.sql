@@ -27,12 +27,13 @@ CREATE TABLE `attackrecord` (
   `attackrecordId` bigint NOT NULL,
   `attackType` enum('NORMAL','MISS','CRITICAL','TRUE','SKILL') NOT NULL,
   `damage` int NOT NULL,
+  `damageDealt` int DEFAULT '-1',
   `characterId` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_characterId` (`characterId`),
   KEY `idx_attackrecordId` (`attackrecordId`),
   CONSTRAINT `fk_attackrecord_character` FOREIGN KEY (`characterId`) REFERENCES `heroes` (`characterId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=463 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3804 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +85,7 @@ CREATE TABLE `battlelogs` (
   CONSTRAINT `fk_battlelogs_attackrecord` FOREIGN KEY (`idAttackRecord`) REFERENCES `attackrecord` (`attackrecordId`) ON DELETE CASCADE,
   CONSTRAINT `fk_battlelogs_battle` FOREIGN KEY (`battleId`) REFERENCES `battles` (`battleId`) ON DELETE CASCADE,
   CONSTRAINT `fk_battlelogs_defencerecord` FOREIGN KEY (`idDefenceRecord`) REFERENCES `defencerecord` (`defencerecordId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=664 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2264 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +102,7 @@ CREATE TABLE `battles` (
   `battleDimension` enum('Character','TEAM') NOT NULL,
   PRIMARY KEY (`id`,`battleId`),
   KEY `idx_battleId` (`battleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +123,7 @@ CREATE TABLE `defencerecord` (
   KEY `idx_characterId` (`characterId`),
   KEY `idx_defencerecordId` (`defencerecordId`),
   CONSTRAINT `fk_defencerecord_character` FOREIGN KEY (`characterId`) REFERENCES `heroes` (`characterId`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=456 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3813 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +199,7 @@ CREATE TABLE `finalcharacterbattlelog` (
   CONSTRAINT `fk_finallog_characterBId` FOREIGN KEY (`characterBId`) REFERENCES `heroes` (`characterId`),
   CONSTRAINT `fk_finallog_looserId` FOREIGN KEY (`looserId`) REFERENCES `heroes` (`characterId`),
   CONSTRAINT `fk_finallog_winnerId` FOREIGN KEY (`winnerId`) REFERENCES `heroes` (`characterId`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -233,7 +234,7 @@ CREATE TABLE `finalteambattlelog` (
   CONSTRAINT `fk_finallog_tAId` FOREIGN KEY (`teamAId`) REFERENCES `teams` (`teamId`),
   CONSTRAINT `fk_finallog_tBId` FOREIGN KEY (`teamBId`) REFERENCES `teams` (`teamId`),
   CONSTRAINT `fk_finallog_wId` FOREIGN KEY (`winnerId`) REFERENCES `teams` (`teamId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,20 +253,20 @@ CREATE TABLE `heroes` (
   `className` varchar(50) NOT NULL,
   `isAlive` tinyint(1) NOT NULL DEFAULT '1',
   `currentLevel` int NOT NULL DEFAULT '1',
-  `experience` int NOT NULL DEFAULT '0',
+  `experience` int DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_characterId` (`characterId`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `heroes_stats`
+-- Table structure for table `heroesstats`
 --
 
-DROP TABLE IF EXISTS `heroes_stats`;
+DROP TABLE IF EXISTS `heroesstats`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `heroes_stats` (
+CREATE TABLE `heroesstats` (
   `id` int NOT NULL AUTO_INCREMENT,
   `heroId` bigint NOT NULL,
   `originalStats` tinyint NOT NULL,
@@ -282,8 +283,8 @@ CREATE TABLE `heroes_stats` (
   `skillProbability` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_heroId` (`heroId`),
-  CONSTRAINT `heroes_stats_ibfk_1` FOREIGN KEY (`heroId`) REFERENCES `heroes` (`characterId`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `heroesstats_ibfk_1` FOREIGN KEY (`heroId`) REFERENCES `heroes` (`characterId`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=427 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,7 +301,7 @@ CREATE TABLE `teams` (
   `members` int DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_teamId` (`teamId`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -315,7 +316,7 @@ CREATE TABLE `teams_heroes` (
   `teamId` bigint NOT NULL,
   `characterId` bigint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -335,4 +336,4 @@ CREATE TABLE `teams_heroes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-08-21 19:07:01
+-- Dump completed on 2023-09-02  0:16:51

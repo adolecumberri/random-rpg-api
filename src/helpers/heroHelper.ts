@@ -1,4 +1,4 @@
-import { Character, Stats } from "rpg-ts";
+import { BaseCharacter, Character, CharacterCallbacks, Stats } from "rpg-ts";
 import { CLASSES_STATS, COMMON_STATS, FEMALE_NAMES, HEROES_NAMES, MALE_NAMES, SURNAMES } from "../constants";
 import { Hero } from "../types";
 import { getRandomInt } from "./commonHelper";
@@ -70,10 +70,16 @@ const controlHeroStats = (stats: Stats): Stats => {
     return stats;
 }
 
+const killedHeroCallback: CharacterCallbacks['die'] = (c, killer) => {
+    killer.levelManager?.gainExperience(c.levelManager?.xpGivenFunction(c.levelManager.currentLevel), killer);
+    (killer as unknown as Hero).kills++;
+  };
+
 export {
     getStatsByClassName,
     getMaleName,
     getFemaleName,
     getSurname,
-    controlHeroStats
+    controlHeroStats,
+    killedHeroCallback,
 }

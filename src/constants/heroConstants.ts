@@ -1,4 +1,4 @@
-import { Stats } from "rpg-ts";
+import { LevelManager, Stats } from "rpg-ts";
 
 const HEROES_NAMES = {
     ARCHER: 'ARCHER',
@@ -160,9 +160,37 @@ const SKILL_PROBABILITY = {
     [HEROES_NAMES.THIEVE]: 60,
 } as const;
 
+const LEVEL_MANAGER_DEFAULT: {[x in keyof LevelManager]?: LevelManager[x]} = {
+    currentLevel: 1,
+    experience: 0,
+    maxLevel: 15,
+    xpNeededFunction: (level: number) => Math.floor(3 + (level - 1)*2),
+    xpGivenFunction: (level: number) => level,
+    statsProgression: {
+        hp: {
+            type: 'BUFF_FIXED',
+            value: 10,
+        },
+        attack: {
+            type: 'BUFF_FIXED',
+            value: 2,
+        },
+        defence: {
+            type: 'BUFF_FIXED',
+            value: 1,
+        },
+        crit: { 
+            type: 'BUFF_FIXED',
+            value: 1,
+        },
+    },
+    levelUpCallbacks: {},
+}
+
 export {
     HEROES_NAMES,
     COMMON_STATS,
     CLASSES_STATS,
     SKILL_PROBABILITY,
+    LEVEL_MANAGER_DEFAULT
 };

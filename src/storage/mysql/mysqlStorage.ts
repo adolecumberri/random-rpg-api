@@ -320,8 +320,8 @@ class MysqlStorage implements StorageModule {
 
     async saveHero(hero: Hero): Promise<any> {
         try {
-            const values = 'characterId, name, surname, gender, className, isAlive';
-            const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${Number(hero.isAlive)}'`;
+            const values = 'characterId, name, surname, gender, className, isAlive, currentLevel, experience';
+            const hero_values = `'${hero.id}', '${hero.name}', '${hero.surname}', '${hero.gender}', '${hero.className}', '${Number(hero.isAlive)}', '${hero.levelManager!.currentLevel}', '${hero.levelManager!.experience}'`;
             const query = `INSERT INTO heroes (${values}) VALUES (${hero_values})`;
             const solution = await this.executeQuery<any>(query);
 
