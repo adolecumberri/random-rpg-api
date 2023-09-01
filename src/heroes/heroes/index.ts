@@ -1,4 +1,4 @@
-import { getRandomInt, Character, CharacterCallbacks } from "rpg-ts";
+import { getRandomInt, Character, CharacterCallbacks, StatusManager, ActionRecord } from "rpg-ts";
 import { getMaleName, getFemaleName, getSurname, getStatsByClassName } from "../../helpers";
 import { Hero, HeroIdentity } from "../../types";
 import { HEROES_NAMES, SKILL_PROBABILITY } from "../../constants";
@@ -22,8 +22,9 @@ function createCharacter(
             probability: SKILL_PROBABILITY[className],
         },
         className: className,
-        statusManager: true,
-        actionRecord: true,
+        statusManager: new StatusManager(),
+        actionRecord: new ActionRecord(),
+        levelManager: new LevelManager(),
         callbacks,
         stats: getStatsByClassName(className),
     }) as Hero;
