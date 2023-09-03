@@ -1,4 +1,5 @@
 import { LevelManager, Stats } from "rpg-ts";
+import { Hero } from "../types";
 
 const HEROES_NAMES = {
     ARCHER: 'ARCHER',
@@ -11,6 +12,28 @@ const HEROES_NAMES = {
     SOLDIER: 'SOLDIER',
     THIEVE: 'THIEVE',
 } as const;
+
+const EVOLVED_HEROES_NAMES = {
+  TIER2_ARCHER: 'Forest Phantom',
+  TIER2_BERSERKER: 'Fury Acolyte',
+  TIER2_DEFENDER: 'Stoic Guardian',
+  TIER2_FENCER: 'Iron tricker',
+  TIER2_NINJA: 'Grave Filler',
+  TIER2_PALADIN: 'Radiant Redeemer',
+  TIER2_SNIPER: 'Life Solver',
+  TIER2_SOLDIER: 'Hell Veteran',
+  TIER2_THIEVE: 'Stealth trickster',
+
+  TIER3_ARCHER: 'Whistling Stinger',
+  TIER3_BERSERKER: 'Rage Forger',
+  TIER3_DEFENDER: 'Mountain Wall',
+  TIER3_FENCER: 'Mirage Duelist',
+  TIER3_NINJA: 'Patient lighting',
+  TIER3_PALADIN: 'Holy Erraser',
+  TIER3_SNIPER: 'Regret Punisher',
+  TIER3_SOLDIER: 'War Hubbub',
+  TIER3_THIEVE: 'Unknown Agent',
+}
 
 const COMMON_STATS: Stats = {
     "hp": 70,
@@ -163,12 +186,12 @@ const SKILL_PROBABILITY = {
 const LEVEL_MANAGER_DEFAULT: {[x in keyof LevelManager]?: LevelManager[x]} = {
     currentLevel: 1,
     experience: 0,
-    maxLevel: 15,
-    xpNeededFunction: (level: number) => Math.floor(3 + (level - 1)*2),
-    xpGivenFunction: (level: number) => level,
+    maxLevel: 7,
+    xpNeededFunction: (level: number) => Math.floor(8 + (level - 1)*2),
+    xpGivenFunction: (level: number) => 1 + (level-1)*2,
     statsProgression: {
         hp: {
-            type: 'BUFF_FIXED',
+            type: 'BUFF_PERCENTAGE',
             value: 10,
         },
         attack: {
@@ -179,12 +202,15 @@ const LEVEL_MANAGER_DEFAULT: {[x in keyof LevelManager]?: LevelManager[x]} = {
             type: 'BUFF_FIXED',
             value: 1,
         },
-        crit: { 
-            type: 'BUFF_FIXED',
-            value: 1,
-        },
     },
-    levelUpCallbacks: {},
+    levelUpCallbacks: {
+        3: (c: Hero) => {
+          c.title = EVOLVED_HEROES_NAMES[`TIER2_${c.className}` as keyof typeof EVOLVED_HEROES_NAMES ];
+        },
+        5: (c: Hero) => {
+          c.title = EVOLVED_HEROES_NAMES[`TIER3_${c.className}` as keyof typeof EVOLVED_HEROES_NAMES ];
+        }
+    },
 }
 
 export {

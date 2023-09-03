@@ -9,7 +9,12 @@ interface HeroIdentity {
     surname: string;
 } // opciones que se le pasa al crear el heroe.
 
-type Hero = Character & HeroIdentity & {className: string, kills: number}
+type Hero = Character & HeroIdentity & {
+    className: string;
+    kills: number;
+    defeats: number;
+    title: string;
+}
 
 interface requestHero {
     className: keyof typeof HEROES_NAMES; 

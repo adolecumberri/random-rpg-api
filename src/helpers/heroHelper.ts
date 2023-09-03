@@ -73,6 +73,8 @@ const controlHeroStats = (stats: Stats): Stats => {
 const killedHeroCallback: CharacterCallbacks['die'] = (c, killer) => {
     killer.levelManager?.gainExperience(c.levelManager?.xpGivenFunction(c.levelManager.currentLevel), killer);
     (killer as unknown as Hero).kills++;
+
+    (c as unknown as Hero).defeats++;
   };
 
 export {

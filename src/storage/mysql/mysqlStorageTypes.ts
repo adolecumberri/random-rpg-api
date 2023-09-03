@@ -8,9 +8,12 @@ type rowOfTableHeroes = {
     surname: string;
     gender: string;
     className: string;
+    title: string;
     isAlive: boolean;
     currentLevel: number;
     experience: number;
+    kills: number;
+    defeats: number;
 }
 
 type rowOfTableStats = Stats & {
@@ -21,19 +24,10 @@ type rowOfTableStats = Stats & {
 
 };
 
-interface heroWithStatsFromTable { // rowOfTableHeroes values...
-    id: number;
-    characterId: number;
-    name: string;
-    surname: string;
-    gender: string;
-    className: string;
-    isAlive: boolean;
-    currentLevel: number;
-    experience: number;
+type heroWithStatsFromTable = { // rowOfTableHeroes values...   
     stats: rowOfTableStats,
     originalStats: rowOfTableStats
-  }
+  } & rowOfTableHeroes
 
 
 type rowOfTableteams = {

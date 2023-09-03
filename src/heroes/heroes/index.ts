@@ -21,6 +21,9 @@ function createCharacter(
         name,
         surname,
         gender,
+        title: '',
+        kills: 0,
+        defeats: 0,
         skill: {
             probability: SKILL_PROBABILITY[className],
         },

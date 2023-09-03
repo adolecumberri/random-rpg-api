@@ -18,6 +18,9 @@ function restoreCharacter(storedHero: heroWithStatsFromTable, callbacks: Charact
         name: storedHeroRest.name,
         surname: storedHeroRest.surname,
         gender: storedHeroRest.gender,
+        title: storedHero.title,
+        kills: storedHero.kills,
+        defeats: storedHero.defeats,
         skill: {
             probability: sp,
         },
