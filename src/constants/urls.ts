@@ -4,6 +4,7 @@ const BASE_URL = '/api';
 const HEROES_URL = '/heroes';
 const TEAMS_URL = '/teams';
 const BATTLES_ULR = '/battles';
+const TEST_URL = '/test';
 
 const BATTLES_IDS_REQUESTED = '/:idA/:idB';
 
@@ -17,6 +18,7 @@ export {
     BASE_URL,
     HEROES_URL,
     TEAMS_URL,
+    TEST_URL,
     URL_RESTORE,
     URL_CREATE,
     URL_CREATE_MULTIPLE,

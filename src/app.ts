@@ -4,9 +4,8 @@ import readline from 'readline';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { moduleHandler } from './storage/storageConfguration';
-import { heroRouter, teamRouter } from './routes';
-import { BASE_URL, BATTLES_ULR, HEROES_URL, TEAMS_URL } from './constants';
-import { battleRouter } from './routes/battleRoutes';
+import { heroRouter, teamRouter, battleRouter, statsRoutes } from './routes';
+import { BASE_URL, BATTLES_ULR, HEROES_URL, TEAMS_URL, TEST_URL } from './constants';
 
 export class App {
 	app: Application = express(); //creation of the propertie "application"
@@ -69,6 +68,7 @@ export class App {
 		this.app.use(`${BASE_URL}${HEROES_URL}`, heroRouter);
 		this.app.use(`${BASE_URL}${TEAMS_URL}`, teamRouter);
 		this.app.use(`${BASE_URL}${BATTLES_ULR}`, battleRouter);
+		this.app.use(`${BASE_URL}${TEST_URL}`, statsRoutes);
 	}
 
 	async listen(): Promise<void> {
